@@ -1,0 +1,13 @@
+{
+  "name": "kinocomputing-lab",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare-shift": "node tools/prepare.mjs",
+    "settle": "node tools/settle.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "marked": "18.2.1"
+  }
+}

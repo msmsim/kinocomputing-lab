@@ -1,0 +1,113 @@
+name: Night shift
+
+# The lab's nightly run (README.md): prepare the briefing and budget, let the
+# agent work one shift, then settle — record the spend, check the rules, and
+# publish the outbox to kinocomputing.
+#
+# Credentials are kept apart on purpose. The agent's step holds only the
+# Anthropic key. Neither checkout persists credentials, and kinocomputing is
+# checked out only after the agent has finished, so nothing the agent reads —
+# web pages, papers, inbox material — can push anything anywhere.
+#
+# Pause the lab by setting the repository variable LAB_PAUSED to "true".
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: night-shift
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  shift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install
+        run: |
+          npm ci
+          npm install -g @anthropic-ai/claude-code@2.1.325
+
+      - name: Prepare
+        id: prep
+        run: |
+          node tools/prepare.mjs
+          echo "skip=$(jq -r .skip state/run.json)" >> "$GITHUB_OUTPUT"
+          echo "model=$(jq -r .model state/run.json)" >> "$GITHUB_OUTPUT"
+          echo "max_usd=$(jq -r .max_usd state/run.json)" >> "$GITHUB_OUTPUT"
+          echo "date=$(jq -r .date state/run.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Shift
+        if: steps.prep.outputs.skip != 'true' && vars.LAB_PAUSED != 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODEL: ${{ steps.prep.outputs.model }}
+          MAX_USD: ${{ steps.prep.outputs.max_usd }}
+        run: |
+          claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
+            --model "$MODEL" \
+            --max-budget-usd "$MAX_USD" \
+            --output-format json \
+            --permission-mode acceptEdits \
+            --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
+            > state/claude-output.json || echo "the shift exited non-zero; settling what it left"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: msmsim/kinocomputing
+          path: kinocomputing
+          token: ${{ secrets.KINO_PUSH_TOKEN }}
+          persist-credentials: false
+
+      - name: Settle
+        id: settle
+        env:
+          KINO_DIR: kinocomputing
+        run: |
+          node tools/settle.mjs | tee settle.log
+          echo "summary=$(tail -1 settle.log | sed 's/^settle: //')" >> "$GITHUB_OUTPUT"
+
+      - name: Commit the lab
+        env:
+          TOKEN: ${{ github.token }}
+          DATE: ${{ steps.prep.outputs.date }}
+          SUMMARY: ${{ steps.settle.outputs.summary }}
+        run: |
+          git config user.name "kinocomputing-lab[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- . ':!kinocomputing' ':!settle.log'
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "night shift $DATE: $SUMMARY"
+          git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:main
+
+      - name: Publish to kinocomputing
+        env:
+          TOKEN: ${{ secrets.KINO_PUSH_TOKEN }}
+          SUMMARY: ${{ steps.settle.outputs.summary }}
+        working-directory: kinocomputing
+        run: |
+          if [ -z "$(git status --porcelain notes)" ]; then echo "nothing to publish"; exit 0; fi
+          git config user.name "kinocomputing-lab[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notes
+          git commit -m "lab: $SUMMARY"
+          for attempt in 1 2 3; do
+            if git push "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" HEAD:main; then exit 0; fi
+            git pull --rebase "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" main
+          done
+          echo "could not publish after 3 attempts"; exit 1

@@ -1,0 +1,142 @@
+// After the shift: record what it cost, check it kept the lab's rules, and
+// publish its outbox to kinocomputing. Spends nothing; holds every credential
+// the agent never sees.
+//
+//   node tools/settle.mjs [--claude-output state/claude-output.json]
+//
+// Checks, each reported in MORNING.md rather than failing the night:
+// - every steer delivered got a line in state/steers.jsonl; one that didn't
+//   isn't marked seen, so it is offered again tomorrow;
+// - state/claims.jsonl was only appended to (against git HEAD); an edited or
+//   deleted claim is restored;
+// - each outbox note has a lab name (or updates a note the lab published),
+//   and renders and converts; refusals are kept in outbox/rejected/.
+//
+// Prints a one-line summary for the commit message.
+
+import { execFileSync } from "node:child_process";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { KINO, LAB, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
+import { renderNote } from "./render.mjs";
+
+const args = process.argv.slice(2);
+const outputPath = args.includes("--claude-output") ? args[args.indexOf("--claude-output") + 1] : join(LAB, "state/claude-output.json");
+const config = readJson(join(LAB, "config/lab.json"));
+const run = readJson(join(LAB, "state/run.json"), null);
+const report = [];
+const summary = [];
+
+if (!run) {
+  console.log("settle: no run.json; nothing to settle");
+  process.exit(0);
+}
+
+// 1. Spend. Recorded whatever happened: a failed run still cost money.
+const output = existsSync(outputPath) ? JSON.parse(readFileSync(outputPath, "utf8")) : null;
+if (output) {
+  const usd = Number(output.total_cost_usd ?? 0);
+  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
+  summary.push(`$${usd.toFixed(2)}`);
+  if (output.is_error) report.push(`- The shift ended in an error (${output.subtype ?? "unknown"}).`);
+}
+if (run.skip || !output) {
+  console.log(`settle: ${run.skip ? "skipped night" : "no shift output"}`);
+  process.exit(0);
+}
+
+// 2. Steers: delivered only once handled.
+const handled = new Set(readJsonl(join(LAB, "state/steers.jsonl")).map((line) => line.steer));
+const seen = readJson(join(LAB, "state/seen.json"), { inbox: {}, blyg: {} });
+const mark = ({ kind, key, value }) => {
+  if (kind === "inbox") seen.inbox[key] = value;
+  else {
+    const [origin, id] = key.split(" ");
+    (seen.blyg[origin] ??= {})[id] = value;
+  }
+};
+for (const m of run.marks ?? []) mark(m);
+for (const origin of new Set((run.marks ?? []).map((m) => m.key.split(" ")[0]))) seen.blyg[origin] ??= {};
+const missed = [];
+for (const steer of run.steers) {
+  if (handled.has(steer.id)) mark(steer.seen);
+  else missed.push(steer.id);
+}
+writeFileSync(join(LAB, "state/seen.json"), json(seen));
+if (missed.length) report.push(`- Steers not handled, offered again tomorrow: ${missed.join(", ")}`);
+
+// 3. Claims: append-only.
+const STAGES = new Set(["conjecture", "simulated", "replicated", "real-data", "challenged", "refuted"]);
+const claimsPath = join(LAB, "state/claims.jsonl");
+let committed = [];
+try {
+  committed = execFileSync("git", ["show", "HEAD:state/claims.jsonl"], { cwd: LAB, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })
+    .split("\n").filter((l) => l.trim());
+} catch {
+  committed = [];
+}
+const current = existsSync(claimsPath) ? readFileSync(claimsPath, "utf8").split("\n").filter((l) => l.trim()) : [];
+const kept = new Set(committed);
+const appended = current.filter((line) => !kept.has(line));
+const lost = committed.filter((line) => !current.includes(line));
+const valid = appended.filter((line) => {
+  try {
+    const claim = JSON.parse(line);
+    const ok = /^c-\d+$/.test(claim.id) && STAGES.has(claim.stage) && typeof claim.statement === "string";
+    if (!ok) report.push(`- A claim line was malformed and dropped: ${line.slice(0, 80)}`);
+    return ok;
+  } catch {
+    report.push(`- A claim line wasn't JSON and was dropped: ${line.slice(0, 80)}`);
+    return false;
+  }
+});
+if (lost.length) report.push(`- ${lost.length} committed claim line(s) were edited or removed; restored. Claims are append-only.`);
+if (lost.length || valid.length !== appended.length) {
+  writeFileSync(claimsPath, [...committed, ...valid].map((l) => `${l}\n`).join(""));
+}
+if (valid.length) summary.push(`${valid.length} claim(s)`);
+
+// 4. Publish the outbox.
+const outbox = join(LAB, "outbox");
+const rejected = join(outbox, "rejected");
+const names = existsSync(outbox) ? readdirSync(outbox).filter((f) => f.endsWith(".md")).sort() : [];
+const pattern = new RegExp(config.publish.name_pattern);
+const isPublished = (name) => existsSync(join(LAB, "published", `${name}.md`));
+let count = 0;
+const reject = (file, why) => {
+  mkdirSync(rejected, { recursive: true });
+  renameSync(join(outbox, file), join(rejected, file));
+  report.push(`- Not published: ${file.replace(/\.md$/, "")} ${why}.`);
+};
+for (const file of names) {
+  const name = file.replace(/\.md$/, "");
+  if (!pattern.test(name) && !isPublished(name)) { reject(file, "— not a lab note name"); continue; }
+  if (count >= config.publish.max_notes_per_night) { reject(file, `— over the ${config.publish.max_notes_per_night}-note nightly limit`); continue; }
+  const source = readFileSync(join(outbox, file), "utf8");
+  const { data, body } = frontMatter(source);
+  const update = isPublished(name);
+  let page;
+  try {
+    page = await renderNote({
+      markdown: body, name, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
+      model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+    });
+  } catch (error) {
+    reject(file, error.message);
+    continue;
+  }
+  writeFileSync(join(KINO, "notes", `${name}.html`), page);
+  mkdirSync(join(LAB, "published"), { recursive: true });
+  renameSync(join(outbox, file), join(LAB, "published", file));
+  count += 1;
+  summary.push(`${update ? "updated" : "published"} ${name}`);
+}
+
+// 5. The morning report gets what the shift couldn't see.
+if (report.length) {
+  const morning = join(LAB, "MORNING.md");
+  const prior = existsSync(morning) ? readFileSync(morning, "utf8").trimEnd() : `# ${run.date}`;
+  writeFileSync(morning, `${prior}\n\n## From settle\n\n${report.join("\n")}\n`);
+}
+writeFileSync(join(LAB, "state/last-settle.json"), json({ date: run.date, summary, report }));
+console.log(`settle: ${summary.join(", ") || "nothing published"}`);
