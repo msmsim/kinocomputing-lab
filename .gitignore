@@ -4,3 +4,4 @@ state/run.json
 state/claude-output.json
 __pycache__/
 .venv/
+experiments/*/data/

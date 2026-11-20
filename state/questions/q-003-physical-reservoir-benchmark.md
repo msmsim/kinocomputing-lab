@@ -4,6 +4,7 @@ title: Does a simulated physical reservoir beat a same-size digital baseline per
 kind: experiment
 status: open
 priority: 3
+watch: "physical reservoir computing"
 ---
 
 "Let physics compute" in miniature. Reservoir computing trains only a linear

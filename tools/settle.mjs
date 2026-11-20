@@ -5,8 +5,8 @@
 //   node tools/settle.mjs [--claude-output state/claude-output.json]
 //
 // Checks, each reported in MORNING.md rather than failing the night:
-// - every steer delivered got a line in state/steers.jsonl; one that didn't
-//   isn't marked seen, so it is offered again tomorrow;
+// - every take of the PI's delivered got a line in state/steers.jsonl; one
+//   that didn't isn't marked seen, so it is offered again tomorrow;
 // - state/claims.jsonl was only appended to (against git HEAD); an edited or
 //   deleted claim is restored;
 // - each outbox note has a lab name (or updates a note the lab published),
@@ -32,13 +32,31 @@ if (!run) {
   process.exit(0);
 }
 
-// 1. Spend. Recorded whatever happened: a failed run still cost money.
+// 1. Spend. Recorded whatever happened: a failed run still cost money. The
+// model's cost and tonight's Exa searches come out of the same bank.
 const output = existsSync(outputPath) ? JSON.parse(readFileSync(outputPath, "utf8")) : null;
+const exaUsd = Math.round(readJsonl(join(LAB, "state/search-spend.jsonl"))
+  .filter((l) => l.date === run.date).reduce((sum, l) => sum + l.usd, 0) * 10000) / 10000;
 if (output) {
   const usd = Number(output.total_cost_usd ?? 0);
-  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
+  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
   summary.push(`$${usd.toFixed(2)}`);
   if (output.is_error) report.push(`- The shift ended in an error (${output.subtype ?? "unknown"}).`);
+}
+if (exaUsd > 0) {
+  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: exaUsd, source: "exa" })}\n`);
+  summary.push(`$${exaUsd.toFixed(2)} Exa`);
+}
+// Reading shown in tonight's briefing isn't shown again.
+if (run.reading?.length) {
+  const shown = readJson(join(LAB, "state/reading.json"), []);
+  writeFileSync(join(LAB, "state/reading.json"), json([...new Set([...shown, ...run.reading])]));
+}
+// Replications run after the shift, so the shift couldn't report them.
+for (const r of readJson(join(LAB, "state/replications.json"), [])) {
+  if (r.error) report.push(`- Replication of ${r.experiment} failed to run: ${r.error.split("\n")[0]}`);
+  else if (r.skipped) report.push(`- Replication of ${r.experiment} skipped: ${r.skipped}.`);
+  else report.push(`- Replication of ${r.experiment} on seed ${r.seed}: ${r.agrees ? "agrees" : "disagrees"} (${r.metric} ${r.value}, was ${r.original}).`);
 }
 if (run.skip || !output) {
   console.log(`settle: ${run.skip ? "skipped night" : "no shift output"}`);
@@ -47,23 +65,17 @@ if (run.skip || !output) {
 
 // 2. Steers: delivered only once handled.
 const handled = new Set(readJsonl(join(LAB, "state/steers.jsonl")).map((line) => line.steer));
-const seen = readJson(join(LAB, "state/seen.json"), { inbox: {}, blyg: {} });
-const mark = ({ kind, key, value }) => {
-  if (kind === "inbox") seen.inbox[key] = value;
-  else {
-    const [origin, id] = key.split(" ");
-    (seen.blyg[origin] ??= {})[id] = value;
-  }
-};
+const seen = readJson(join(LAB, "state/seen.json"), {});
+if (run.baseline) seen.takes ??= {};
+const mark = ({ key, value }) => { (seen.takes ??= {})[key] = value; };
 for (const m of run.marks ?? []) mark(m);
-for (const origin of new Set((run.marks ?? []).map((m) => m.key.split(" ")[0]))) seen.blyg[origin] ??= {};
 const missed = [];
 for (const steer of run.steers) {
   if (handled.has(steer.id)) mark(steer.seen);
   else missed.push(steer.id);
 }
 writeFileSync(join(LAB, "state/seen.json"), json(seen));
-if (missed.length) report.push(`- Steers not handled, offered again tomorrow: ${missed.join(", ")}`);
+if (missed.length) report.push(`- Takes not handled, offered again tomorrow: ${missed.join(", ")}`);
 
 // 3. Claims: append-only.
 const STAGES = new Set(["conjecture", "simulated", "replicated", "real-data", "challenged", "refuted"]);
@@ -119,6 +131,7 @@ for (const file of names) {
   try {
     page = await renderNote({
       markdown: body, name, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
+      answers: !update && data.answers ? data.answers : null,
       model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {

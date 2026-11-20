@@ -41,11 +41,24 @@ function describe(html) {
  * Renders one note. `kino` is the kinocomputing checkout (its template and
  * converter are the contract). Throws an Error whose message is the refusal.
  */
-export async function renderNote({ markdown, name, pin = false, changeNote = null, model, at, kino, origin }) {
+export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, model, at, kino, origin }) {
   const refused = refusals(markdown);
   if (refused.length) throw new Error(`uses ${refused.join(" and ")}, which the blyg can't carry`);
-  const html = marked.parse(markdown.trim()).trim();
+  let html = marked.parse(markdown.trim()).trim();
   if (!html) throw new Error("is empty");
+  // An answer to one of the PI's takes is a stub of it (§10.6). kinocomputing
+  // reads a trailing source line as a stub target, the way it reads a Subset
+  // share; only a take on kinocomputing itself can be answered.
+  if (answers) {
+    let target;
+    try {
+      target = new URL(answers);
+    } catch {
+      throw new Error(`answers ${answers}, which isn't a URL`);
+    }
+    if (target.origin !== new URL(origin).origin) throw new Error(`answers ${answers}, which isn't a note on kinocomputing`);
+    html = `${html}\n<p class="source"><a href="${escapeAttr(target.href)}">${escapeAttr(target.href)}</a></p>`;
+  }
 
   const { htmlToMarkdown } = await import(pathToFileURL(join(kino, "tools", "blyg.mjs")).href);
   try {

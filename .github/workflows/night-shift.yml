@@ -7,7 +7,7 @@ name: Night shift
 # Credentials are kept apart on purpose. The agent's step holds only the
 # Anthropic key. Neither checkout persists credentials, and kinocomputing is
 # checked out only after the agent has finished, so nothing the agent reads —
-# web pages, papers, inbox material — can push anything anywhere.
+# web pages, papers, the PI's linked material — can push anything anywhere.
 #
 # Pause the lab by setting the repository variable LAB_PAUSED to "true".
 
@@ -45,6 +45,10 @@ jobs:
 
       - name: Prepare
         id: prep
+        env:
+          # Whether the lab has an Exa key: prepare gives Exa a slice of the
+          # night's budget only then. The key itself isn't in this step.
+          EXA_CONFIGURED: ${{ secrets.EXA_API_KEY != '' }}
         run: |
           node tools/prepare.mjs
           echo "skip=$(jq -r .skip state/run.json)" >> "$GITHUB_OUTPUT"
@@ -56,6 +60,9 @@ jobs:
         if: steps.prep.outputs.skip != 'true' && vars.LAB_PAUSED != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Optional. tools/search.mjs meters it against tonight's allowance;
+          # the key's own limit in Exa's dashboard is the backstop.
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
           MODEL: ${{ steps.prep.outputs.model }}
           MAX_USD: ${{ steps.prep.outputs.max_usd }}
         run: |
@@ -66,6 +73,14 @@ jobs:
             --permission-mode acceptEdits \
             --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
             > state/claude-output.json || echo "the shift exited non-zero; settling what it left"
+
+      # Experiments with a new result run again on another seed. The agent's
+      # own code, so no secrets in this step — replicate.mjs passes it only
+      # PATH and HOME — and it runs before kinocomputing is checked out.
+      - name: Replicate
+        if: steps.prep.outputs.skip != 'true' && vars.LAB_PAUSED != 'true'
+        timeout-minutes: 35
+        run: node tools/replicate.mjs
 
       - uses: actions/checkout@v4
         with:

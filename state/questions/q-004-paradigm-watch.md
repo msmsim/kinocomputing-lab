@@ -4,6 +4,7 @@ title: Paradigm watch — keep the alternatives' "latest" current
 kind: notebook
 status: open
 priority: 4
+watch: "thermodynamic computing" OR "analog computing" OR "neuromorphic computing" OR "reversible computing" OR "physical computing" OR "in-memory computing"
 ---
 
 https://www.kinocomputing.com/alternative-paradigms gives each of ~25 paradigms

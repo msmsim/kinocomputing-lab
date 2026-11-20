@@ -5,7 +5,9 @@
   "scripts": {
     "prepare-shift": "node tools/prepare.mjs",
     "settle": "node tools/settle.mjs",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "mutants": "node test/mutants.mjs",
+    "replicate": "node tools/replicate.mjs"
   },
   "dependencies": {
     "marked": "18.2.1"

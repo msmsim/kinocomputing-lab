@@ -19,7 +19,8 @@
     "origin": "https://www.kinocomputing.com/",
     "repo": "msmsim/kinocomputing"
   },
-  "steer_blygs": [
-    "https://www.msweet.net/notes/"
-  ]
+  "search": {
+    "exa_usd_per_night": 0.1,
+    "watch_per_question": 3
+  }
 }

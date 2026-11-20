@@ -35,7 +35,7 @@ export function frontMatter(text) {
     let value = kv[2].trim();
     if (value === "true" || value === "false") value = value === "true";
     else if (/^-?\d+$/.test(value)) value = Number(value);
-    else value = value.replace(/^(["'])(.*)\1$/, "$2");
+    else value = value.replace(/^(["'])((?:(?!\1).)*)\1$/, "$2"); // one quoted string, not `"a" OR "b"`
     data[kv[1]] = value;
   }
   return { data, body: m[2] };
