@@ -21,3 +21,14 @@ a runner's 2 CPUs and 7 GB.
 
 Pre-register before running: what agreement with the published finding would
 count as replicating it, and what would count against it.
+
+## Log
+
+- 2026-11-20 (shift 1): Pre-registered as `experiments/e001-chip-native-nowcast/PLAN.md`
+  (headline: fraction of the CRPS gap closed at 60 min, f ≥ 0.5; kill conditions
+  in `run.py`). Chip sampler, CRPS and kill decision are written and pass
+  `run.py --selftest`. Nothing has run: the pysteps example-data host and
+  kinocomputing.com were denied by the sandbox, so neither the data nor the
+  published write-up could be read. The forecast path is not written. Open
+  for the PI: the reading of "most of the gap" and the naive baseline, both
+  to be checked against the write-up.

@@ -57,6 +57,6 @@ if [ "${KINO_BUILD:-}" = "1" ]; then
   (cd "$KINO_DIR" && node tools/build-stream.mjs --state && node tools/build-stream.mjs) | tail -3
 fi
 
-git add -A -- . ':!state/settle.log'
+git add -A
 git diff --cached --quiet || git commit -qm "local shift $(jq -r .date state/run.json): $(tail -1 state/settle.log | sed 's/^settle: //')"
 echo "local shift done: $(tail -1 state/settle.log)"

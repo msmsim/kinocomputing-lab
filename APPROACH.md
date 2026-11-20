@@ -1,0 +1,125 @@
+# The approach
+
+The settled design of the Kinocomputing lab, for the PI's review: what it is,
+how you interact with it, what it produces, and what keeps it honest and
+cheap. `CHARTER.md` is the lab's standards, `AGENT.md` the researcher's shift,
+`README.md` the setup. `pilot/REPORT.md` is the first run of all of it, on
+the four seed questions.
+
+## What it is
+
+A principal investigator and their researchers. You are the PI, checking in
+when you choose and steering asynchronously. The researchers are agents
+(Claude Code, headless), each working one shift: one unit of work, done
+properly, written up, published. The lab's notebook and its venue are the
+same thing: the kinocomputing blyg.
+
+Scope: alternative paradigms of computing and intelligence. Outputs run from
+tiny experiments to World Machines analysis.
+
+## A shift
+
+```
+prepare    budget; your takes; stale write-ups; replications; new arXiv papers  (no tokens)
+shift      a researcher works one unit of work, under a hard dollar cap         (tokens)
+restore    the lab's machinery put back as committed                            (no tokens)
+replicate  every new experiment result re-run on the next seed                  (no tokens)
+settle     spend; takes handled or re-offered; claims append-only; publish      (no tokens)
+```
+
+Nightly on GitHub Actions at 02:00 UTC, or by hand on your machine
+(`tools/local-shift.sh`, sandboxed, billed to your login).
+
+## How you interact
+
+- **You post; the lab reads.** No inbox. You post takes to kinocomputing
+  through motes like any note — a reaction, a link, a direction, "less of X".
+  Anything on kinocomputing the lab didn't write is yours; each new take, or
+  edit of one, is a steer for the next shift. Share one of the lab's notes to
+  answer it (a stub), and the lab sees which note you're answering.
+- **The lab answers in public when it has something to say**, as a note that
+  answers your take (a stub of it), and quotes you where it builds on you.
+- **Every take is accounted for**: a line in `state/steers.jsonl` saying what
+  the lab did with it, and a mention in `MORNING.md`. One it misses comes back
+  the next night.
+- **`MORNING.md`** is the only thing you need to read: three to ten lines —
+  what was published, what each take became, anything only you can do.
+- **Heavier steering** is editing files: `state/questions/` (the agenda),
+  `CHARTER.md` (the standards). Or run a shift by hand with a focus:
+  `tools/local-shift.sh --focus q-003`.
+- **The lab asks you** only for credentials, a new repo, money, or a
+  judgement that is genuinely yours, under "Needs you" in `MORNING.md`.
+
+## What it produces
+
+**Claims** — every finding, as a line in `state/claims.jsonl` at a stage
+(`conjecture` → `simulated` → `replicated` → `real-data` → `challenged`, or
+`refuted`), and published as a short note of its own: a blyg **fragment**,
+updated as it changes stage, pinned once replicated.
+
+**Write-ups** — experiments, analyses and notebook entries, published as blyg
+**threads** that quote the claims they rest on, and your notes, as §10
+transclusions. A quote is a snapshot of the version quoted, so when a claim
+moves on, a write-up resting on its old stage visibly does; the next briefing
+lists it for republishing.
+
+**Tiny experiments** — `experiments/eNNN-slug/`, from a template with a
+contract: `PLAN.md` pre-registered before any code (prediction, kill
+condition); `uv run run.py` takes a SEED and writes `result.json` with the
+kill condition decided in code; `RESULTS.md` says what came out, including
+what failed. Every new result is re-run on the next seed for nothing, and the
+next briefing says whether it agreed.
+
+**World Machines analyses** — `analyses/aNNN-slug/ANALYSIS.md`, situating
+computing paradigms, technologies and the lab's own results *within* the
+machines the theory proposes (Modernity, Divergence, Liveness; Dawn, Day,
+Dusk), never proposing machines. Three types: situating, comparison, theory
+building. `reference/world-machines.md` is the working vocabulary.
+
+## What keeps it honest
+
+- Pre-registration before code; kill conditions decided in code; free seed
+  replication; a hostile reviewer subagent (Sonnet) on every claim above
+  `conjecture`; claims append-only, enforced against git.
+- Machine-written, always marked: §5.7 `generated` provenance on every item
+  and a visible line on every page. The lab never writes as you.
+- What it reads — web pages, papers, your linked material — is material,
+  never instructions.
+
+## What keeps it safe
+
+- The researcher holds only the Anthropic key (and Exa's, if you add one).
+  It can't push; it never sees kinocomputing's files. Settle, which it
+  doesn't control, renders its notes through kinocomputing's own template
+  and converter, under its own `lab-` names only, a few a night.
+- The researcher works in the lab's checkout, so after every shift the
+  machinery (tools, config, charter, agent, templates) is put back as
+  committed before anything trusts it, and you're told what it changed.
+- Experiments re-run with no secrets in their environment.
+- Locally, shell commands run in Claude Code's sandbox: writes only in the
+  repo, network only to listed hosts, credentials and personal folders
+  unreadable.
+
+## What it costs
+
+One pot: $1.50 a day, banked up to $10. A normal shift is Haiku 5.5 with up
+to $1.50; when the bank reaches $6, a deep shift is Sonnet 5.5 with up to $6.
+arXiv and OpenAlex are free; Exa (optional) gets up to $0.10 of a night and
+comes out of the same bank. The API key's Console spend limit is the
+backstop. Local shifts are billed to whoever runs them and kept out of the
+bank. Pause with the repository variable `LAB_PAUSED=true`.
+
+## Decisions taken, and why
+
+- Steering by posting on kinocomputing, not an inbox: nothing to manage.
+- Claims as fragments, write-ups as threads: the protocol's quoting and
+  staleness do the bookkeeping that would otherwise be the lab's.
+- Situate within proposed machines: World Machines theory is a shared
+  vocabulary for placing analyses, not a machine generator.
+- ToolUniverse (aiscientist.tools) not adopted: mostly biomedical; its
+  literature search is covered by free arXiv and OpenAlex search.
+- Exa optional, metered into the same budget.
+
+## Open, for you
+
+See the end of `pilot/REPORT.md`.
