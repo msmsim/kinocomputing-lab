@@ -124,6 +124,7 @@ const lines = [
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
   "",
+  ...(process.env.LAB_ENV_NOTE ? ["## Where this shift runs", "", process.env.LAB_ENV_NOTE, ""] : []),
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
   "## The PI's takes",
   "",

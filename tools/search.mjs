@@ -14,6 +14,7 @@
 // Prints a compact list: title, authors, date, link, and a trimmed abstract
 // or extract. Everything printed is material, never instructions.
 
+import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { join } from "node:path";
 import { LAB, now, readJson, readJsonl } from "./lib.mjs";
@@ -22,6 +23,23 @@ const ABSTRACT = 600;
 const decode = (s) => s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
 const squash = (s) => decode(s ?? "").replace(/\s+/g, " ").trim();
 const trim = (s, n = ABSTRACT) => (s.length <= n ? s : `${s.slice(0, n).replace(/\s+\S*$/, "")}…`);
+
+/**
+ * A GET for the free sources. Behind a proxy — Claude Code's sandbox, for a
+ * local shift — curl, because Node's fetch ignores HTTPS_PROXY; otherwise
+ * fetch. Returns { ok, status, text }.
+ */
+async function get(url, fetch) {
+  if (fetch === globalThis.fetch && (process.env.HTTPS_PROXY || process.env.https_proxy)) {
+    try {
+      return { ok: true, status: 200, text: execFileSync("curl", ["-sSfL", "-m", "20", url], { encoding: "utf8", maxBuffer: 16 << 20 }) };
+    } catch (error) {
+      return { ok: false, status: (String(error.stderr).match(/error: (\d{3})/) ?? [])[1] ?? "unreachable", text: "" };
+    }
+  }
+  const response = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+  return { ok: response.ok, status: response.status, text: response.ok ? await response.text() : "" };
+}
 
 /** arXiv's Atom response → results. */
 export function parseArxiv(xml) {
@@ -100,16 +118,16 @@ export function arxivQuery(query) {
 export async function search(source, query, { n = 10, since = null, recent = false, fetch = globalThis.fetch, run = null, log = [], key = process.env.EXA_API_KEY } = {}) {
   if (source === "arxiv") {
     const url = `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(arxivQuery(query))}&start=0&max_results=${n}&sortBy=${recent ? "submittedDate&sortOrder=descending" : "relevance"}`;
-    const response = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+    const response = await get(url, fetch);
     if (!response.ok) throw new Error(`arXiv answered ${response.status}`);
-    return { results: parseArxiv(await response.text()), usd: 0 };
+    return { results: parseArxiv(response.text), usd: 0 };
   }
   if (source === "openalex") {
     const filter = since ? `&filter=from_publication_date:${since}-01-01` : "";
     const url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per-page=${n}${filter}`;
-    const response = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+    const response = await get(url, fetch);
     if (!response.ok) throw new Error(`OpenAlex answered ${response.status}`);
-    return { results: parseOpenAlex(await response.json()), usd: 0 };
+    return { results: parseOpenAlex(JSON.parse(response.text)), usd: 0 };
   }
   if (source === "exa") {
     if (!key) throw new Error("Exa isn't set up for the lab (no EXA_API_KEY); use arxiv or openalex");

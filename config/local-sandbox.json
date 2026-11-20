@@ -16,7 +16,11 @@
         "raw.githubusercontent.com",
         "objects.githubusercontent.com",
         "zenodo.org",
-        "huggingface.co"
+        "huggingface.co",
+        "www.kinocomputing.com",
+        "kinocomputing.com",
+        "worldmachines.org",
+        "blyg.worldmachines.org"
       ]
     },
     "filesystem": {

@@ -31,6 +31,9 @@ while [ $# -gt 0 ]; do
 done
 
 export LAB_LOCAL=1 KINO_DIR
+# What the agent should know about this machine, for the briefing.
+HOSTS="$(jq -r '.sandbox.network.allowedDomains | join(", ")' config/local-sandbox.json)"
+export LAB_ENV_NOTE="${LAB_ENV_NOTE:-On the operator's machine ($(uname -sm)), not a GitHub runner, in Claude Code's sandbox: shell commands can write only inside this repository and reach only these hosts: ${HOSTS}. A blocked host is the sandbox's choice; say so in the journal and work around it only with what's allowed.} ${LAB_ENV_EXTRA:-}"
 export LAB_SURFACE_DIR="${LAB_SURFACE_DIR:-$KINO_DIR/dist}"
 LAB_FOCUS="$FOCUS" LAB_RUN_KIND="$KIND" node tools/prepare.mjs
 
