@@ -8,7 +8,7 @@ On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's
 
 ## Focus
 
-The operator running this shift set its focus: **q-003**. Make it tonight's unit of work, after the PI's takes.
+The operator running this shift set its focus: **q-004**. Make it tonight's unit of work, after the PI's takes.
 
 ## The PI's takes
 
@@ -20,21 +20,21 @@ None.
 
 ## Replications since the last shift
 
-None.
+- e002-physical-reservoir-narma10: seed 2, median_test_nmse_physical 0.9392 (was 0.962335), agrees
 
 ## New reading
 
 For q-003:
 
-- Data re-uploading in Quantum Reservoir Computing (2026-11-13) https://arxiv.org/abs/2611.17913v1
-- Thermally-driven quantum reservoir computing (2026-11-04) https://arxiv.org/abs/2611.07187v1
-- Local information processing capacity: anatomy of computation in neuromorphic systems (2026-11-04) https://arxiv.org/abs/2611.05959v1
+- Class-aware Latent Attention Replay (CLAR): Class Incremental Hazard Diagnosis for Resilient AI in the Manufacturing Industrial Internet (2026-10-29) https://arxiv.org/abs/2610.39323v1
+- Extrapolating learned dynamics across bifurcations based on generalized synchronization (2026-10-25) https://arxiv.org/abs/2610.34471v1
+- Quantum neuroplastic learning for time-series processing (2026-10-25) https://arxiv.org/abs/2610.34055v1
 
 For q-004:
 
-- ReCIM-HD: A 40 nm On-Device Learning Accelerator with Hyperdimensional Computing via Importance-Based Hybrid Digital-ReRAM CIM (2026-11-18) https://arxiv.org/abs/2611.23973v1
-- Optical Neural Networks Should Be Evaluated by Function, Not Only Physics (2026-11-17) https://arxiv.org/abs/2611.23610v1
-- Towards Cryogenic AI Hardware: Over 99% Precision In-Memory Computing at 4 K with 3-bit Ferroelectric Hf0.5Zr0.5O2 Capacitors (2026-11-17) https://arxiv.org/abs/2611.23489v1
+- Compute Before You Digitize: ADC-less Mixed-Signal Processing for Scalable Cryogenic Qubit Readout (2026-11-17) https://arxiv.org/abs/2611.23448v1
+- Semantic Communication via Analog RF Computing: When the Radio Computes the Meaning (2026-11-17) https://arxiv.org/abs/2611.22100v1
+- Projection-Based Partitioned MiLAC Architecture for MU-MIMO Precoding (2026-11-16) https://arxiv.org/abs/2611.21561v1
 
 ## Open questions
 
@@ -46,4 +46,5 @@ For q-004:
 
 ## Published notes the lab can update
 
-None yet.
+- lab-2026-11-20-oscillator-reservoir-claim
+- lab-2026-11-20-physical-reservoir-narma10

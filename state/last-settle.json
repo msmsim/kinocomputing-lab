@@ -1,12 +1,8 @@
 {
   "date": "2026-11-20",
   "summary": [
-    "$0.15",
-    "1 claim(s)",
-    "published lab-2026-11-20-oscillator-reservoir-claim",
-    "published lab-2026-11-20-physical-reservoir-narma10"
+    "$0.02",
+    "published lab-2026-11-20-analog-cim-diffusion-noise"
   ],
-  "report": [
-    "- Replication of e002-physical-reservoir-narma10 on seed 2: agrees (median_test_nmse_physical 0.9392, was 0.962335)."
-  ]
+  "report": []
 }
