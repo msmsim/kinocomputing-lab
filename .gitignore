@@ -7,3 +7,4 @@ __pycache__/
 experiments/*/data/
 .uv-cache/
 state/settle.log
+**/.cc-writes/

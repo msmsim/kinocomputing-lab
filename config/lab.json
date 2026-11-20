@@ -24,5 +24,9 @@
   "search": {
     "exa_usd_per_night": 0.1,
     "watch_per_question": 3
+  },
+  "lab": {
+    "repo": "msmsim/kinocomputing-lab",
+    "evidence_base": "https://github.com/msmsim/kinocomputing-lab/blob/main/"
   }
 }

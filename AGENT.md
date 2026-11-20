@@ -171,6 +171,12 @@ The body.
 
 A note's kind is fixed: a claim stays a claim and a write-up a write-up.
 
+Link evidence, don't just name it: a file in this repository is
+`https://github.com/msmsim/kinocomputing-lab/blob/main/<path>` (the lab
+repository is public, so readers can follow it). Link sources too — find a
+paper's DOI or arXiv page with `tools/search.mjs` rather than leaving it
+unlinked.
+
 **A quote**, in a write-up only: a line holding just `![[name]]` quotes that
 note whole; `>` lines straight after it, with no blank line between, quote
 that part of it instead, word for word. `name` is a claim's lab name
