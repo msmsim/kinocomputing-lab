@@ -22,6 +22,16 @@ const offline = process.env.LAB_OFFLINE === "1";
 const budgetState = readJson(join(LAB, "state/budget.json"), null) ?? { start: today };
 writeFileSync(join(LAB, "state/budget.json"), json(budgetState));
 const money = allowance(config.budget, readJsonl(join(LAB, "state/spend.jsonl")), today, budgetState.start);
+// An operator running a shift by hand (tools/local-shift.sh) may ask for a
+// deep run; the cap is still the deep run's.
+if (process.env.LAB_RUN_KIND === "deep" || process.env.LAB_RUN_KIND === "light") {
+  money.kind = process.env.LAB_RUN_KIND;
+  money.maxUsd = money.kind === "deep" ? config.budget.deep_run_max_usd : config.budget.light_run_max_usd;
+  money.skip = false;
+}
+// And may set the shift's focus: a question to work on. Shown in the briefing
+// as the operator's, so the journal can say why the shift chose it.
+const focus = process.env.LAB_FOCUS ?? null;
 
 // The night's money is one pot. Exa, when the lab has a key, gets a slice of
 // it; the model gets the rest.
@@ -70,7 +80,7 @@ const open = questions.filter((q) => q.status === "open" || q.status === "active
 // that the lab hasn't been shown before. Free; a few per question.
 const reading = [];
 const shown = new Set(readJson(join(LAB, "state/reading.json"), []));
-if (!offline && !surface) {
+if (!offline && process.env.LAB_NO_READING !== "1") {
   for (const q of open.filter((x) => x.watch)) {
     try {
       const { results } = await search("arxiv", q.watch, { n: 10, recent: true });
@@ -98,6 +108,7 @@ const run = {
   max_usd: modelUsd,
   exa_usd: exaUsd,
   bank_usd: money.bank,
+  focus,
   steers: steers.map(({ id, seen: mark }) => ({ id, seen: mark })),
   marks,
   baseline: seen.takes === undefined && !offline,
@@ -113,6 +124,7 @@ const lines = [
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
   "",
+  ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
   "## The PI's takes",
   "",
   ...(steers.length ? steers.flatMap((s) => [

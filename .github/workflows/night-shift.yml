@@ -74,6 +74,11 @@ jobs:
             --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
             > state/claude-output.json || echo "the shift exited non-zero; settling what it left"
 
+      # The agent worked in this checkout. Before anything trusts the lab's
+      # tools again, put them back as committed; settle reports what changed.
+      - name: Restore the machinery
+        run: bash tools/restore-machinery.sh
+
       # Experiments with a new result run again on another seed. The agent's
       # own code, so no secrets in this step — replicate.mjs passes it only
       # PATH and HOME — and it runs before kinocomputing is checked out.

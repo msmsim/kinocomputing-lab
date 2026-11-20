@@ -5,3 +5,5 @@ state/claude-output.json
 __pycache__/
 .venv/
 experiments/*/data/
+.uv-cache/
+state/settle.log

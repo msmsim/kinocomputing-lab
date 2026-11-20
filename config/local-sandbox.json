@@ -1,0 +1,56 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "pypi.org",
+        "files.pythonhosted.org",
+        "export.arxiv.org",
+        "arxiv.org",
+        "api.openalex.org",
+        "github.com",
+        "codeload.github.com",
+        "raw.githubusercontent.com",
+        "objects.githubusercontent.com",
+        "zenodo.org",
+        "huggingface.co"
+      ]
+    },
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.gnupg",
+        "~/.config",
+        "~/.claude",
+        "~/.npmrc",
+        "~/.netrc",
+        "~/Library",
+        "~/Documents",
+        "~/Desktop",
+        "~/Downloads"
+      ]
+    }
+  },
+  "permissions": {
+    "blockWritesOutsideWorkingDirectories": true,
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.config/**)",
+      "Read(~/.claude/**)",
+      "Read(~/.npmrc/**)",
+      "Read(~/.netrc/**)",
+      "Read(~/Library/**)",
+      "Read(~/Documents/**)",
+      "Read(~/Desktop/**)",
+      "Read(~/Downloads/**)",
+      "Read(~/.npmrc)",
+      "Read(~/.netrc)"
+    ]
+  }
+}

@@ -39,7 +39,7 @@ const exaUsd = Math.round(readJsonl(join(LAB, "state/search-spend.jsonl"))
   .filter((l) => l.date === run.date).reduce((sum, l) => sum + l.usd, 0) * 10000) / 10000;
 if (output) {
   const usd = Number(output.total_cost_usd ?? 0);
-  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
+  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
   summary.push(`$${usd.toFixed(2)}`);
   if (output.is_error) report.push(`- The shift ended in an error (${output.subtype ?? "unknown"}).`);
 }
@@ -62,6 +62,12 @@ if (run.skip || !output) {
   console.log(`settle: ${run.skip ? "skipped night" : "no shift output"}`);
   process.exit(0);
 }
+
+// The machinery the shift changed, which tools/restore-machinery.sh put back
+// before this ran.
+const machinery = existsSync(join(LAB, "state/machinery-changes.txt"))
+  ? readFileSync(join(LAB, "state/machinery-changes.txt"), "utf8").split("\n").filter(Boolean) : [];
+if (machinery.length) report.push(`- The shift changed the lab's machinery, which was put back: ${machinery.join(", ")}. If a change was worth making, it's the PI's to make.`);
 
 // 2. Steers: delivered only once handled.
 const handled = new Set(readJsonl(join(LAB, "state/steers.jsonl")).map((line) => line.steer));

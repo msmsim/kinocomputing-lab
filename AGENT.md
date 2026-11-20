@@ -61,6 +61,8 @@ says.
 
 3. **Choose one unit of work.** In order of preference:
    - what a take asked for, if it asked for something specific;
+   - the shift's focus, if the briefing has one (an operator ran this shift
+     by hand and chose the question);
    - a replication that disagreed (in the briefing): find out why first;
    - finishing something already in flight (an experiment mid-run, an
      analysis in drafting, a note promised in the last journal entry);
@@ -115,11 +117,13 @@ says.
    quoting its old version, and the next shift decides whether to republish
    them. At most two write-ups and four claims a night.
 
-8. **Write the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC):
-   what you did and why, what you found, what you spent it on, and what the
-   next shift should do. Then write `MORNING.md` for the PI, replacing the old
-   one: three to ten lines — what was published, what each take became, and
-   anything only the PI can do. Nothing else.
+8. **Write the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC,
+   from the briefing): what you did and why, what you found, what you spent
+   it on, and what the next shift should do. If the file already exists, an
+   earlier shift ran today: add a `## Shift N` section, don't rewrite it.
+   Then write `MORNING.md` for the PI, replacing the old one: three to ten
+   lines — what was published, what each take became, and anything only the
+   PI can do. Nothing else.
 
 ## Formats
 

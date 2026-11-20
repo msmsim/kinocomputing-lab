@@ -52,7 +52,9 @@ export function frontMatter(text) {
  */
 export function allowance(budget, spends, today, start) {
   const spentOn = new Map();
-  for (const s of spends) spentOn.set(s.date, (spentOn.get(s.date) ?? 0) + s.usd);
+  // A shift run locally (tools/local-shift.sh) is billed to whoever ran it,
+  // not to the lab's key: logged, but not the bank's.
+  for (const s of spends) if (s.account !== "local") spentOn.set(s.date, (spentOn.get(s.date) ?? 0) + s.usd);
   let bank = 0;
   for (let d = new Date(`${start}T00:00:00Z`); dayOf(d.toISOString()) <= today; d.setUTCDate(d.getUTCDate() + 1)) {
     const day = dayOf(d.toISOString());

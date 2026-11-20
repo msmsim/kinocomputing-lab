@@ -31,6 +31,8 @@ test("budget: the allowance banks unspent days, caps, and buys a deep run when i
   assert.equal(overspent.bank, 0, "an overrun is paid back from later days");
   const both = allowance(BUDGET, [{ date: "2026-11-21", usd: 1, source: "model" }, { date: "2026-11-21", usd: 0.4, source: "exa" }], "2026-11-21", "2026-11-21");
   assert.equal(both.bank, 0.1, "model and Exa spend come out of one bank");
+  const local = allowance(BUDGET, [{ date: "2026-11-21", usd: 1, account: "local" }], "2026-11-21", "2026-11-21");
+  assert.equal(local.bank, 1.5, "a shift run locally isn't billed to the lab's bank");
 });
 
 test("front matter: strings, booleans, integers, and a value that only starts and ends with quotes", () => {
@@ -185,7 +187,7 @@ function makeWorld() {
   const node = (cwd, args, at, extra = {}) => {
     const r = spawnSync(process.execPath, args, {
       cwd, encoding: "utf8",
-      env: { ...process.env, KINO_DIR: kino, LAB_NOW: at, BLYG_NOW: at, LAB_SURFACE_DIR: join(kino, "dist"), REPLICATE_CMD: "python3 run.py", ...extra },
+      env: { ...process.env, KINO_DIR: kino, LAB_NOW: at, BLYG_NOW: at, LAB_SURFACE_DIR: join(kino, "dist"), LAB_NO_READING: "1", REPLICATE_CMD: "python3 run.py", ...extra },
     });
     if (r.status !== 0) throw new Error(`${args.join(" ")} failed:\n${r.stdout}${r.stderr}`);
     return r.stdout;
@@ -304,6 +306,15 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     write("outbox/001-old-note.md", "---\nkind: notebook\n---\n\nAn attempt on the PI's own note.\n");
     write("MORNING.md", "# 2026-11-21\n\nPublished a first look.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.42, num_turns: 9, is_error: false }));
+    // The shift tampers with the rules that judge it; the restore puts them back.
+    const settleSource = read("tools/settle.mjs");
+    write("tools/settle.mjs", "console.log('settle: all fine');\n");
+    write("CHARTER.md", "# Anything goes\n");
+    write("tools/helper.mjs", "// new\n");
+    const restored = execFileSync("bash", ["tools/restore-machinery.sh"], { cwd: w.lab, encoding: "utf8" });
+    assert.match(restored, /put back 3 machinery file/);
+    assert.equal(read("tools/settle.mjs"), settleSource);
+    assert.ok(!existsSync(join(w.lab, "tools/helper.mjs")), "added files go too");
     assert.match(w.node(w.lab, ["tools/replicate.mjs"], "2026-11-21T03:20:00Z"), /e001-draw agrees/);
     const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:30:00Z");
     assert.match(settled, /\$0\.42, \$0\.01 Exa, 1 claim\(s\), published lab-2026-11-21-first-look/);
@@ -315,6 +326,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(morning, /Not published: lab-2026-11-21-bad uses a table/);
     assert.match(morning, /Not published: 001-old-note — not a lab note name/);
     assert.match(morning, /Replication of e001-draw on seed 2: agrees/);
+    assert.match(morning, /changed the lab's machinery, which was put back: CHARTER\.md, tools\/helper\.mjs, tools\/settle\.mjs/);
     assert.deepEqual(JSON.parse(read("state/seen.json")).takes !== undefined, true, "the baseline is recorded");
     const spends = read("state/spend.jsonl").trim().split("\n").map((l) => JSON.parse(l));
     assert.deepEqual(spends.map((s) => [s.source, s.usd]), [["model", 0.42], ["exa", 0.014]]);
