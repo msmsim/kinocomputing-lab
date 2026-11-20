@@ -125,6 +125,9 @@ change_note: what changed in the evidence (updates only; omit for a new note)
 The body.
 ```
 
+Keep titles under 60 characters: the note's address on kinocomputing is made
+from its title and cut at 60.
+
 Markdown only, and only what the blyg can carry: paragraphs, headings,
 bulleted and numbered lists, links, emphasis, inline code, code blocks,
 block quotes, rules, and images by absolute URL. No tables, no raw HTML —
