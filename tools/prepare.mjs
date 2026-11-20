@@ -11,7 +11,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
-import { takeSteers, fetchJson } from "./steers.mjs";
+import { takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
 
 const config = readJson(join(LAB, "config/lab.json"));
@@ -43,6 +43,16 @@ if (!offline) {
     ({ steers, marks } = await takeSteers(config.kinocomputing.origin, seen.takes, getJson));
   } catch (error) {
     console.warn(`steers: kinocomputing unreadable tonight: ${error.message}`);
+  }
+}
+
+// Write-ups quoting a claim that has since moved.
+let stale = [];
+if (!offline) {
+  try {
+    stale = await staleThreads(config.kinocomputing.origin, getJson);
+  } catch (error) {
+    console.warn(`stale threads: ${error.message}`);
   }
 }
 
@@ -114,6 +124,10 @@ const lines = [
     "",
     ...(s.links.length ? ["Links:", ...s.links.map((l) => `- ${l}`), ""] : []),
   ]) : ["None since last night.", ""]),
+  "## Write-ups quoting an older version",
+  "",
+  ...(stale.length ? stale.map((s) => `- ${s.page}: ${s.quotes.join("; ")}`) : ["None."]),
+  "",
   "## Replications since the last shift",
   "",
   ...(replications.length ? replications.map((r) => `- ${r.experiment}: ${r.error ? `failed to run — ${r.error.split("\n")[0]}` : r.skipped ?? `seed ${r.seed}, ${r.metric} ${r.value} (was ${r.original}), ${r.agrees ? "agrees" : "**disagrees**"}`}`) : ["None."]),

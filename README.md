@@ -29,6 +29,17 @@ through kinocomputing's own template and converter and refuses anything that
 wouldn't publish cleanly. Everything it publishes is marked machine-written —
 §5.7 `generated` provenance in the blyg item, and a line on the page.
 
+## On kinocomputing
+
+Claims and write-ups are published apart, using the blyg's two kinds. Each
+claim is a short **fragment** of its own, versioned as it moves stage and
+pinned when it is replicated. Experiment, analysis and notebook write-ups are
+**threads** that quote the claims they rest on — and your notes, where they
+answer or build on them — as §10 transclusions: snapshots at the version
+quoted. When a claim moves on, the write-ups quoting its old version are
+stale, and the next briefing lists them. Every note is marked
+machine-written. At most two write-ups and four claims a night.
+
 ## Steering, for the PI
 
 Process-light by design: a PI and researchers, the PI checking in when they
@@ -74,8 +85,9 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
    Action runs on the lab's pushes and registers its notes.)
 4. **Actions:** in this repo's Settings → Actions → General, allow read and
    write workflow permissions, so the shift can commit its state.
-5. **kinocomputing** must have the `blygger-hackathon-lab` branch merged (it
-   adds the `generated` provenance the lab's notes rely on).
+5. **kinocomputing** must have the `blygger-hackathon-threads` branch merged
+   (it brings `-qol` and `-lab` with it): `generated` provenance, and the
+   fragments, threads and quotes the lab's claims and write-ups rely on.
 6. **Exa (optional):** an Exa account (the free tier's $10 a month is
    plenty), an API key with its own budget limit set in Exa's dashboard,
    added to this repo as the secret `EXA_API_KEY`. Without it the lab

@@ -9,8 +9,9 @@ workflow publishes after you finish.
 ## What you have
 
 - `state/tonight.md` — tonight's briefing, written for you before you start:
-  the budget, the PI's takes since last night, last night's replications,
-  new reading for watched questions, and the open questions. Start here.
+  the budget, the PI's takes since last night, write-ups quoting a claim
+  that has since moved, last night's replications, new reading for watched
+  questions, and the open questions. Start here.
 - `state/questions/` — one file per question (format below). The lab's agenda.
 - `state/claims.jsonl` — every claim the lab has made, append-only.
 - `journal/` — one file per night. Read the last three for continuity.
@@ -100,7 +101,19 @@ says.
 7. **Publish.** Write each note to `outbox/<name>.md` (format below). To update
    a note the lab already published, use its existing name from `published/`
    and give a change note. To answer one of the PI's takes in public, give
-   its URL as `answers`. At most two notes a night.
+   its URL as `answers`.
+
+   Claims and write-ups are separate notes. A finding worth publishing is a
+   **claim** note (`kind: claim`): one claim, its stage in words, a link to
+   its evidence, under 1,000 characters. It publishes as a fragment, so
+   other notes can quote it. When the claim changes stage, update that same
+   note with a change note; pin it when it reaches `replicated`. An
+   experiment, analysis or notebook note is a **write-up**: it publishes as a
+   thread and quotes the claims it rests on, and the PI's notes where it
+   answers or builds on them (format below). Quote, don't restate: a quote
+   is a snapshot, so when a claim moves on, the briefing lists the write-ups
+   quoting its old version, and the next shift decides whether to republish
+   them. At most two write-ups and four claims a night.
 
 8. **Write the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC):
    what you did and why, what you found, what you spent it on, and what the
@@ -140,7 +153,7 @@ Stages: `conjecture`, `simulated`, `replicated`, `real-data`, `challenged`,
 
 ```markdown
 ---
-kind: experiment | analysis | notebook
+kind: claim | experiment | analysis | notebook
 question: q-NNN
 pin: false
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
@@ -150,6 +163,27 @@ change_note: what changed in the evidence (updates only; omit for a new note)
 **The title, as a bold line on its own**
 
 The body.
+```
+
+A note's kind is fixed: a claim stays a claim and a write-up a write-up.
+
+**A quote**, in a write-up only: a line holding just `![[name]]` quotes that
+note whole; `>` lines straight after it, with no blank line between, quote
+that part of it instead, word for word. `name` is a claim's lab name
+(`lab-2026-11-21-…`) or a note's address on kinocomputing (the last part
+of its URL, e.g. a take's). Only claims and the PI's notes can be quoted —
+not write-ups. A quote that doesn't resolve, or a selection that isn't in
+the note word for word, refuses the whole note, so copy selections exactly.
+
+```markdown
+The PI asked about this:
+
+![[on-reservoirs]]
+> nobody measures them per joule
+
+So the lab did:
+
+![[lab-2026-11-21-reservoir-claim]]
 ```
 
 Keep titles under 60 characters: the note's address on kinocomputing is made

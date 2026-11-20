@@ -20,6 +20,14 @@ const MUTANTS = [
   ["claims editable", "tools/settle.mjs", "if (lost.length || valid.length", "if (valid.length"],
   ["writes over the PI's notes", "tools/settle.mjs", "if (!pattern.test(name) && !isPublished(name))", "if (false)"],
   ["answers anywhere", "tools/render.mjs", "if (target.origin !== new URL(origin).origin)", "if (false)"],
+  ["threads before the claims they quote", "tools/settle.mjs", 'parsed.sort((a, b) => (b.data.kind === "claim") - (a.data.kind === "claim") || a.file.localeCompare(b.file));', ""],
+  ["a note's kind can change", "tools/settle.mjs", "if (update && (frontMatter(", "if (false && (frontMatter("],
+  ["claims quote", "tools/render.mjs", "if (claim && extracted.quotes.length) throw", "if (false) throw"],
+  ["claims any length", "tools/render.mjs", "if (claim && markdown.trim().length > maxClaim) throw", "if (false) throw"],
+  ["write-ups quotable", "tools/settle.mjs", "  if (thread) throw new Error(", "  if (false) throw new Error("],
+  ["selections unchecked", "tools/render.mjs", "if (q.lines.length && !textContent(target.html).includes(", "if (false && !textContent(target.html).includes("],
+  ["directives in code are quotes", "tools/render.mjs", "const d = !fence && line.match(DIRECTIVE);", "const d = line.match(DIRECTIVE);"],
+  ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
 ];
 
 let survived = 0;

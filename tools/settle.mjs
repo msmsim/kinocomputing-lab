@@ -109,6 +109,23 @@ if (lost.length || valid.length !== appended.length) {
 if (valid.length) summary.push(`${valid.length} claim(s)`);
 
 // 4. Publish the outbox.
+
+// What a quote may name (kinocomputing P22): a note on kinocomputing — by its
+// file name or the address it's published at — that is, or will be when
+// tonight's push is registered, a live fragment. Claims written tonight are
+// already in KINO/notes when the threads quoting them render.
+const registry = readJson(join(KINO, "blyg/_registry.json"), { items: {} }).items;
+function quoteResolver(name) {
+  const slug = existsSync(join(KINO, "notes", `${name}.html`)) ? name
+    : Object.keys(registry).find((s) => registry[s].page === name);
+  if (!slug || !existsSync(join(KINO, "notes", `${slug}.html`))) throw new Error(`quotes ${name}, which isn't a note on kinocomputing`);
+  const entry = registry[slug];
+  const page = readFileSync(join(KINO, "notes", `${slug}.html`), "utf8");
+  const thread = entry ? (entry.kind ?? (entry.stub_of ? "thread" : "fragment")) === "thread"
+    : /<meta name="blyg:kind" content="thread">/.test(page);
+  if (thread) throw new Error(`quotes ${name}, a write-up; only claims and the PI's notes can be quoted`);
+  return { slug, html: page.match(/<main>([\s\S]*?)<\/main>/)?.[1] ?? "" };
+}
 const outbox = join(LAB, "outbox");
 const rejected = join(outbox, "rejected");
 const names = existsSync(outbox) ? readdirSync(outbox).filter((f) => f.endsWith(".md")).sort() : [];
@@ -120,19 +137,29 @@ const reject = (file, why) => {
   renameSync(join(outbox, file), join(rejected, file));
   report.push(`- Not published: ${file.replace(/\.md$/, "")} ${why}.`);
 };
-for (const file of names) {
-  const name = file.replace(/\.md$/, "");
+// Claims publish before the threads that quote them (§7: the thread last),
+// and don't count against the nightly limit on notes.
+const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...frontMatter(readFileSync(join(outbox, file), "utf8")) }));
+parsed.sort((a, b) => (b.data.kind === "claim") - (a.data.kind === "claim") || a.file.localeCompare(b.file));
+let claims = 0;
+for (const { file, name, data, body } of parsed) {
+  const claim = data.kind === "claim";
   if (!pattern.test(name) && !isPublished(name)) { reject(file, "— not a lab note name"); continue; }
-  if (count >= config.publish.max_notes_per_night) { reject(file, `— over the ${config.publish.max_notes_per_night}-note nightly limit`); continue; }
-  const source = readFileSync(join(outbox, file), "utf8");
-  const { data, body } = frontMatter(source);
   const update = isPublished(name);
+  if (update && (frontMatter(readFileSync(join(LAB, "published", file), "utf8")).data.kind === "claim") !== claim) {
+    reject(file, "— a note's kind can't change: a claim stays a claim, and a write-up a write-up");
+    continue;
+  }
+  if (claim ? claims >= config.publish.max_claims_per_night : count >= config.publish.max_notes_per_night) {
+    reject(file, claim ? `— over the ${config.publish.max_claims_per_night}-claim nightly limit` : `— over the ${config.publish.max_notes_per_night}-note nightly limit`);
+    continue;
+  }
   let page;
   try {
     page = await renderNote({
       markdown: body, name, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
-      answers: !update && data.answers ? data.answers : null,
-      model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+      answers: !update && data.answers ? data.answers : null, kind: data.kind, maxClaim: config.publish.max_claim_chars,
+      quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {
     reject(file, error.message);
@@ -141,7 +168,8 @@ for (const file of names) {
   writeFileSync(join(KINO, "notes", `${name}.html`), page);
   mkdirSync(join(LAB, "published"), { recursive: true });
   renameSync(join(outbox, file), join(LAB, "published", file));
-  count += 1;
+  if (claim) claims += 1;
+  else count += 1;
   summary.push(`${update ? "updated" : "published"} ${name}`);
 }
 

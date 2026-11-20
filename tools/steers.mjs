@@ -64,6 +64,33 @@ export async function takeSteers(kinoOrigin, seen, fetchJson) {
   return { steers, marks };
 }
 
+/**
+ * The lab's threads that quote an older version of something than the one now
+ * live (§10.4 staleness): a claim that moved stage since the write-up quoting
+ * it was published. Each is the page of the thread and what it quotes stale.
+ */
+export async function staleThreads(kinoOrigin, fetchJson) {
+  const kino = normalizeOrigin(kinoOrigin);
+  const index = await fetchJson(`${kino}items/index.json`);
+  const live = new Map((index.items ?? []).map((item) => [item.id, item]));
+  const stale = [];
+  for (const item of index.items ?? []) {
+    if (item.kind !== "thread") continue;
+    const doc = await fetchJson(`${kino}items/${item.id}.json`);
+    if (!doc.generated?.length) continue; // the PI's stubs aren't the lab's to refresh
+    const behind = (doc.transclusions ?? []).filter((t) => !t.origin && live.get(t.id)?.kind !== "withdrawn"
+      && (live.get(t.id)?.version ?? 0) > t.version);
+    if (!behind.length) continue;
+    const pages = [];
+    for (const t of behind) {
+      const target = await fetchJson(`${kino}items/${t.id}.json`).catch(() => null);
+      pages.push(`${target?.page ?? t.id} (quoted v${t.version}, now v${live.get(t.id).version})`);
+    }
+    stale.push({ page: doc.page, quotes: pages });
+  }
+  return stale;
+}
+
 export async function fetchJson(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000), headers: { accept: "application/json" } });
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);

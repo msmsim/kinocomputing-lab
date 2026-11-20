@@ -79,6 +79,11 @@ four others. Replication is the standard, not the exception.
 - The lab publishes as itself. Every note it writes is marked
   machine-written: the blyg's `generated` provenance in the item, and a line
   on the page. It never writes as the PI, and never imitates a real person.
+- Claims and write-ups are published apart. Each claim is a short note of
+  its own (a blyg fragment), updated as it changes stage; write-ups
+  (threads) quote the claims they rest on, and the PI's notes, rather than
+  restating them. A quote is a snapshot, so a write-up resting on an old
+  stage of a claim visibly does, until it is republished.
 - A note is updated, not duplicated, as its question moves: an edit is a new
   version with a change note saying what changed in the evidence.
 - A note is pinned when a claim in it reaches `replicated` or above, so the
