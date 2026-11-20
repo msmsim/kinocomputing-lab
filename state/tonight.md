@@ -2,9 +2,13 @@
 
 Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off tonight; arXiv and OpenAlex are free. Bank $1.50.
 
+## Where this shift runs
+
+On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's sandbox: shell commands can write only inside this repository and reach only these hosts: pypi.org, files.pythonhosted.org, export.arxiv.org, arxiv.org, api.openalex.org, github.com, codeload.github.com, raw.githubusercontent.com, objects.githubusercontent.com, zenodo.org, huggingface.co, www.kinocomputing.com, kinocomputing.com, worldmachines.org, blyg.worldmachines.org. A blocked host is the sandbox's choice; say so in the journal and work around it only with what's allowed. 
+
 ## Focus
 
-The operator running this shift set its focus: **q-001**. Make it tonight's unit of work, after the PI's takes.
+The operator running this shift set its focus: **q-003**. Make it tonight's unit of work, after the PI's takes.
 
 ## The PI's takes
 
@@ -22,15 +26,15 @@ None.
 
 For q-003:
 
-- Magnon high-harmonic generation by nonlinearities of spin torque driven by phonon-mediated crossing of many-body energy levels of bright and dark excitons (2026-11-19) https://arxiv.org/abs/2611.26589v1
-- Generative Models using Multi-layer Quantum Extreme Learning Machines (2026-11-15) https://arxiv.org/abs/2611.20139v1
-- Complex fluid flow dynamics by bright scattershot boson sampling (2026-11-13) https://arxiv.org/abs/2611.18510v1
+- Data re-uploading in Quantum Reservoir Computing (2026-11-13) https://arxiv.org/abs/2611.17913v1
+- Thermally-driven quantum reservoir computing (2026-11-04) https://arxiv.org/abs/2611.07187v1
+- Local information processing capacity: anatomy of computation in neuromorphic systems (2026-11-04) https://arxiv.org/abs/2611.05959v1
 
 For q-004:
 
-- Scalable fault vulnerability analysis for ReRAM-based process-in-memory CNN accelerators (2026-11-19) https://arxiv.org/abs/2611.26307v1
-- SoU-RHS: Bayesian Structured Sparsity for Compact Architecture Recovery in CNNs (2026-11-18) https://arxiv.org/abs/2611.24166v1
-- Electrostatic and Quantum Transport Engineering of Multilayer Ferroelectric Tunnel Junctions for Improved TER and RA Trade off (2026-11-18) https://arxiv.org/abs/2611.24103v1
+- ReCIM-HD: A 40 nm On-Device Learning Accelerator with Hyperdimensional Computing via Importance-Based Hybrid Digital-ReRAM CIM (2026-11-18) https://arxiv.org/abs/2611.23973v1
+- Optical Neural Networks Should Be Evaluated by Function, Not Only Physics (2026-11-17) https://arxiv.org/abs/2611.23610v1
+- Towards Cryogenic AI Hardware: Over 99% Precision In-Memory Computing at 4 K with 3-bit Ferroelectric Hf0.5Zr0.5O2 Capacitors (2026-11-17) https://arxiv.org/abs/2611.23489v1
 
 ## Open questions
 

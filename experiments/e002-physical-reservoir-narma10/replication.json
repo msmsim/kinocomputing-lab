@@ -1,0 +1,10 @@
+{
+  "of": "b43e82ab",
+  "seed": 2,
+  "at": "2026-11-20T23:44:04Z",
+  "metric": "median_test_nmse_physical",
+  "original": 0.962335,
+  "value": 0.9392,
+  "killed": true,
+  "agrees": true
+}

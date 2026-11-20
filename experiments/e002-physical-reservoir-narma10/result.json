@@ -1,0 +1,125 @@
+{
+  "metric": "median_test_nmse_physical",
+  "value": 0.962335,
+  "baseline": 0.145795,
+  "ratio_phys_over_esn": 6.6006,
+  "competitive_ratio_le_1p5": false,
+  "seed": 1,
+  "killed": true,
+  "instances": 5,
+  "physical_test_nmse": [
+    0.871739,
+    0.99471,
+    0.962335,
+    0.978954,
+    0.921105
+  ],
+  "esn_test_nmse": [
+    0.194396,
+    0.145795,
+    0.131011,
+    0.137797,
+    0.148621
+  ],
+  "params_each": 2550,
+  "e_mac_J_assumed": 4.6e-12,
+  "esn_energy_per_step_J": 1.173e-08,
+  "breakeven_energy_per_oscillator_step_J": 2.346e-10,
+  "detail": [
+    {
+      "instance": 0,
+      "redraws": 0,
+      "physical": {
+        "a": 0.5,
+        "k": 1.6,
+        "lambda": 0.01,
+        "val": 0.8635907399782697,
+        "test": 0.8717389819058825
+      },
+      "esn": {
+        "rho": 0.8,
+        "alpha": 1.0,
+        "s": 0.1,
+        "lambda": 1e-08,
+        "val": 0.1433973792617832,
+        "test": 0.1943956733120406
+      }
+    },
+    {
+      "instance": 1,
+      "redraws": 0,
+      "physical": {
+        "a": 4.0,
+        "k": 1.6,
+        "lambda": 0.01,
+        "val": 0.798913937596102,
+        "test": 0.9947099672354845
+      },
+      "esn": {
+        "rho": 0.95,
+        "alpha": 1.0,
+        "s": 0.1,
+        "lambda": 1e-08,
+        "val": 0.1370112532047975,
+        "test": 0.1457951260930687
+      }
+    },
+    {
+      "instance": 2,
+      "redraws": 0,
+      "physical": {
+        "a": 2.0,
+        "k": 0.05,
+        "lambda": 0.01,
+        "val": 0.8703830932791737,
+        "test": 0.9623352708798248
+      },
+      "esn": {
+        "rho": 0.8,
+        "alpha": 1.0,
+        "s": 0.1,
+        "lambda": 1e-08,
+        "val": 0.13712112041487115,
+        "test": 0.1310109667595001
+      }
+    },
+    {
+      "instance": 3,
+      "redraws": 0,
+      "physical": {
+        "a": 0.5,
+        "k": 0.8,
+        "lambda": 0.01,
+        "val": 0.8938254761311955,
+        "test": 0.9789535024235908
+      },
+      "esn": {
+        "rho": 0.95,
+        "alpha": 1.0,
+        "s": 0.1,
+        "lambda": 1e-08,
+        "val": 0.1656310529091702,
+        "test": 0.13779670209203482
+      }
+    },
+    {
+      "instance": 4,
+      "redraws": 0,
+      "physical": {
+        "a": 0.5,
+        "k": 1.6,
+        "lambda": 0.01,
+        "val": 0.9007135298696274,
+        "test": 0.9211048585715725
+      },
+      "esn": {
+        "rho": 0.95,
+        "alpha": 1.0,
+        "s": 0.1,
+        "lambda": 1e-08,
+        "val": 0.14690886335643027,
+        "test": 0.14862087275464336
+      }
+    }
+  ]
+}

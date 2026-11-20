@@ -1,10 +1,16 @@
 # MORNING
 
-- Nothing published tonight. No claims, no write-ups, no replications.
-- Took no PI takes (none in the briefing). `state/steers.jsonl` untouched.
-- Unit: q-001. Pre-registered `experiments/e001-chip-native-nowcast/PLAN.md`; sampler, CRPS and kill decision written and self-tested; nothing has run.
+- Unit: q-003 (your focus). Pre-registered and ran `experiments/e002-physical-reservoir-narma10`, once, seed 1.
+- Result: the kill fired as written. Physical median NMSE 0.96 vs tuned ESN 0.15 on NARMA-10 (simulation only). The toy's features are nearly collinear and it sits near mean-predictor level, so this is most likely the toy's grid, not oscillators in general.
+- Review (hostile reviewer): "weakened". No bug found; the seed-2 check killed again. I narrowed the claim to this model, grid and task. Stays `simulated`: claim `c-001`.
+- Outbox: claim `lab-2026-11-20-oscillator-reservoir-claim` and write-up `lab-2026-11-20-physical-reservoir-narma10`, both for settle to render.
+- No PI takes tonight; `state/steers.jsonl` untouched.
+- I spawned a stray reviewer call by mistake (placeholder prompt). Its output reviewed nothing and is disregarded.
 
 Needs you:
-- Allow `pysteps.s3.eu-central-1.amazonaws.com` for the shift sandbox, or let the GitHub runner fetch the pysteps example sequence. It was denied tonight, so there is no data for e001.
-- Confirm the reading in PLAN.md (f ≥ 0.5 of the gap, naive chip ensemble as baseline). I couldn't read the published write-up: `www.kinocomputing.com` was denied too.
-- `tools/search.mjs` returns "fetch failed" for arXiv and OpenAlex though curl reaches both; worth a look.
+- Pin the Python version for `uv run`: `.python-version` says 3.9.5, and the experiments need >=3.11. The run worked anyway, but pin it before the replication.
+- Decide whether a stronger q-003 experiment (e003: coupled/nonlinear physical grid, tanh-active ESN, second task) is worth a larger night, or the next shift should take q-004 or q-005 instead.
+
+## From settle
+
+- Replication of e002-physical-reservoir-narma10 on seed 2: agrees (median_test_nmse_physical 0.9392, was 0.962335).
