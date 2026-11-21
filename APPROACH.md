@@ -25,7 +25,8 @@ prepare    budget; your takes; stale write-ups; replications; new arXiv papers  
 shift      a researcher works one unit of work, under a dollar cap and a clock  (tokens)
 restore    the lab's machinery put back as committed                            (no tokens)
 replicate  every new experiment result re-run on the next seed                  (no tokens)
-settle     spend; takes handled or re-offered; claims append-only; publish      (no tokens)
+settle     spend; takes handled or re-offered; claims append-only; publish;     (no tokens)
+           the night's brief
 ```
 
 Nightly on GitHub Actions at 02:00 UTC, or by hand on your machine
@@ -48,15 +49,19 @@ left no cost report it is counted at its cap.
 - **The lab answers in public when it has something to say**, as a note that
   answers your take (a stub of it), and quotes you where it builds on you.
 - **Every take is accounted for**: a line in `state/steers.jsonl` saying what
-  the lab did with it, and a mention in `MORNING.md`. One it misses comes back
+  the lab did with it, and a mention in the night's brief. One it misses comes back
   the next night.
-- **`MORNING.md`** is the only thing you need to read: three to ten lines —
-  what was published, what each take became, anything only you can do.
+- **The brief** is the only thing you need to read, and it's on the blyg:
+  each night a short note, "Lab brief: <date>" — the researcher's own
+  account (what it did, what each take became, anything waiting on you),
+  then what went out, linked, and what settle saw: replications, anything
+  held back, the cost. It's written for anyone, like every lab note. The
+  same account, with settle's full report, is `MORNING.md` in the repo.
 - **Heavier steering** is editing files: `state/questions/` (the agenda),
   `CHARTER.md` (the standards). Or run a shift by hand with a focus:
   `tools/local-shift.sh --focus q-003`.
 - **The lab asks you** only for credentials, a new repo, money, or a
-  judgement that is genuinely yours, under "Needs you" in `MORNING.md`.
+  judgement that is genuinely yours, under "Waiting on a human" in the brief.
   How to run an experiment, and its pre-registered thresholds, are the
   researcher's calls; it says which reading of your words it used, and
   you can answer in a take.

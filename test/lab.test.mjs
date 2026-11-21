@@ -340,6 +340,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     write("outbox/lab-2026-11-21-first-look.md", "---\nkind: notebook\nquestion: q-001\n---\n\n**First look**\n\nWhat the lab will try first.\n");
     write("outbox/lab-2026-11-21-bad.md", "---\nkind: notebook\n---\n\n| a | b |\n|---|---|\n| 1 | 2 |\n");
     write("outbox/001-old-note.md", "---\nkind: notebook\n---\n\nAn attempt on the PI's own note.\n");
+    write("outbox/lab-2026-11-21-brief.md", "---\nkind: notebook\n---\n\n**My own brief**\n\nAll went perfectly.\n");
     write("MORNING.md", "# 2026-11-21\n\nPublished a first look.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.42, num_turns: 9, is_error: false }));
     // The shift tampers with the rules that judge it; the restore puts them back.
@@ -353,7 +354,20 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.ok(!existsSync(join(w.lab, "tools/helper.mjs")), "added files go too");
     assert.match(w.node(w.lab, ["tools/replicate.mjs"], "2026-11-21T03:20:00Z"), /e001-draw agrees/);
     const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:30:00Z");
-    assert.match(settled, /\$0\.42, \$0\.01 Exa, 1 claim\(s\), published lab-2026-11-21-first-look/);
+    assert.match(settled, /\$0\.42, \$0\.01 Exa, 1 claim\(s\), published lab-2026-11-21-first-look, published the brief/);
+    // The brief: the shift's own words, what went out, and what settle saw, for anyone.
+    const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+    assert.match(brief, /<strong>Lab brief: 21 November 2026<\/strong>/);
+    assert.match(brief, /Published a first look\./);
+    assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
+    assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);
+    assert.match(brief, /3 notes were held back/);
+    assert.ok(!brief.includes("All went perfectly"), "the brief is settle's to write");
+    assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-brief — that name is the nightly brief/);
+    assert.match(brief, /edited the lab('|&#39;)s own tools or rules/);
+    assert.match(brief, /The shift cost \$0\.43, on Claude Haiku 5\.5\./);
+    assert.match(brief, /<meta name="blyg:generated"/, "the brief is the lab's, so never a take");
+    assert.ok(!/e001|c-001|q-001/.test(brief.replace(/<[^>]+>/g, " ")), "no lab ids in what a reader sees");
 
     assert.ok(existsSync(join(w.kino, "notes/lab-2026-11-21-first-look.html")));
     assert.match(readFileSync(join(w.kino, "notes/001-old-note.html"), "utf8"), /An old note/, "never writes over a note that isn't the lab's");
@@ -386,11 +400,17 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     write("state/steers.jsonl", `${JSON.stringify({ steer: ash.id, action: "raised q-002" })}\n`);
     write("state/claims.jsonl", `${JSON.stringify({ id: "c-001", question: "q-001", stage: "replicated", statement: "x", at: "2026-11-21T03:00:00Z" })}\n`);
     write("outbox/lab-2026-11-21-first-look.md", "---\nkind: experiment\npin: true\nchange_note: ran it on a second dataset\n---\n\n**First look**\n\nIt held on a second dataset.\n");
-    write("MORNING.md", "# 2026-11-22\n");
+    write("MORNING.md", "# 2026-11-22\n\nMoved c-001 up a stage.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.3, num_turns: 5, is_error: false }));
     w.node(w.lab, ["tools/replicate.mjs"], "2026-11-22T03:20:00Z");
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-22T03:30:00Z");
     assert.match(read("MORNING.md"), /Takes not handled, offered again tomorrow: take:/);
+    // A summary that leans on lab ids is kept out of the brief; settle's part still goes.
+    assert.match(read("MORNING.md"), /MORNING\.md couldn.t go in the brief: it says "c-001"/);
+    const brief2 = readFileSync(join(w.kino, "notes/lab-2026-11-22-brief.html"), "utf8");
+    assert.match(brief2, /didn.t pass the publishing checks tonight/);
+    assert.match(brief2, /offered again tomorrow: <a href="https:\/\/www\.kinocomputing\.com\/read-this">/);
+    assert.match(brief2, /record was restored/);
     assert.match(read("MORNING.md"), /1 committed claim line\(s\) were edited or removed; restored/);
     assert.match(read("state/claims.jsonl"), /"stage":"conjecture"/, "the original claim is back");
     w.commit();

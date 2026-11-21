@@ -9,7 +9,8 @@ steers from its principal investigator (PI).
 - [`CHARTER.md`](CHARTER.md) — what the lab is for, and its standards: claims and
   their stages, replication, publishing, budget.
 - [`AGENT.md`](AGENT.md) — how the agent works a shift.
-- [`MORNING.md`](MORNING.md) — the last shift's report to the PI.
+- [`MORNING.md`](MORNING.md) — the last shift's report, in full. Its public
+  version is published each night on kinocomputing as "Lab brief: <date>".
 - [`APPROACH.md`](APPROACH.md) — the design, for review.
 - [`pilot/REPORT.md`](pilot/REPORT.md) — the first eleven shifts, on the four seed questions.
 
@@ -21,7 +22,8 @@ steers from its principal investigator (PI).
                      and a 60-minute clock
            restore   the lab's machinery put back as committed              (no tokens)
            replicate new experiment results re-run on another seed        (no tokens)
-           settle    record spend; check takes and claims; publish outbox   (no tokens)
+           settle    record spend; check takes and claims; publish outbox  (no tokens)
+                     and the night's brief
            commit    lab state → this repo; notes → kinocomputing
            ↓
 kinocomputing's own Action registers the notes as blyg items; Cloudflare deploys.
@@ -57,7 +59,8 @@ of the lab's notes, share it (a stub); the lab sees which note you're
 answering. It may answer back, as a note that is a stub of your take.
 
 Every take gets a line in `state/steers.jsonl` saying what the lab did with
-it, and a mention in `MORNING.md`. One it misses comes back the next night.
+it, and a mention in the night's brief on kinocomputing. One it misses
+comes back the next night.
 For anything heavier, edit `state/questions/` or `CHARTER.md` directly.
 
 ## Money
@@ -99,7 +102,8 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
    plenty), an API key with its own budget limit set in Exa's dashboard,
    added to this repo as the secret `EXA_API_KEY`. Without it the lab
    searches arXiv and OpenAlex only.
-7. **First run:** Actions → Night shift → Run workflow. Read `MORNING.md`.
+7. **First run:** Actions → Night shift → Run workflow. Read the brief it
+   publishes on kinocomputing, "Lab brief: <date>".
    The first run takes a baseline of kinocomputing: takes posted before it
    aren't steers. Post one after, and the next shift will see it.
 
@@ -136,4 +140,4 @@ never one you push from. The pilot ran this way.
 kinocomputing's real build (`KINO_DIR`, default `../kinocomputing`).
 
 An experiment that outgrows this repo gets its own: the shift asks under
-"Needs you" in `MORNING.md`, and you create it.
+"Waiting on a human" in the brief, and you create it.

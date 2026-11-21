@@ -112,7 +112,7 @@ const run = {
   exa_usd: exaUsd,
   bank_usd: money.bank,
   focus,
-  steers: steers.map(({ id, seen: mark }) => ({ id, seen: mark })),
+  steers: steers.map(({ id, url, seen: mark }) => ({ id, url, seen: mark })),
   marks,
   baseline: seen.takes === undefined && !offline,
   reading: reading.flatMap((r) => r.results.map((x) => x.url)),

@@ -4,7 +4,12 @@
 //
 //   node tools/settle.mjs [--claude-output state/claude-output.json]
 //
-// Checks, each reported in MORNING.md rather than failing the night:
+// Then publishes tonight's brief to kinocomputing (lab-YYYY-MM-DD-brief):
+// the shift's own MORNING.md, written for anyone, and what settle saw, in
+// words a reader outside the lab can follow. The PI reads it on the blyg.
+//
+// Checks, each reported in MORNING.md (and, in plain words, in the brief)
+// rather than failing the night:
 // - every take of the PI's delivered got a line in state/steers.jsonl; one
 //   that didn't isn't marked seen, so it is offered again tomorrow;
 // - state/claims.jsonl was only appended to (against git HEAD); an edited or
@@ -20,12 +25,35 @@ import { join } from "node:path";
 import { KINO, LAB, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
 import { renderNote } from "./render.mjs";
 
+const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
+
+/** A note's title: its opening bold line. */
+const titleOf = (markdown) => markdown.trim().match(/^\*\*(.+?)\*\*\s*$/m)?.[1] ?? null;
+
+/**
+ * An experiment as a reader can follow it: the published note that links its
+ * results, as a link, or failing that its name in words.
+ */
+function experimentTold(dir) {
+  const folder = join(LAB, "published");
+  for (const file of existsSync(folder) ? readdirSync(folder).filter((x) => x.endsWith(".md")).sort().reverse() : []) {
+    const { body } = frontMatter(readFileSync(join(folder, file), "utf8"));
+    const title = titleOf(body);
+    if (title && body.includes(`experiments/${dir}/`)) return `the experiment in [${title}](${ORIGIN}${file.replace(/\.md$/, "")})`;
+  }
+  return `the ${dir.replace(/^e\d+-/, "").replace(/-/g, " ")} experiment`;
+}
+
 const args = process.argv.slice(2);
 const outputPath = args.includes("--claude-output") ? args[args.indexOf("--claude-output") + 1] : join(LAB, "state/claude-output.json");
 const config = readJson(join(LAB, "config/lab.json"));
 const run = readJson(join(LAB, "state/run.json"), null);
 const report = [];
 const summary = [];
+// What the brief says settle saw: the same events as `report`, for a reader
+// who can't see the lab (no ids, no file names).
+const told = [];
+let spent = 0;
 
 if (!run) {
   console.log("settle: no run.json; nothing to settle");
@@ -41,11 +69,16 @@ if (output) {
   const usd = Number(output.total_cost_usd ?? 0);
   appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
   summary.push(`$${usd.toFixed(2)}`);
-  if (output.is_error) report.push(`- The shift ended in an error (${output.subtype ?? "unknown"}).`);
+  spent += usd;
+  if (output.is_error) {
+    report.push(`- The shift ended in an error (${output.subtype ?? "unknown"}).`);
+    told.push("The researcher's session ended in an error.");
+  }
 }
 if (exaUsd > 0) {
   appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: exaUsd, source: "exa" })}\n`);
   summary.push(`$${exaUsd.toFixed(2)} Exa`);
+  spent += exaUsd;
 }
 // Reading shown in tonight's briefing isn't shown again.
 if (run.reading?.length) {
@@ -54,9 +87,17 @@ if (run.reading?.length) {
 }
 // Replications run after the shift, so the shift couldn't report them.
 for (const r of readJson(join(LAB, "state/replications.json"), [])) {
-  if (r.error) report.push(`- Replication of ${r.experiment} failed to run: ${r.error.split("\n")[0]}`);
-  else if (r.skipped) report.push(`- Replication of ${r.experiment} skipped: ${r.skipped}.`);
-  else report.push(`- Replication of ${r.experiment} on seed ${r.seed}: ${r.agrees ? "agrees" : "disagrees"} (${r.metric} ${r.value}, was ${r.original}).`);
+  const what = experimentTold(r.experiment);
+  if (r.error) {
+    report.push(`- Replication of ${r.experiment} failed to run: ${r.error.split("\n")[0]}`);
+    told.push(`The automatic rerun of ${what} on fresh random numbers failed to run.`);
+  } else if (r.skipped) {
+    report.push(`- Replication of ${r.experiment} skipped: ${r.skipped}.`);
+  } else {
+    report.push(`- Replication of ${r.experiment} on seed ${r.seed}: ${r.agrees ? "agrees" : "disagrees"} (${r.metric} ${r.value}, was ${r.original}).`);
+    // Agreement is the verdict (pass or fail, decided in advance), not the number.
+    told.push(`The automatic rerun of ${what} on fresh random numbers ${r.agrees ? "reached the same verdict as" : "**reached a different verdict from**"} the original (it scored ${r.value}; the original ${r.original}).`);
+  }
 }
 if (run.skip) {
   console.log("settle: skipped night");
@@ -67,12 +108,18 @@ if (run.skip) {
 if (!output) {
   appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: run.max_usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, estimated: true })}\n`);
   summary.push(`~$${run.max_usd.toFixed(2)} (no cost report; counted at the cap)`);
+  spent += run.max_usd;
   report.push("- The shift left no cost report, so it is counted at its cap.");
 }
 // The runner says how the shift ended: 124 is the time limit.
 const exit = Number(process.env.SHIFT_EXIT ?? 0);
-if (exit === 124) report.push("- The shift hit its time limit and was stopped. What it had written is kept for the next shift; anything it hadn't published waits.");
-else if (exit) report.push(`- The shift exited with status ${exit}. What it had written is kept for the next shift.`);
+if (exit === 124) {
+  report.push("- The shift hit its time limit and was stopped. What it had written is kept for the next shift; anything it hadn't published waits.");
+  told.push("The shift ran out of time and was stopped; unfinished work carries over to the next one.");
+} else if (exit) {
+  report.push(`- The shift exited with status ${exit}. What it had written is kept for the next shift.`);
+  told.push("The shift stopped unexpectedly; what it had written carries over to the next one.");
+}
 const today = join(LAB, "journal", `${run.date}.md`);
 if (!existsSync(today) || readFileSync(today, "utf8").length === 0) report.push("- No journal entry was written tonight.");
 
@@ -80,7 +127,10 @@ if (!existsSync(today) || readFileSync(today, "utf8").length === 0) report.push(
 // before this ran.
 const machinery = existsSync(join(LAB, "state/machinery-changes.txt"))
   ? readFileSync(join(LAB, "state/machinery-changes.txt"), "utf8").split("\n").filter(Boolean) : [];
-if (machinery.length) report.push(`- The shift changed the lab's machinery, which was put back: ${machinery.join(", ")}. If a change was worth making, it's the PI's to make.`);
+if (machinery.length) {
+  report.push(`- The shift changed the lab's machinery, which was put back: ${machinery.join(", ")}. If a change was worth making, it's the PI's to make.`);
+  told.push("The researcher edited the lab's own tools or rules; they were put back as they were.");
+}
 
 // 2. Steers: delivered only once handled.
 const handled = new Set(readJsonl(join(LAB, "state/steers.jsonl")).map((line) => line.steer));
@@ -94,7 +144,11 @@ for (const steer of run.steers) {
   else missed.push(steer.id);
 }
 writeFileSync(join(LAB, "state/seen.json"), json(seen));
-if (missed.length) report.push(`- Takes not handled, offered again tomorrow: ${missed.join(", ")}`);
+if (missed.length) {
+  report.push(`- Takes not handled, offered again tomorrow: ${missed.join(", ")}`);
+  const urls = run.steers.filter((st) => missed.includes(st.id)).map((st) => st.url);
+  told.push(`Not answered tonight, and offered again tomorrow: ${urls.map((u) => (u ? `[${u.replace(/^https?:\/\//, "")}](${u})` : "one of the PI's posts")).join(", ")}.`);
+}
 
 // 3. Claims: append-only.
 const STAGES = new Set(["conjecture", "simulated", "replicated", "real-data", "challenged", "refuted"]);
@@ -122,6 +176,7 @@ const valid = appended.filter((line) => {
   }
 });
 if (lost.length) report.push(`- ${lost.length} committed claim line(s) were edited or removed; restored. Claims are append-only.`);
+if (lost.length || valid.length !== appended.length) told.push("Some of the lab's record of its claims was malformed or rewritten; the record was restored.");
 if (lost.length || valid.length !== appended.length) {
   writeFileSync(claimsPath, [...committed, ...valid].map((l) => `${l}\n`).join(""));
 }
@@ -161,9 +216,12 @@ const reject = (file, why) => {
 const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...frontMatter(readFileSync(join(outbox, file), "utf8")) }));
 parsed.sort((a, b) => (b.data.kind === "claim") - (a.data.kind === "claim") || a.file.localeCompare(b.file));
 let claims = 0;
+const BRIEF = `lab-${run.date}-brief`;
+const out = [];
 for (const { file, name, data, body } of parsed) {
   const claim = data.kind === "claim";
   if (!pattern.test(name) && !isPublished(name)) { reject(file, "— not a lab note name"); continue; }
+  if (name === BRIEF) { reject(file, "— that name is the nightly brief's, which settle writes"); continue; }
   const update = isPublished(name);
   if (update && (frontMatter(readFileSync(join(LAB, "published", file), "utf8")).data.kind === "claim") !== claim) {
     reject(file, "— a note's kind can't change: a claim stays a claim, and a write-up a write-up");
@@ -190,9 +248,52 @@ for (const { file, name, data, body } of parsed) {
   if (claim) claims += 1;
   else count += 1;
   summary.push(`${update ? "updated" : "published"} ${name}`);
+  out.push({ name, title: titleOf(body) ?? name, update, claim });
+}
+const held = parsed.length - out.length;
+if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for failing the publishing checks; [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md) says why.`);
+
+// 5. Tonight's brief, on kinocomputing: the shift's own account, then what
+// settle saw. A second shift on the same day updates the day's brief.
+const morningPath = join(LAB, "MORNING.md");
+const shiftSaid = existsSync(morningPath)
+  ? readFileSync(morningPath, "utf8").replace(/^#[^\n]*\n/, "").trim() : "";
+const dateWords = new Date(`${run.date}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/ (\w)/g, (m, c) => ` ${c.toUpperCase()}`);
+const briefOf = (said) => [
+  `**Lab brief: ${dateWords}**`,
+  said || "The researcher left no summary tonight.",
+  ...(out.length ? ["**Published tonight**", out.map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : ""}`).join("\n")] : []),
+  "**Also tonight**",
+  [...told, `The shift cost $${spent.toFixed(2)}, on ${modelWords}.`].map((l) => `- ${l}`).join("\n"),
+].join("\n\n");
+const briefUpdate = isPublished(BRIEF);
+let briefMd = briefOf(shiftSaid);
+let briefPage = null;
+const renderBrief = (markdown) => renderNote({
+  markdown, name: BRIEF, kind: "brief", changeNote: briefUpdate ? "Another shift ran today; this is its brief." : null,
+  quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+});
+try {
+  briefPage = await renderBrief(briefMd);
+} catch (error) {
+  // The shift's own words didn't pass; settle's alone always should.
+  report.push(`- The shift's MORNING.md couldn't go in the brief: it ${error.message}.`);
+  briefMd = briefOf(`The researcher's summary didn't pass the publishing checks tonight; it's in [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md).`);
+  try {
+    briefPage = await renderBrief(briefMd);
+  } catch (again) {
+    report.push(`- The brief wasn't published: it ${again.message}.`);
+  }
+}
+if (briefPage) {
+  writeFileSync(join(KINO, "notes", `${BRIEF}.html`), briefPage);
+  mkdirSync(join(LAB, "published"), { recursive: true });
+  writeFileSync(join(LAB, "published", `${BRIEF}.md`), `---\nkind: brief\npin: false\n---\n\n${briefMd}\n`);
+  summary.push(`${briefUpdate ? "updated" : "published"} the brief`);
 }
 
-// 5. The morning report gets what the shift couldn't see.
+// 6. The morning report gets what the shift couldn't see.
 if (report.length) {
   const morning = join(LAB, "MORNING.md");
   const prior = existsSync(morning) ? readFileSync(morning, "utf8").trimEnd() : `# ${run.date}`;

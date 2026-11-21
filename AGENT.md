@@ -137,9 +137,15 @@ says.
    from the briefing): what you did and why, what you found, what you spent
    it on, and what the next shift should do. If the file already exists, an
    earlier shift ran today: add a `## Shift N` section, don't rewrite it.
-   Then write `MORNING.md` for the PI, replacing the old one: three to ten
-   lines — what was published, what each take became, and anything only the
-   PI can do. Nothing else.
+   Then write `MORNING.md`, replacing the old one: three to ten lines —
+   what you did and found tonight, what each of the PI's takes became, and,
+   under "Waiting on a human", anything only the PI can do. Nothing else.
+   It is published as tonight's brief on kinocomputing, under a list of
+   what went out (settle adds that, and what it saw), so it follows
+   "Writing for the site": no lab ids, things named by what they are, a
+   note linked as `https://www.kinocomputing.com/<its lab name>`. A
+   summary that uses a lab id is left out of the brief, and the brief
+   says the researcher's summary failed its checks.
 
 ## Formats
 
@@ -277,5 +283,5 @@ make it, record it in a dated PLAN section before running, say what it
 costs the claim, and carry on. So is a pre-registered threshold: state it,
 say why, and let the PI disagree in a take if they do. Reading the PI's own
 published words is different — if a plan turns on what the PI meant, say
-which reading you used and why; the PI can answer in a take. Put it in `MORNING.md` under "Needs you", one line each, and carry on
+which reading you used and why; the PI can answer in a take. Put it in `MORNING.md` under "Waiting on a human", one line each, and carry on
 with whatever doesn't depend on it.
