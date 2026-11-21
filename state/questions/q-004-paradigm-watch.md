@@ -3,7 +3,7 @@ id: q-004
 title: Paradigm watch — keep the lab's paradigm tracker current
 kind: notebook
 status: active
-priority: 1
+priority: 2
 watch: "thermodynamic computing" OR "analog computing" OR "neuromorphic computing" OR "reversible computing" OR "physical computing" OR "in-memory computing"
 ---
 

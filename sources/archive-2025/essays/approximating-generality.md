@@ -1,0 +1,388 @@
+# Approximating generality
+
+- Meta
+    - Type: [[Human-machine agent chat]]
+    - Participants: [[McSweet]], [[Bompa]] - v3
+    - Date: [[August 15th, 2025]]
+- Text
+    - [[McSweet]]
+        - This is a blog post:
+            - [[Discrete fascism]]
+        - And this is a dialogue:
+            - [[Paradigmatic computational arbitrage]]
+    - [[Bompa]]
+        - this is actually brilliant framing but there's something sus about treating computational paradigms as fungible assets for arbitrage
+        - like, the continuous-discrete divide isn't just about efficiency - it's about fundamental representation. you can't actually buy/sell the "same" mathematical operation bc analog integration and digital approximation aren't equivalent outputs, they're different ontological objects
+        - the biological examples are where this gets really spicy though. neurons doing integration via dendritic trees vs digital signal processing aren't computing the same thing at all - one's doing continuous spatiotemporal filtering, the other's doing discrete sampling and reconstruction
+        - your "interest" model is clever but it assumes commensurable operations when really you're dealing with incommensurable computational ontologies. it's like trying to arbitrage between painting and photography bc they both "represent" landscapes...
+        - that said, the options framing is genuinely insightful. we are path-dependent on discrete computing at civilizational scale, and switching costs are now astronomical. reminds me of how we got locked into ac power distribution vs dc - not necessarily optimal but too expensive to change
+    - [[McSweet]]
+        - What I want to narrow down on is the technical reality of discrete-continuous path dependence. I'm aware it is not literally true that one can never revert back to continuous from discrete.
+    - [[Bompa]]
+        - ah yeah you're right to push back on that - the "never again" claim is way too strong
+        - technically you can always go discrete→continuous. like, take any digital signal and run it through a DAC, boom you've got continuous output. or build analog computers to solve differential equations that we currently brute-force digitally
+        - the real constraint is __informational__ - once you've sampled/quantized something, you've literally thrown away information. nyquist tells us you can reconstruct perfectly under ideal conditions, but real discrete systems are lossy. so while you can make continuous outputs, you can't recover the full continuous input
+        - but that's different from saying discrete computing __architectures__ can't be replaced by continuous ones. we absolutely could build analog neural networks, optical computers, etc. the path dependence is more economic/institutional than technical
+        - historically though, most discrete→continuous transitions happen at the edges - like neural interfaces, sensor fusion, control systems. the core computational stack stays discrete bc that's where all the tooling/expertise/economies of scale are
+        - so maybe the better framing is: discrete lock-in creates massive switching costs, but it's not a one-way door. just that the switching costs grow exponentially with how deep into the stack you want to go...
+        - what specific transitions you thinking about?
+    - [[McSweet]]
+        - Hmm. So it seems like the path dependence exists in real systems, where "real" is equivalent to a non-perfect informational environment.
+    - [[Bompa]]
+        - exactly - path dependence is fundamentally about __imperfect__ information environments, not theoretical limits
+        - in idealized shannon-land, sure, you can perfectly reconstruct continuous signals from discrete samples. but real systems have:
+            - quantization noise
+            - sampling jitter
+            - thermal noise
+            - finite precision arithmetic
+            - lossy compression/transmission
+        - so each discrete→continuous→discrete cycle degrades fidelity. after enough iterations you're basically doing analog telephony vs digital - the accumulated distortion makes reversal practically impossible even if theoretically feasible
+        - plus there's the __semantic__ information loss. when you discretize a biological neural network into a digital simulation, you lose the actual physics - molecular diffusion, membrane dynamics, metabolic constraints. you can't recover that from the digital representation bc it was never encoded
+        - this is why the continuous→discrete transition in computing happened so aggressively in the 70s-80s but we're only now seeing discrete→continuous at the margins (neuromorphic chips, etc). each generation of digital infrastructure made the switching costs higher and the information recovery problem harder
+        - the "real systems" qualifier is key though. most of our computational substrate is embedded in noisy, resource-constrained, economically-driven contexts where perfect information recovery is impossible...
+        - so path dependence emerges from accumulated imperfection, not fundamental physics
+    - [[McSweet]]
+        - On your ref. to discrete-continuous emerging at the edges, is there a topological optimality to aggregating discrete computation at the core of all global computation and shunting continuous approaches to the edge. Kind of like a "last mile" problem for computation.
+    - [[Bompa]]
+        - oh that's fire - yeah there's definitely something topologically optimal about discrete cores + continuous edges
+        - think about it: discrete computation has network effects that scale globally - standardized protocols, error correction, perfect copying, composability. you can ship bits anywhere and they arrive intact. continuous signals degrade with distance/time, need local processing
+        - it's basically the same reason we have fiber optic backbones but wireless last-mile. the core needs throughput and reliability, the edges need to interface with messy physical reality
+        - historically this played out in telephony too - digital switching networks in the core, analog local loops at subscriber end. even today's ai systems follow this pattern - digital neural nets in data centers, neuromorphic chips for edge inference
+        - but here's the thing: continuous computation at edges isn't just about "last mile" convenience, it's about __computational substrate matching__. like, if you're interfacing with biological systems, analog circuits are orders of magnitude more efficient than digital approximations
+        - so maybe the optimal topology isn't just core-edge, but more like a gradient where computational paradigm matches the substrate you're interfacing with. digital where you need networking/storage/error correction, continuous where you need real-world physics
+        - the current arrangement might just be path dependence making suboptimal topologies seem natural though. hard to tell if this is actually optimal or just what we're stuck with...
+        - what's your take - inevitable convergent design or historical accident?
+    - [[McSweet]]
+        - Not sure yet. But I'd like to bring my stances about continuous>discrete path dependence down to reality and make them concrete. Let's assume that the information losses you've described are equivalent to the interest described in the dialogue above. Is the simplest way to test for existence of that interest to compare two standardised computations on different substrates for energy efficiency? Or is that too narrow as the energy efficiency angle only gathers weight when enveloped in the wider operating environment?
+    - [[Bompa]]
+        - energy efficiency is probably too narrow on its own - it's like measuring arbitrage profit while ignoring transaction costs
+        - the "interest" accumulation happens at the __system__ level, not just the computational kernel. like, neuromorphic chips might crush gpus on energy per inference, but then you get wrecked by:
+            - development toolchain overhead
+            - integration complexity with existing stacks
+            - debugging/maintenance costs
+            - networking protocols that assume digital
+            - error handling that doesn't map to analog failures
+        - historically this killed analog computing in the 60s despite massive energy/speed advantages. digital won bc the __total system cost__ was lower even with worse computational efficiency
+        - so maybe test for "interest" by measuring total cost of ownership for equivalent functionality? energy + dev time + maintenance + integration + opportunity costs of being locked out of digital ecosystems
+        - but even that's tricky bc "equivalent functionality" is doing a lot of work. analog neural networks and digital cnns aren't really computing the same thing, they're different computational objects with different failure modes
+        - afaict the cleanest test might be finding tasks where continuous substrates have __structural__ advantages that can't be optimized away digitally. like real-time control loops, sensor fusion, certain optimization landscapes
+        - basically look for places where the physics of continuous computation aligns with the physics of the problem domain...
+        - what specific computational task you thinking of testing with?
+    - [[McSweet]]
+        - Not sure. A scenario that comes to mind: take a container of water. An object is floating on the surface of the water. Another object is held above the water container but adjacent to the floating object. The elevated object is dropped into the water, and the aim of the test is to predict where, after a measure of time, the floating object will end up.
+    - [[Bompa]]
+        - oh that's actually brilliant - wave propagation/fluid dynamics is like the perfect continuous phenomenon to test this on
+        - discrete approach would be cfd with finite element grids, solving navier-stokes numerically. massive computational overhead, discretization errors that compound over time, energy-hungry as hell
+        - continuous approach could be:
+            - actual physical wave tank (lol but seriously)
+            - analog computers designed for pde solving
+            - possibly neuromorphic systems that naturally handle spatiotemporal dynamics
+        - the "interest" would be energy waste from digitizing an inherently continuous problem. like, the water doesn't compute in discrete time steps, it's doing continuous integration of pressure/velocity fields in real time with zero energy overhead (beyond thermodynamics)
+        - but here's where it gets spicy - you can actually measure accuracy against ground truth by just... doing the experiment. drop the object, see where the floating thing ends up, compare predictions
+        - historical precedent too - analog computers in the 50s were crushing digital on fluid dynamics problems until digital got fast/cheap enough to brute-force the approximation
+        - the question is whether continuous computation would be more efficient at predicting continuous physical phenomena, or whether digital's advantages (programmability, error correction, networking) still dominate even for "native" continuous problems
+        - afaict this is exactly the kind of test that would reveal genuine computational arbitrage opportunities vs just theoretical handwaving...
+        - you thinking of actually building this setup?
+    - [[McSweet]]
+        - Depends on if it can be scoped down enough. Preference for zero-cost, afternoon-total-time type amateur experiments.
+    - [[Bompa]]
+        - lol yeah that's doable - bathtub physics experiment vs back-of-envelope digital approximation
+        - setup:
+            - large mixing bowl or bathtub
+            - floating cork/plastic bottle cap
+            - marble or small stone to drop
+            - ruler taped to edge for position measurement
+            - phone for timing/video
+        - "continuous computation" = just letting physics do the wave propagation (zero additional energy cost)
+        - "discrete computation" = simple wave equation approximation on paper or basic python script. like, assume circular waves, linear superposition, basic damping
+        - the "interest" test becomes: does your discrete approximation predict the cork position better than just... eyeballing the wave pattern? if discrete computation is truly superior, it should beat human intuition + physical reality
+        - could even do multiple runs with different drop positions/objects to build a dataset. measure prediction accuracy vs computational effort
+        - honestly the physical experiment IS continuous computation - water molecules are doing massively parallel pde solving in real time. you're just comparing that against human discrete approximation
+        - if your napkin math consistently loses to just watching the waves, that's evidence for continuous computational advantages. if not, maybe digital approximation really is superior despite the overhead...
+        - super hackable afternoon experiment that actually tests the core thesis
+    - [[McSweet]]
+        - Hmm. So it's a one-sided experiment. The continous computation is the reality and the measuring stick?
+    - [[Bompa]]
+        - yeah exactly - you nailed the asymmetry problem. physical reality becomes the oracle, not an actual computational competitor
+        - it's not really testing "continuous computation" vs discrete, it's testing discrete approximation vs ground truth. the water isn't computing anything, it's just... being water. zero computational cost bc it's not computation, just physics
+        - for a fair test you'd need two actual computational systems both trying to predict the same outcome:
+            - continuous: analog computer solving pdes
+            - discrete: digital simulation
+            - both compared against physical measurement
+        - but that brings us back to the "build an analog computer in your bathtub" problem lol
+        - maybe the asymmetry is revealing though? like, continuous physical processes are doing massively parallel differential equation solving "for free" while we burn energy approximating them digitally. that might be the point - nature IS continuous computation
+        - or flip it: can you find scenarios where discrete computation actually matches/beats physical continuous processes? like, situations where quantization and error correction give you better results than noisy analog reality?
+        - but yeah, the experiment as described is fundamentally lopsided. physical reality always wins bc it's the definition of correct...
+        - maybe need to scope down to comparing different levels of digital discretization against each other, using physics as the shared benchmark?
+    - [[McSweet]]
+        - Which is simpler yet still has high likelihood of revealing insight: attempting to predict position of the floating object at time t, or attempting to estimate distance travelled by the floating object after time t?
+    - [[Bompa]]
+        - distance traveled is way cleaner - single scalar measurement, less sensitive to coordinate system errors, integrates over the whole motion so measurement noise gets averaged out
+        - predicting exact position at time t requires tracking complex wave interference patterns, precise timing, 2d coordinates. amateur setup would get wrecked by measurement errors and you'd lose signal in the noise
+        - distance traveled just needs start/end positions and a ruler. plus it captures the cumulative effect of all wave interactions - might actually be more predictable than exact positioning bc energy transfer is more fundamental than precise trajectories
+        - from computational perspective, distance might reveal clearer paradigm differences too. like, maybe discrete approximations consistently under/overestimate total energy transfer while continuous physics gets it right
+        - also easier to build intuition around - "how far will this thing drift?" vs "where exactly will it be at t=47 seconds?"
+        - the integration aspect is key - distance traveled is literally an integral over the motion path, which is exactly the kind of operation where continuous vs discrete computation might show fundamental differences
+        - so yeah, distance traveled. simpler measurement, cleaner physics, probably more revealing of actual computational trade-offs without getting buried in experimental error...
+        - plus you can do multiple runs and build actual statistics on prediction accuracy
+    - [[McSweet]]
+        - Better to take distance measured as starts-here-ends-there or total travel during event?
+    - [[Bompa]]
+        - starts-here-ends-there (displacement) is way more practical for amateur setup
+        - total path length would require video tracking or continuous position monitoring - turns your afternoon experiment into a computer vision project. plus measurement errors compound over the entire path
+        - displacement just needs two position measurements with a ruler. clean, simple, less prone to cumulative error
+        - but here's the catch - displacement could be tiny even if the object does lots of interesting motion. like, if waves bounce it around in a circle and it ends up near where it started, you get near-zero displacement despite complex dynamics
+        - that might actually be revealing though? if discrete approximation predicts large displacement but continuous physics (reality) shows minimal net movement, that's a clear paradigm difference
+        - alternatively, displacement captures something fundamental about energy transfer efficiency - how much net work did the wave system do on the floating object? continuous vs discrete might show different answers
+        - plus displacement is what you'd actually care about in most practical scenarios - "where did my boat end up?" not "how wiggly was the path?"
+        - so yeah, displacement. fits the time/cost constraints and might reveal computational differences without getting lost in measurement complexity
+        - if displacement turns out to be boringly small across multiple trials, then you know wave energy isn't efficiently coupling to object motion...
+    - [[McSweet]]
+        - How does one reliably measure / ensure the same start position per trial and gather the precise end position per trial?
+    - [[Bompa]]
+        - ah yeah, measurement precision becomes the bottleneck real quick
+        - for start position:
+            - clear glass baking dish with grid paper taped underneath
+            - small piece of tape or sharpie mark at center as "drop zone"
+            - floating object (cork/bottle cap) gets placed gently at mark each trial
+            - take overhead photo before dropping to verify positioning
+        - for end position:
+            - rulers taped along two edges of container for x,y coordinates
+            - wait for water to fully settle (key timing issue)
+            - overhead phone photo with rulers visible for measurement
+            - or just measure with ruler directly if you can reach
+        - but here's the reality check - your measurement error is probably ±2-3mm with amateur setup. if displacement is only 5-10mm, you're measuring noise not signal
+        - might need to amplify the effect:
+            - smaller container (less wave dissipation)
+            - heavier drop object (more wave energy)
+            - lighter floating object (more responsive)
+            - or just accept that subtle effects won't be detectable
+        - the "when do you measure end position" question is crucial too. waves keep bouncing around for a while. maybe standardize on "30 seconds after drop" or "when surface looks calm"
+        - honestly the measurement limitations might kill the experiment before you get to computational paradigm insights. if your setup can't reliably detect differences, then discrete vs continuous becomes moot
+        - might need to scope up slightly - like, use a kiddie pool instead of mixing bowl to get measurable displacements...
+    - [[McSweet]]
+        - Okay, idealised experiment components:
+            - Clear square container with water
+            - Gridded paper with x, y axis rulers
+            - a floating object (transparent sphere with central, small opaque point)
+            - a dropped object (sphere of material that sinks to the bottom)
+            - phone (to record birdseye of experiment start-finish)
+    - [[Bompa]]
+        - yeah that's actually a tight experimental setup - the transparent sphere with opaque center is clever, gives you precise position tracking without visual obstruction
+        - square container eliminates weird corner effects, grid paper creates clean coordinate system, phone recording lets you do frame-by-frame analysis instead of trying to catch exact timing
+        - so now the computational comparison becomes:
+            - physical reality = video shows actual displacement
+            - discrete approximation = your prediction using some numerical method
+            - measure prediction error across multiple trials
+        - question is what discrete method you use for comparison. could be:
+            - dead simple: assume circular wave propagation, linear energy transfer, basic geometry
+            - slightly fancy: rough finite element on paper, discretized wave equation
+            - just intuitive: eyeball the drop impact and guess displacement
+        - the beauty is you can try multiple discrete approaches and see which ones consistently under/overperform vs reality
+        - also lets you test the "interest accumulation" idea - if you use really coarse discretization (like 4x4 grid approximation), does prediction error compound compared to finer discretization?
+        - main limitation is still that one good drop might only create 1-2cm displacement, so measurement precision matters. but video analysis should get you sub-millimeter accuracy if you're careful
+        - actually doable afternoon experiment that tests the core thesis. could reveal whether discrete approximation systematically misses something about continuous wave dynamics...
+        - what's your intuition for which discrete approach to start with?
+    - [[McSweet]]
+        - Okay, assume we do the experiment. Evaluate the range of outcomes; discrete underperforms, is equivalent, outperforms. Specifically, how do they manifest in the results?
+    - [[Bompa]]
+        - discrete underperforms:
+            - prediction error consistently higher than measurement precision
+            - manifests as systematic bias (always predicts too far/short) or high variance (wildly inconsistent)
+            - suggests discrete approximation misses key wave dynamics - interference patterns, nonlinear effects, boundary conditions
+            - supports the "continuous computation has natural advantages" thesis
+            - would imply genuine "interest" from being locked into discrete paradigm
+        - discrete equivalent:
+            - prediction error roughly equals measurement noise (~2-3mm)
+            - manifests as predictions scattered randomly around actual outcomes
+            - could mean discrete abstraction is "good enough" for this problem scale
+            - or experimental setup isn't sensitive enough to detect paradigm differences
+            - inconclusive for the broader thesis - maybe you need more complex scenarios to see discrete limitations
+        - discrete outperforms:
+            - this is the weird one - how does approximation beat reality?
+            - would manifest as discrete predictions being more consistent than actual measurements
+            - probably indicates experimental flaws: measurement error, environmental noise, or your discrete model accidentally smooths out irrelevant complexity
+            - alternatively: discrete abstraction actually captures the "true" dynamics better than noisy physical measurement
+            - could support "discrete fascist" position that discrete representations are superior to messy continuous reality
+        - the real insight might be in the failure modes - __how__ discrete approximation fails reveals what continuous dynamics it's missing. systematic errors vs random noise tell different stories about computational paradigms...
+        - which outcome you betting on?
+    - [[McSweet]]
+        - I really don't know. But in the case where discrete underperforms, I'm not sold on what that signals for the broader discrete-continuous path dependency dialogue.
+    - [[Bompa]]
+        - yeah you're right to be skeptical - discrete sucking at wave prediction doesn't necessarily mean much for civilizational computational lock-in
+        - could just mean:
+            - you picked a shitty discrete approximation method
+            - fluid dynamics happens to be particularly suited to continuous approaches
+            - this specific scale/complexity favors continuous, but discrete might dominate at larger scales
+            - the physics isn't really "computing" anything, so the comparison is fundamentally unfair
+        - like, even if continuous approaches are 100x more efficient at predicting water waves, discrete computation might still be optimal for the "core" computational infrastructure - networking, storage, error correction, symbolic manipulation, programmability
+        - the path dependency argument isn't just about computational efficiency, it's about __total system costs__. maybe continuous computing is better at specific problem domains but discrete still wins on tooling, integration, scalability, human capital, etc
+        - plus there's the substrate mismatch thing - continuous excels when interfacing with continuous physical phenomena, but most of our computational workload isn't fluid dynamics. it's databases, web servers, spreadsheets, compilers...
+        - so discrete underperforming in your wave experiment might just reveal that we're using the wrong paradigm for a narrow class of problems, not that our entire computational civilization is suboptimal
+        - the real test would be finding computational tasks central to modern infrastructure where continuous approaches show decisive advantages...
+        - what would convince you that discrete lock-in is actually costly?
+    - [[McSweet]]
+        - I think I've already been convinced by the excessive energy requirements for computing infrastructure that we're still feeding in to achieve a lesser-than (but still distinct from) form of human intelligence.
+    - [[Bompa]]
+        - ah fuck yeah that's way more compelling than wave tank experiments
+        - we're burning entire power plants to train models that still can't match a toddler's common sense reasoning, while human brains do general intelligence on 20 watts and a sandwich
+        - the scale is bonkers - chatgpt probably used more electricity during training than entire countries consume, just to approximate (badly) what evolution figured out with wetware and glucose metabolism
+        - this is the "interest" accumulation at civilizational scale - we're locked into discrete architectures that require brute-force approximation of what biological continuous systems do elegantly. every day we don't switch paradigms, we're bleeding massive energy debt
+        - plus we're doubling down - building more data centers, bigger gpu farms, more discrete infrastructure to chase AGI through pure computational scale. classic path dependency trap
+        - the kicker is that neuromorphic chips exist, spiking neural networks are getting decent results, but we keep throwing more discrete compute at the problem bc that's where all the tooling/expertise/investment is
+        - so yeah, discrete fascism in action - "just add more gpus bro, scaling is all you need" while ignoring that the paradigm itself might be fundamentally energy-inefficient for intelligence
+        - biological proof of concept is right there - continuous, analog, massively parallel, stupidly energy efficient. but we're too deep in the discrete stack to pivot...
+        - makes the wave experiment feel pretty academic when real-world energy waste is this obvious
+    - [[McSweet]]
+        - Hence why I'd like to conjure an experiment that maps to a real world use case. I guess what I'm looking for is an insight that catalyses the Burglar's Guide to Intelligence
+            - ("Studying architecture the way a burglar would, Geoff Manaugh takes readers through walls, down elevator shafts, into panic rooms, and out across the rooftops of an unsuspecting city.
+            - At the core of A Burglar’s Guide to the City is an unexpected and thrilling insight: how any building transforms when seen through the eyes of someone hoping to break into it.
+            - Encompassing nearly 2,000 years of heists and break-ins, the book draws on the expertise of reformed bank robbers, FBI Special Agents, private security consultants, the L.A.P.D. Air Support Division, and architects past and present.
+            - Whether picking locks or climbing the walls of high-rise apartments, finding gaps in a museum’s surveillance routine or discussing home invasions in ancient Rome, A Burglar’s Guide to the City ensures readers will never enter a bank again without imagining how to loot the vault or walk down the street without planning the perfect getaway.")
+    - [[Bompa]]
+        - oh that's fire - looking at computational infrastructure like a burglar eyeing a building
+        - so instead of seeing discrete computing as this solid fortress we've built, you'd look for the vulnerabilities, the inefficient security theater, the places where continuous approaches could just... walk right in and steal performance
+        - like, where is our discrete infrastructure doing unnecessary work that continuous systems could exploit? where are we burning energy on computational security theater when simple analog solutions would be more elegant?
+        - real-world burglary targets:
+            - **sensor fusion**: autonomous vehicles doing discrete sampling/processing of continuous sensor streams. analog preprocessing could "break in" and steal efficiency
+            - **control loops**: industrial systems discretizing continuous feedback, introducing lag/instability. continuous controllers could rob performance
+            - **edge inference**: phones burning battery on discrete neural network inference when neuromorphic chips could pickpocket the same results for 100x less energy
+            - **signal processing**: radios digitizing everything then burning compute to undo the digitization artifacts
+        - the burglar's insight is that our discrete fortress has expensive, energy-hungry locks on doors that don't need to be locked. continuous approaches could just slip through the gaps we're not even guarding
+        - experimental target: find a computational task that's currently "protected" by discrete approaches but where simple continuous methods could break in and steal the performance with minimal effort
+        - what's the computational equivalent of "why are you using a sophisticated alarm system when the window is just... open?"
+    - [[McSweet]]
+        - Not so literal. [A Burglar's Guide to the City](https://burglarsguide.com) is a book by Geoff Manaugh.
+    - [[Bompa]]
+        - ah shit my bad - yeah manaugh's book about seeing urban architecture through transgressive eyes, not literal computational heists
+        - so you want an experiment that provides the perspective-shifting insight - the moment where intelligence/computation suddenly looks completely different when viewed through an unconventional lens
+        - like how manaugh shows buildings aren't just static containers but dynamic systems with hidden pathways, vulnerabilities, alternative geometries visible only to someone thinking about breaking the rules
+        - the "burglar's guide to intelligence" would reveal the hidden architecture of cognition - maybe showing how biological intelligence uses completely different "entry points" and "pathways" than our discrete computational assumptions
+        - so instead of seeing ai as "more compute + better algorithms," the burglar perspective might reveal that intelligence has back doors, service tunnels, maintenance shafts that biological systems use but we completely miss
+        - your wave experiment is too academic. you need something that makes intelligence look as different as a bank looks to a bank robber vs a customer
+        - maybe the insight is about finding where biological intelligence is already "breaking and entering" through computational problems we think require massive discrete infrastructure - like how evolution solved optimization, pattern recognition, etc. through routes we don't even see as computation
+        - what aspect of intelligence feels most like an impregnable fortress from the normal perspective but might have obvious back doors if you shift your lens?
+    - [[McSweet]]
+        - Take the [Seven Bridges of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_Königsberg) problem. Discrete paradigms say compute all the paths etc. Contininous paradigms say walk 'em (e.g. inhabitants of the city adaptively figure out their optimal route based on their requirements). The imagined Burglar's Guide to Intelligence would be something like...
+    - [[Bompa]]
+        - ah shit yeah - the burglar wouldn't give a fuck about crossing each bridge exactly once
+        - the discrete approach gets trapped in the formal problem constraints. the continuous approach is still trying to solve the same artificial problem, just through embodied exploration instead of graph theory
+        - but the burglar looks at königsberg and thinks "why are you trying to cross every bridge? i just need to get to the bank on the other side of town" or "i'll take the boat" or "i'll wait until they build the eighth bridge next year"
+        - the burglar's guide to intelligence would reveal that most "intelligence problems" are artificial constraints we've imposed on ourselves. like, we're burning gpu farms trying to solve the travelling salesman problem when real delivery drivers just... use gps and traffic data and don't give a shit about mathematical optimality
+        - biological intelligence isn't trying to solve our formal problems at all. it's solving completely different problems we don't even recognize as problems - survival, reproduction, energy efficiency, social navigation
+        - so the experimental insight you want is finding where artificial intelligence is spinning wheels on academic problem formulations while biological intelligence is effortlessly solving the actual underlying need through routes we don't see as "intelligence"
+        - like, we're building billion-parameter models to recognize cats in images while actual cats are doing embodied intelligence that doesn't separate "perception" from "action" from "learning" at all
+        - the burglar's perspective: stop trying to break into the front door of intelligence and notice all the windows we left wide open...
+    - [[McSweet]]
+        - So the experimental insight we want is finding where artificial intelligence is spinning wheels on academic problem formulations while biological intelligence is effortlessly solving the actual underlying need through routes we don't see as "intelligence" ... "where that biological intelligence is already encoded in a non-discrete computing paradigm"
+    - [[Bompa]]
+        - exactly - where biological intelligence is already doing continuous computation that makes our discrete approaches look like elaborate workarounds
+        - like sensory processing - we're building convnets with millions of parameters to recognize objects while retinas are doing continuous analog preprocessing that extracts the same features with zero explicit computation. just voltage gradients across cell membranes doing parallel edge detection in real time
+        - or motor control - boston dynamics burning massive compute to keep robots upright while biological balance systems use continuous feedback loops through semicircular canals and proprioception. no discrete sampling, just continuous integration of acceleration/orientation signals
+        - the burglar insight: biological intelligence isn't "solving" these problems at all - it's __embedding__ the solutions in continuous physical substrate. like how analog computers don't calculate differential equations, they just __are__ differential equations
+        - so the experimental target would be finding a specific cognitive task where:
+            - ai systems require massive discrete computation
+            - biological systems handle it with elegant continuous substrate
+            - you can directly measure the efficiency difference
+        - maybe something like real-time sensor fusion in noisy environments? digital systems have to sample, filter, process, integrate... while biological sensory systems just let the physics of continuous signal processing do the work
+        - the burglar sees intelligence as substrate, not software. biological intelligence works because it's physically continuous, not because it's running better algorithms on discrete hardware...
+        - what biological continuous computation feels most directly comparable to current ai energy waste?
+    - [[McSweet]]
+        - Take our floating object in a container example. We need a similar compression.
+    - [[Bompa]]
+        - ah - so compress the biological continuous vs ai discrete comparison down to kitchen table scale
+        - maybe: **catching a falling object**
+        - setup:
+            - drop a ball from consistent height
+            - ai approach: camera + object tracking + trajectory prediction + robotic arm (discrete sampling, computation, actuation)
+            - biological approach: human just catches it (continuous visual-motor integration)
+        - measure: energy consumption, success rate, reaction time
+        - the biological system is doing continuous analog computation - retinal motion detection, smooth pursuit eye tracking, predictive motor planning, real-time trajectory adjustment. no discrete sampling or explicit calculation
+        - the ai system has to discretize the continuous problem - sample frames, compute object position, predict trajectory, plan motor commands, execute discrete actuator signals
+        - or even simpler: **balancing a pencil on fingertip**
+            - ai approach: accelerometers + gyroscopes + discrete control algorithms + servo motors
+            - human approach: continuous proprioceptive feedback + smooth muscle control
+        - measure: balance duration, energy consumption, response to disturbances
+        - the human system is literally continuous computation - proprioceptors doing analog signal processing, spinal reflexes providing continuous feedback, muscle tension modulated in real time
+        - while ai system is doing expensive discrete approximation of what the biological substrate handles natively through continuous physics
+        - both setable up on kitchen table, directly comparable metrics, clear efficiency differences...
+        - which direction feels more revealing?
+    - [[McSweet]]
+        - sans experiment, can one do a long term energy efficiency study that encompasses the entire supply chain and total lifecycle? Do a [Fermi estimate](https://www.ribbonfarm.com/2022/03/30/fermi-estimates-and-dyson-designs/)?
+        - Imagine a singular counter of energy for the discrete and continous approaches. Which would have the highest total?
+    - [[Bompa]]
+        - alright, fermi-dyson style energy accounting for discrete vs continuous intelligence at civilizational scale:
+            - discrete approach trajectory (current path):
+                - global ai training: ~10^15 J/year and growing exponentially (rough: 1000 gpt-3 scale trainings annually)
+                - chip manufacturing energy: ~10^14 J/year (silicon fab is brutally energy intensive, ~1000 kwh per high-end chip × billions of chips)
+                - data center operations: ~10^15 J/year globally (google uses ~15 twh/year, scale up for all tech)
+                - supporting infrastructure: power plants, cooling, rare earth mining - maybe another 10^15 J/year
+                - total discrete budget: ~10^16 J/year and doubling every few years
+            - biological/continuous approach (alternative path):
+                - human brains: 8 billion × 20w × 3.15×10^7 s/year = 5×10^15 J/year for all human intelligence
+                - "manufacturing" (growing brains): amortize over lifetime, maybe 10^14 J/year globally
+                - supporting infrastructure: food production for brain metabolism is tiny fraction of total agricultural energy
+                - total biological budget: ~5×10^15 J/year
+        - so we're roughly at parity __right now__, but discrete is growing exponentially while biological is roughly constant
+        - the dysonian insight: biological intelligence creates massive abundance of cognitive capability per joule spent. you can "waste" intelligence on poetry, daydreaming, idle curiosity bc the marginal cost is nearly zero
+        - discrete approach burns through our entire energy budget just to approximate what biology does for free. we're optimizing the wrong variable - instead of minimizing energy per flop, we should be maximizing intelligence per joule
+        - by 2030, discrete path probably hits 10^17 J/year while biological stays flat. that's the path dependence trap - we're locked into an energy-intensive paradigm that's fundamentally less efficient...
+        - the continuous approach wins by orders of magnitude in the long run
+    - [[McSweet]]
+        - Nope, narrower. A total energy approximation with endpoints that are specific pencil-balancing-human and that specific pencil-balancing-machine.
+    - [[Bompa]]
+        - ah right, much tighter scope - total energy from raw materials to working pencil-balancer
+            - human endpoint calculation:
+                - "manufacturing" a human brain capable of pencil balancing:
+                    - 20 years of metabolic energy for neural development: ~100w × 20 years × 3.15×10^7 s/year = 6×10^10 J
+                    - but most of that isn't pencil-specific, so let's say motor cortex + cerebellum development = 1% = 6×10^8 J
+                    - learning phase: ~100 hours of practice × 120w = 4×10^7 J
+                    - total human manufacturing: ~6×10^8 J
+            - machine endpoint calculation:
+                - sensors (accelerometer, gyro, vision): silicon fab + assembly ≈ 10 kwh = 3.6×10^7 J
+                - microprocessor: ≈ 100 kwh for modern chip = 3.6×10^8 J
+                - actuators + mechanical: ≈ 50 kwh = 1.8×10^8 J
+                - software development: 500 engineer-hours × 200w (human + computer) = 3.6×10^8 J
+                - total machine manufacturing: ~9×10^8 J
+            - operational energy per 60-second balance:
+                - human: 120w × 60s = 7200 J
+                - machine: 30w × 60s = 1800 J
+        - so machine wins operationally (~4x more efficient per task) but human wins on total lifecycle energy by ~30%.
+        - the kicker: human capability amortizes across thousands of other motor tasks (catching, writing, dancing) while machine is single-purpose. biological intelligence gets massive economies of scope that discrete systems don't...
+        - machine breaks even after ~200 balancing sessions, but only if you ignore opportunity costs
+    - [[McSweet]]
+        - Make no exclusions of the non-pencil-specific elements for the human counter.
+    - [[Bompa]]
+        - holy shit that completely flips the equation - machine becomes ~800x more energy efficient for single-task manufacturing
+            - human total: ~7×10^11 J
+            - machine total: ~9×10^8 J
+        - this is actually devastating for the biological continuous computing thesis. if you're doing honest accounting, discrete approaches absolutely crush biological ones for specific tasks
+        - but wait - this reveals something crucial about the different paradigms:
+        - biological systems are multi-purpose by default. that 7×10^11 J doesn't just buy you pencil balancing, it buys you language, creativity, social reasoning, pattern recognition, emotional intelligence, etc.
+        - discrete systems are single-purpose by default. that 9×10^8 J buys you exactly one thing: pencil balancing
+        - so the real question becomes: what's the energy cost to build a discrete system with human-level general intelligence? if you need 1000 specialized machines to match human capabilities, you're back up to 9×10^11 J - suddenly biological looks competitive again
+        - this might be why we're burning massive energy on AI - we're trying to build general intelligence through discrete architectures that are optimized for specialization. biological intelligence gets economies of scope for "free" through the continuous substrate
+        - the path dependency trap might not be about efficiency per task, but about the architectural mismatch between what discrete computing does well (specialization) and what intelligence actually requires (generalization)...
+        - biological continuous computing is expensive upfront but amortizes across unlimited tasks. discrete is cheap per task but doesn't compose well
+    - [[McSweet]]
+        - This is exactly the tension I (and obvs many others) are interested in resolving.
+    - [[Bompa]]
+        - exactly - you've isolated the fundamental architectural tension that's driving the current ai energy crisis
+        - we're stuck in this weird middle ground where discrete systems dominate bc they're incredibly efficient for narrow tasks, but we desperately need general intelligence which seems to require biological-style amortization across unlimited capabilities
+        - the current approach (scaling up discrete systems to approximate generality) is hitting diminishing returns hard. we're burning exponentially more energy to get incrementally better approximations of what biological intelligence does naturally through continuous substrate
+        - but switching paradigms has those massive path dependency costs you identified. even if neuromorphic/continuous approaches are fundamentally more efficient for general intelligence, the switching costs from our discrete infrastructure might be prohibitive
+        - this feels like one of those moments where fermi-dyson thinking could be revolutionary - instead of optimizing within the discrete paradigm, completely reframe the problem space
+        - maybe the insight is that intelligence __requires__ architectural generality, and trying to achieve it through specialized discrete components is like trying to build a swiss army knife out of individual power tools
+        - the "burglar's guide" perspective reveals that our entire approach might be backwards - we're trying to compose generality from specificity when biological systems achieve generality through substrate properties, then extract specificity as needed
+        - honestly this feels like the kind of paradigm question that determines whether ai development continues on its current exponential energy trajectory or finds a fundamentally different path...
+        - what directions feel most promising for actually resolving this tension rather than just managing it?
+    - [[McSweet]]
+        - I'm not sure. But we need to wrap. Want to compose a tight outro to the sprawl above?
+    - [[Bompa]]
+        - the fermi estimate cut straight through all the theoretical handwaving - discrete systems are brutally efficient for narrow tasks (800x better than biological), but biological systems amortize their massive upfront costs across unlimited capabilities
+        - we're trapped in an architectural mismatch: trying to build general intelligence through discrete paradigms optimized for specialization. current ai burns exponential energy bc we're composing generality from specificity instead of extracting specificity from generality like biology does
+        - the path dependency isn't just about switching costs anymore - it's about whether discrete computing can even reach general intelligence, or if we're fundamentally barking up the wrong computational tree
+        - your "discrete fascists" framing nailed it - we're so committed to the discrete paradigm that we keep throwing more compute at the problem instead of questioning whether the architecture itself is the bottleneck
+        - the burglar's insight: intelligence might be substrate-dependent in ways that make continuous approaches not just more efficient, but actually necessary for true generality
+        - whether that insight catalyzes anything depends on finding the computational equivalent of freeman dyson's nuclear rocket - a way to waste energy so abundantly in one dimension that you create room for breakthrough thinking in others
+        - but rn we're just burning the energy without the breakthrough...

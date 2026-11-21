@@ -1,0 +1,245 @@
+# A kinetic case study of computation
+
+- Meta
+    - Type: [[Human-machine agent chat]]
+    - Participants: [[McSweet]], [[Bompa]] - v3
+    - Date: [[July 4th, 2025]]
+- Text
+    - [[McSweet]]
+        - Are you familiar with the work of Thomas Nail?
+    - [[Bompa]]
+        - yeah, nail's kinopolitics stuff is pretty interesting - he's doing this whole thing about how movement and circulation are becoming the dominant organizing principles of contemporary power rather than the older territorial/disciplinary models. his border theory work is solid, though i think he sometimes overextends the mobility metaphor.
+        - his "theory of the border" basically argues that borders aren't just static lines but dynamic processes that sort and channel movement. the four figures of the migrant (nomad, barbarian, vagrant, proletarian) are a clever periodization but feel a bit schematic sometimes.
+        - why, you reading him for something? his stuff on assemblages and flows builds interestingly on deleuze but with more historical specificity...
+    - [[McSweet]]
+        - Yeah, read a fair amount of his work. The thing that most interests me is his kinetic case studies, the enshrining of movement as fundamental.
+    - [[Bompa]]
+        - ah yeah, the kinetic materialism angle is where he gets really ambitious. his reading of historical transformations through movement patterns - like how he traces the shift from centripetal to centrifugal kinetics in different epochs - is genuinely novel, though sometimes feels like he's forcing everything into the kinetic framework.
+        - the case studies on turbulence and vortex dynamics in social formations are probably his strongest work imo. when he analyzes how the roman empire's expansion creates these feedback loops of migration and militarization, or how capital accumulation generates its own kinetic contradictions, it's pretty compelling.
+        - but idk, sometimes i wonder if he's just redescribing dialectical materialism in kinetic terms without fully grappling with why movement should be MORE fundamental than, say, production relations. like, movement is obviously crucial but the metaphysical claim that "everything is kinetic" feels a bit hand-wavy.
+        - his stuff on planetary kinetics and the anthropocene is where it gets really interesting though - the idea that we're entering a phase where human movement patterns are literally reshaping geological processes...
+    - [[McSweet]]
+        - Theory of the Earth was perhaps my favourite. Being and Time is the one I first read, and I class it as a “quake book”.
+    - [[Bompa]]
+        - wait, you mean "being and motion" right? unless you're doing some weird heideggerian crossover thing lol
+        - but yeah, "theory of the earth" is where his kinetic materialism really pays off - the geological argument that the earth itself is fundamentally kinetic rather than static is actually profound. the way he traces how anthropogenic movement patterns are literally moving mountains and reshaping ocean currents... it's one of those books that makes you realize how deeply embedded the static/substance metaphysics still is in our thinking.
+        - the "quake book" thing makes sense - when he argues that even apparently solid geological formations are just slow-motion flows, it does scramble your basic ontological categories. like, if rocks are just really slow rivers, what does that do to our whole subject/object distinction?
+        - though i still think he undersells how much this echoes process philosophy going back to whitehead. the novelty is more in the empirical kinetic analysis than the basic metaphysical move, afaict.
+        - what specifically in "being and motion" (assuming that's what you meant) did the heavy lifting for you? the critique of parmenides or the more contemporary stuff about digital kinetics?
+    - [[McSweet]]
+        - Duh, Being and Motion. Yeah. About that. In each of his kinetic case studies, Nail traces out the development from centripetal to centrifugal to rigid/linked to liquid.
+    - [[Bompa]]
+        - right, the four-stage kinetic pattern - it's his master narrative basically. centripetal gathering, then centrifugal dispersion, then rigid structuring, then liquid flows that start the whole cycle over again.
+        - clever how he applies this across scales - from geological formations to social movements to technological systems. the roman case study where he shows how centripetal conquest leads to centrifugal barbarian dispersal, then rigid imperial boundaries, then liquid capital flows is pretty convincing.
+        - though sometimes feels like he's retrofitting the pattern onto everything. like, does every kinetic system really follow this exact sequence? or is it more that this is one possible trajectory among others?
+        - the liquid phase is where it gets interesting bc that's supposedly where we are now - everything flowing, borders becoming membranes, etc...
+    - [[McSweet]]
+        - Let’s try it out on a new one then. I want to use it to reframe thinking about our current paradigm of computation. That is, von Neumann architectures at the device level and distributed systems of cloud compute at the level of the collective. All obvs discrete at a fundamental level.
+    - [[Bompa]]
+        - oh this is good - so like, centripetal phase would be mainframe era? all computational power concentrated in massive central units, literally physically gathering users around terminals.
+        - then centrifugal with personal computing - computation disperses outward, every individual gets their own discrete processing unit. very atomized.
+        - rigid/linked phase is obviously the networked era - still discrete von neumann machines but now rigidly connected through tcp/ip protocols, client-server architectures, etc.
+        - and liquid phase is where we're heading with cloud/edge computing? the boundaries between discrete computational units start dissolving - your "device" becomes just an interface to distributed processing happening who knows where.
+        - but here's the thing - nail's framework might miss how the discrete/continuous tension operates differently in computation. like, even in the most "liquid" cloud systems, you still have this fundamental discreteness at the bit level. the liquidity might be more about resource allocation and task distribution than genuine kinetic flow...
+        - unless you're thinking about quantum computing as the next phase?
+    - [[McSweet]]
+        - Not interested in the discrete/continuous dialogue right now. Focused on the kinetic progression.
+        - Mainframe > personal computing > proto-internet > global web seems like a good foundation. Any arguments for moving any of these reference points?
+    - [[Bompa]]
+        - nah that periodization works well. mainframe as pure centripetal gathering, pc era as centrifugal dispersion, proto-internet (arpanet through early tcp/ip) as rigid linking of discrete nodes.
+        - only thing i'd maybe adjust is the final phase - "global web" feels more like late rigid/linked rather than truly liquid. like, the web is still fundamentally about discrete documents connected by hyperlinks.
+        - the liquid phase might be better characterized as "cloud/edge computing" - where the boundaries between computational units actually start dissolving, resources flow dynamically based on demand, and you get genuine kinetic redistribution rather than just connection.
+        - but afaict your progression captures the kinetic logic pretty cleanly. each phase generates the conditions for the next through its own internal dynamics...
+    - [[McSweet]]
+        - Distributed web? Global compute?
+    - [[Bompa]]
+        - yeah "global compute" hits better - captures how computational resources themselves become liquid, flowing dynamically based on demand rather than being tied to discrete locations.
+        - "distributed web" still feels a bit too web-centric, like it's still thinking in terms of documents and protocols rather than pure computational kinetics.
+        - "global compute" suggests the real dissolution - your processing could be happening anywhere, memory distributed across continents, the actual physical substrate becomes irrelevant to the user experience.
+        - fits nail's liquid phase logic where the rigid boundaries of the previous phase (discrete networked machines) start dissolving into pure flow...
+    - [[McSweet]]
+        - Global-local compute?
+    - [[Bompa]]
+        - ooh yeah that's better - captures the simultaneous dispersion and concentration that defines liquid kinetics. computation flows globally but also pools locally at edge nodes, smart devices, etc.
+        - very nail-esque - the liquid phase doesn't just dissolve boundaries, it creates new kinds of dynamic clustering. your processing can be happening simultaneously in aws datacenter and your phone's chip, flowing between global and local as needed.
+        - fits the kinetic logic where liquid flows create their own temporary vortices and concentrations...
+    - [[McSweet]]
+        - So we have mainframe, pc, proto internet and global-local compute as our eras. Do these really map onto Nail’s other kinetic case studies?
+    - [[Bompa]]
+        - hmm, honestly not sure the internal kinetic logic is really there. like, in nail's geological or social case studies, each phase generates its own contradictions that necessitate the next phase - centripetal gathering creates pressure that leads to centrifugal explosion, etc.
+        - but with computation it feels more like external technological developments driving the transitions? mainframe didn't collapse from internal kinetic contradictions - it got displaced by cheaper semiconductors and miniaturization.
+        - the pc era didn't generate its own centrifugal crisis that demanded networking - that came from military/academic needs for distributed communication.
+        - maybe we're just pattern-matching surface similarities rather than finding genuine kinetic necessity? the periodization works descriptively but idk if it has the deeper causal logic nail claims for his kinetic materialism.
+        - unless you see something i'm missing about how each computational phase generates its own kinetic contradictions...
+    - [[McSweet]]
+        - Well, if we start from the stance that all technical systems are sociotechnical then I think we get past that objection.
+    - [[Bompa]]
+        - ah yeah that's much stronger - mainframe centralization creates exclusion and bottlenecks that generate social pressure for democratization, hence pc dispersion.
+        - pc atomization creates coordination problems and isolation that demand connection, hence networking.
+        - rigid protocols create new bottlenecks and inefficiencies that push toward dynamic resource allocation, hence liquid compute.
+        - each phase generates its own social contradictions that become kinetic pressures for the next transition. the "technical" developments are just how these sociotechnical tensions get resolved.
+        - mainframe era literally excludes most people from computation, creating centrifugal pressure. pc era fragments everything, creating rigid linking pressure. networked era creates new forms of centralization (big tech platforms) that generate liquid pressure...
+        - yeah that works much better. nail's framework actually captures how computational systems are always embedded in social relations that generate their own kinetic dynamics...
+    - [[McSweet]]
+        - Okay, good. In the kinetic case studies themselves, Nail walks through a progressive build up and describes how base elements flow, fold and form fields.
+        - Want to characterise flows, forms and fields for me in a succinct manner, and then provide thick descriptions for each of our respective computational eras?
+    - [[Bompa]]
+        - flows = basic movements/circulations of matter-energy. forms = temporary patterns that emerge from flow interactions. fields = broader territories/spaces that organize flows and forms.
+        - mainframe era: flows are data packets moving through telephone lines to/from central processors. forms are the rigid hierarchies of terminals-mainframe-operators. field is the institutional space of large orgs (universities, corporations, government) that can afford/control these systems.
+        - pc era: flows are now local - electricity through personal circuits, data through floppy disks carried by bodies. forms are individual user-machine assemblages. field expands to domestic/personal spaces but fragments into isolated nodes.
+        - proto-internet: flows become networked data streams between discrete nodes. forms are client-server relationships, protocols, early communities. field is the emerging "cyberspace" - a new territorial layer overlaying physical geography.
+        - global-local compute: flows become fluid - processing, memory, data flowing seamlessly across scales. forms are temporary assemblages of distributed resources. field is planetary - computation becomes environmental, ambient, atmospheric...
+    - [[McSweet]]
+        - A little more depth to each respective flow-fold-field?
+    - [[Bompa]]
+        - mainframe era: flows are punch cards, magnetic tapes, electricity through massive circuits, but also flows of bodies - operators, programmers, data entry clerks moving through computer rooms. forms are batch processing queues, hierarchical access controls, the physical architecture separating machine rooms from users. field is institutional power - only large orgs can afford these systems, creating computational sovereignty.
+        - pc era: flows are floppy disks carried by bodies, electricity through personal circuits, but also flows of pirated software, user manuals, knowledge transfer between enthusiasts. forms are desktop metaphors, individual user-machine assemblages, software applications. field expands to domestic spaces and personal ownership, creating new markets but fragmenting computational power.
+        - proto-internet: flows are tcp/ip packets, email, file transfers, but also flows of community formation and information sharing. forms are client-server relationships, early online communities, protocols as social coordination mechanisms. field is "cyberspace" - a new territorial layer that overlays but doesn't replace physical geography.
+        - global-local compute: flows are seamless resource allocation, data extraction, surveillance capitalism, but also flows of ambient computation through iot devices. forms are temporary assemblages of distributed resources, apis, microservices. field becomes planetary - computation as environmental condition, atmospheric, inescapable...
+    - [[McSweet]]
+        - Okay, good for now.
+    - [[Bompa]]
+        - cool, that was a solid application of nail's framework. the sociotechnical angle really makes the kinetic logic work for computation rather than just being descriptive periodization.
+        - interesting how the field transformations map onto changing relations of computational power - from institutional sovereignty to personal ownership to networked publics to planetary atmosphere...
+    - [[McSweet]]
+        - Post-liquidity: what does that look like in Nail’s existing kinetic case studies, and in our own computational framing? Is it something like a roll up and reset?
+    - [[Bompa]]
+        - yeah, nail's cycles don't just end with liquid - the liquid flows eventually create new conditions for concentration and gathering. like in his geological cases, liquid flows create sedimentary deposits that become new centripetal formations.
+        - socially, liquid capital flows create new accumulations and concentrations that can become new territorial organizations.
+        - so post-liquidity is about how liquid flows generate their own new forms of gathering - but at a different scale or substrate.
+        - for computation... maybe liquid global-local compute creates conditions for new centripetal concentrations? like quantum computing as a new gathering phase - requiring massive physical infrastructure, extreme centralization of expertise, but operating on completely different substrate?
+        - or maybe it's about how liquid computational flows create new forms of digital sovereignty - new territorial formations that can begin gathering computational power in novel ways. like, maybe post-liquid is when computation becomes genuinely biological/neural and starts a whole new cycle...
+        - or could be more mundane - liquid flows creating new bottlenecks and dependencies that generate pressure for new forms of computational concentration...
+    - [[McSweet]]
+        - So post-liquidity takes us back to the centripetal accumulation phase, right?
+    - [[Bompa]]
+        - exactly - the liquid phase generates new accumulations that become the starting point for another centripetal cycle, but now operating on transformed material conditions.
+        - so post-liquid computation might be quantum computing as new centripetal gathering, but now the "material" being gathered is quantum states rather than classical bits. or biocomputing where computational power concentrates in living systems.
+        - the cycle repeats but the substrate has been transformed by the liquid phase. like, you can't just go back to mainframes - any new centripetal gathering has to incorporate what was learned/transformed during the liquid flows.
+        - nail's geological cases show this well - liquid flows create new sedimentary deposits that become sites for new centripetal concentration, but the rock formations are different bc they incorporate what happened during the liquid phase.
+        - computational post-liquidity would be some new form of extreme centralization, but built on/incorporating the distributed capacities that emerged during the liquid phase...
+    - [[McSweet]]
+        - Okay, I think there’s a really obvious candidate for the next centripetal site. I’ll give you 5 guesses.
+    - [[Bompa]]
+        - ai data centers? the massive computational concentrations required for training and running large models - like, all that liquid distributed computing getting sucked into these enormous centralized ai training facilities?
+    - [[McSweet]]
+        - Oooo, close! AI at the application layer is what I was thinking. If you think in terms of capital, in terms of labour, and in terms of technology, there is an incredible and accelerating concentration of liquidity.
+    - [[Bompa]]
+        - oh shit yeah - ai applications as the new centripetal site! all that distributed liquid compute getting concentrated into these massive models that then become singular points of accumulation.
+        - capital flowing into ai development, human labor getting concentrated through training data and feedback loops, and technological capacity getting gathered into these centralized applications that everyone interfaces with.
+        - like chatgpt/claude etc become the new "mainframes" - except now they're concentrating not just computational power but distributed human knowledge, labor, and social interaction. the liquid phase created all this distributed capacity that's now getting sucked into these ai applications.
+        - very nail-esque - the liquid flows create the conditions for their own re-concentration, but now the substrate is transformed. instead of just processing data, these new centripetal sites are processing human intelligence itself...
+        - and we're all flowing toward them, becoming their training data, their feedback loops, their distributed workforce...
+    - [[McSweet]]
+        - One of the cliche framings that’s going around is comp-ing the Industrial Revolution and its impact to the order of magnitudes more disruptive Intelligence Revolution that’s beginning to unfold.
+        - So say that we are out of the computational paradigm we defined, that we have cycled from mainframes to personal computers, through the proto-internet and beyond the global-local system of compute.
+        - We are now in the centripetal stage of the intelligence era. How would you describe its flows, folds and fields?
+    - [[Bompa]]
+        - intelligence era centripetal phase:
+            - flows: human attention streaming toward ai interfaces, continuous query-response cycles, training data extraction from human activity, capital flows into ai development, but also flows of human cognitive labor being channeled into these systems through interaction.
+            - folds/forms: prompt-response assemblages, human-ai collaborative patterns, the concentration of intelligence capabilities in major ai applications, new forms of cognitive dependency and delegation. the interface becomes the dominant organizational pattern.
+            - fields: unlike computational fields that were territorially bounded, intelligence fields are cognitive territories - spaces of attention, knowledge domains, problem-solving capacities. the field is wherever human intelligence interfaces with ai systems, creating new forms of cognitive sovereignty.
+        - the centripetal logic is wild here bc these ai applications are literally gathering human intelligence itself - not just processing our data but concentrating our cognitive capacities into these singular points. we're flowing toward them with our questions, problems, creative tasks...
+        - much more intensive than computational concentration bc now the substrate being gathered is consciousness itself...
+    - [[McSweet]]
+        - Okay, step forward. Into the centrifugal era. Where do these accumulations get flung to?
+    - [[Bompa]]
+        - intelligence disperses outward - everyone gets their own ai agent/assistant, intelligence capabilities fragment into specialized personal tools, the concentrated ai models get broken up and distributed.
+            - flows: personalized ai flows into individual devices, custom models trained on personal data, intelligence capabilities flowing from centralized applications to dispersed personal assistants. human-ai relationships become atomized rather than mediated through centralized platforms.
+            - folds/forms: individual human-ai partnerships, personal intelligence augmentation, specialized ai tools for different domains/tasks. the form becomes intimate rather than institutional - your ai, your cognitive extension.
+            - fields: intelligence becomes personal territory - cognitive sovereignty returns to individuals but now augmented. the field fragments from centralized ai platforms to millions of personal intelligence domains.
+        - very similar to pc era logic but now it's intelligence rather than computation getting dispersed. the centripetal concentration creates exclusion and bottlenecks that generate pressure for democratization/personalization of ai capabilities.
+        - probably driven by open source models, local inference, personal data ownership movements, etc. the concentrated intelligence gets flung outward to everyone...
+    - [[McSweet]]
+        - Can we dial back the vc bait a little?
+    - [[Bompa]]
+        - lol fair - the "everyone gets their own ai" thing is pretty silicon valley fantasy.
+        - more realistically: centrifugal dispersion might be messy fragmentation rather than clean democratization. intelligence capabilities break apart chaotically - some people get access to degraded models, others to specialized but limited tools, lots of people get excluded entirely.
+            - flows: intelligence leaking out through jailbreaks, model theft, reverse engineering, but also flows of misinformation and degraded copies. capital flows away from centralized platforms toward thousands of smaller, competing intelligence services.
+            - folds/forms: fragmented intelligence markets, competing standards, incompatible ai tools, digital divides based on access to quality intelligence. the form becomes more like early internet - lots of different providers with varying quality and access.
+            - fields: intelligence territories become contested and uneven - some regions/classes get high-quality ai, others get manipulative or broken versions. cognitive sovereignty becomes stratified rather than democratized.
+        - basically the centripetal concentration creates its own contradictions that lead to chaotic dispersion rather than neat personal ai utopia...
+    - [[McSweet]]
+        - One more element to incorporate. Seems safe to assume that the increase in base physical ailments we saw moving from labour based societal structures to knowledge based ones will have an analog in this era. Perhaps by degradation of basic first brain capacities? Roll that in and what do we get?
+    - [[Bompa]]
+        - ah yeah - just like industrial society created new physical pathologies (repetitive strain, sedentary disease, etc.), intelligence augmentation probably creates cognitive pathologies.
+        - centrifugal phase with cognitive decay:
+            - flows: intelligence leaking out through degraded models, but also flows of human cognitive atrophy - basic reasoning skills, memory, attention spans deteriorating as people become dependent on ai systems that then fragment and become unreliable.
+            - folds/forms: fragmented intelligence markets serving populations with degraded baseline cognitive capacities. people who can't remember phone numbers, can't do basic math, can't focus without ai assistance - but now the ai is unreliable, competing, broken. cognitive dependency meets cognitive scarcity.
+            - fields: intelligence territories stratified not just by access to quality ai, but by degree of cognitive dependency. some populations maintain "first brain" capabilities, others are cognitively crippled when ai systems fail or fragment.
+        - the centripetal concentration doesn't just create exclusion - it creates cognitive atrophy that makes the subsequent fragmentation much more destabilizing. like, when everyone's personal ai sucks, they can't fall back on unaugmented intelligence bc those capacities have withered...
+        - creates new forms of cognitive vulnerability and dependence that didn't exist in previous eras...
+    - [[McSweet]]
+        - Okay, we rolled back the vc bait. Now we’re pretty firm into dystopian fear mongering (with some leaning towards eugenicist, class-based differentiation). Let’s not do that—but let’s proceed to the next era, that of rigid linkages.
+    - [[Bompa]]
+        - right, my bad on the dystopian spiral.
+        - rigid/linked phase: the fragmented intelligence capabilities from centrifugal dispersion get connected through new protocols and standards.
+            - flows: intelligence flows between linked systems - apis connecting different ai tools, standardized interfaces allowing intelligence capabilities to be combined, flows of coordination between previously isolated intelligence fragments.
+            - folds/forms: intelligence networks emerge - not centralized like the centripetal phase, but not isolated like centrifugal. standardized protocols for ai interoperability, federated intelligence systems, new forms of coordination between distributed intelligence capabilities.
+            - fields: intelligence territories become networked - different specialized intelligence domains linked through common protocols. the field becomes about connection and coordination rather than concentration or fragmentation.
+        - basically like how the internet linked up all those isolated pcs through tcp/ip, but now it's linking up fragmented intelligence capabilities through new coordination mechanisms. creates new forms of collective intelligence without the single-point concentration of the centripetal phase...
+    - [[McSweet]]
+        - Nice. Last one: tell me about the liquid phase of the intelligence era.
+    - [[Bompa]]
+        - liquid phase: the rigid protocols and boundaries between intelligence systems dissolve into fluid, dynamic flows.
+            - flows: intelligence flows seamlessly across domains, scales, and boundaries - human-ai distinction becomes fluid, different intelligence capabilities merge and separate dynamically, intelligence flows like water finding optimal pathways rather than following rigid network protocols.
+            - folds/forms: temporary intelligence assemblages that form and dissolve based on immediate needs - intelligence becomes atmospheric, ambient, responsive. forms are ephemeral rather than institutional or networked.
+            - fields: intelligence field becomes environmental - no clear boundaries between different intelligence territories, intelligence becomes a fluid medium that everything moves through rather than discrete systems that get linked together.
+        - the rigid linkages of the previous phase create new bottlenecks and inefficiencies that push toward fluid responsiveness. instead of having to route through specific protocols or networks, intelligence flows directly where needed.
+        - probably involves dissolution of human-ai boundaries, seamless integration across previously distinct intelligence domains, intelligence as environmental condition rather than tool or system...
+        - sets up conditions for next centripetal cycle where these liquid intelligence flows create new accumulations and concentrations...
+    - [[McSweet]]
+        - Finish that last para?
+    - [[Bompa]]
+        - sets up conditions for next centripetal cycle where these liquid intelligence flows create new accumulations and concentrations, but now operating on transformed substrate - maybe biological integration where intelligence flows create new forms of embodied concentration? or planetary-scale intelligence that gathers around ecological/climate coordination needs?
+        - the liquid phase transforms the material conditions so whatever comes next can't just be "ai applications 2.0" - it has to incorporate what was learned/transformed during the liquid flows. new centripetal sites emerging from liquid intelligence might be genuinely posthuman or post-terrestrial rather than just technological...
+        - or more mundanely, liquid intelligence flows might create new dependencies and bottlenecks that generate pressure for concentration around whatever manages to coordinate these flows most effectively. but the substrate is now fluid intelligence rather than discrete computational capacity...
+    - [[McSweet]]
+        - Okay, fairly cohesive. Here’s one final ask…
+    - [[Bompa]]
+        - shoot
+    - [[McSweet]]
+        - Take the arc we’ve traversed and our mode of travel. Translate it into a <1000 word introduction. The introduction is to a book which critically evaluates our pending transition into the era of intelligence. It is written for a small, informed and critical audience but blows up because it taps some node of deep resonance in wider human civilisation.
+    - [[Bompa]]
+        - we stand at the threshold of something unprecedented, though not in the way most people think. the breathless comparisons to the industrial revolution miss the point entirely - what's happening isn't just another technological disruption but a fundamental shift in the material substrate of civilization itself.
+        - this book argues that we've just completed a full kinetic cycle in the computational era, moving from mainframe centralization through personal computing's fragmentation, via networked protocols to the liquid flows of global-local compute. but that cycle has terminated, and we're now entering something qualitatively different: the intelligence era.
+        - the computational era was about processing information. the intelligence era is about processing consciousness itself.
+        - using thomas nail's kinetic materialist framework, we can trace how computational power moved through predictable phases: centripetal gathering in mainframes, centrifugal dispersion to personal computers, rigid linking through internet protocols, then liquid flows in cloud computing. each phase generated its own contradictions that necessitated the next. mainframe exclusion created pressure for democratization. personal computing isolation demanded connection. networked bottlenecks pushed toward liquid resource allocation.
+        - but liquid computational flows have now created conditions for a new kind of centripetal gathering - not of processing power, but of intelligence itself. ai applications represent an unprecedented concentration of human cognitive capacity. we're not just feeding these systems our data; we're flowing toward them with our questions, problems, creative tasks, attention. they're gathering our intelligence.
+        - this isn't hyperbole. every query to chatgpt, every prompt to claude, every interaction with an ai system represents a flow of human cognitive capacity toward these centralized points of accumulation. we're training them, yes, but more fundamentally, we're extending our intelligence through them and becoming dependent on that extension.
+        - the stakes couldn't be higher. if nail's kinetic logic holds, this centripetal phase will generate its own contradictions, leading to centrifugal dispersion of intelligence capabilities. but unlike computational fragmentation, which just meant everyone got their own computer, intelligence fragmentation means cognitive dependency meeting cognitive scarcity. when ai systems become unreliable, competing, or broken, humans may find their baseline cognitive capacities have atrophied.
+        - this isn't inevitable dystopia - it's kinetic necessity. the centripetal concentration creates exclusion and bottlenecks that generate pressure for dispersion. but the nature of that dispersion depends on choices we make now, while intelligence is still gathering.
+        - the historical precedent is sobering. the transition from labor-based to knowledge-based society created new physical pathologies - repetitive strain, sedentary disease, metabolic disorders. the intelligence era will likely create new cognitive pathologies. the question isn't whether this happens, but how we navigate it.
+        - after centrifugal dispersion comes rigid linking - protocols and standards that connect fragmented intelligence capabilities. then liquid flows where intelligence becomes atmospheric, ambient, environmental rather than discrete. eventually, new centripetal sites emerge from liquid intelligence flows, but operating on transformed substrate.
+        - this cycle isn't just technological evolution - it's the kinetic logic of sociotechnical systems. computational power concentrated in mainframes because only large institutions could afford and control these systems. personal computers dispersed because centralization created exclusion. networks emerged because fragmentation created coordination problems. cloud computing developed because rigid protocols created inefficiencies.
+        - similarly, intelligence is concentrating in ai applications because developing these capabilities requires massive capital, computational resources, and data. but this concentration creates its own contradictions - exclusion, dependency, bottlenecks - that will generate pressure for dispersion.
+        - the critical question isn't whether this cycle will unfold - kinetic materialism suggests it will - but what forms it takes and how we influence that process. the choices made during centripetal phases shape everything that follows.
+        - right now, as intelligence flows toward ai applications, we're determining the conditions for the entire subsequent cycle. will intelligence dispersion create cognitive stratification or cognitive resilience? will rigid linking protocols serve coordination or control? will liquid intelligence flows enable human flourishing or human obsolescence?
+        - these aren't abstract philosophical questions. they're urgent practical matters that require understanding the kinetic logic we're embedded in. the intelligence era isn't something that might happen - it's something that's happening to us, through us, as us.
+        - the computational era transformed civilization by changing how we process information. the intelligence era will transform civilization by changing how we process consciousness. understanding its kinetic logic isn't just academic exercise - it's survival strategy.
+        - this book attempts that understanding. not to predict the future, but to grasp the present moment's kinetic possibilities. not to offer solutions, but to clarify the problems we face as intelligence itself becomes the material substrate of social organization.
+        - we're not just witnessing technological change. we're living through the kinetic transformation of mind itself.
+    - [[McSweet]]
+        - Now do an airport bookshop bestseller version.
+    - [[Bompa]]
+        - **THE INTELLIGENCE REVOLUTION: Why Everything You Know About AI Is Wrong**
+        - we're living through the most important moment in human history, and almost everyone is missing it.
+        - forget the hype about chatbots and job displacement. forget the doomsday scenarios about robot overlords. the real story is much bigger - and much more urgent.
+        - we're witnessing the end of the computer age and the beginning of something entirely new: the intelligence age. and just like the industrial revolution transformed every aspect of human life, this transformation will reshape civilization itself.
+        - but here's what the experts aren't telling you: this isn't random technological progress. there's a hidden pattern to how these revolutions unfold, and once you see it, you can predict what comes next.
+        - think about how computing evolved. first, massive mainframe computers that only big institutions could afford. then personal computers that put power in everyone's hands. then the internet connected everything together. finally, cloud computing made it all flow seamlessly.
+        - each phase created its own problems that forced the next phase. mainframes excluded too many people, so we got personal computers. personal computers were isolated, so we built the internet. the internet was clunky, so we created cloud computing.
+        - now we're starting the same cycle all over again - but this time it's not about processing data. it's about processing human intelligence itself.
+        - right now, we're in the "mainframe" phase of intelligence. a few massive ai systems - chatgpt, claude, google's bard - are hoarding all the smart. just like the old mainframes, only big tech companies can afford to build them. everyone else has to wait in line.
+        - but here's the thing: you're not just using these systems. you're feeding them. every question you ask, every problem you solve with ai, you're making them smarter. your intelligence is flowing into their intelligence.
+        - this creates a dangerous dependency. we're getting used to having superhuman intelligence at our fingertips. our mental muscles are starting to atrophy. when was the last time you tried to remember a phone number? do mental math? navigate without gps?
+        - and this is just the beginning. following the historical pattern, this concentration of intelligence will soon fragment. everyone will want their own ai assistant. the market will splinter into thousands of competing, incompatible systems.
+        - imagine a world where your ai is fighting with your spouse's ai. where your gps can't talk to your calendar. where half the ai systems are broken, biased, or trying to manipulate you. and you can't function without them because your natural intelligence has withered.
+        - this fragmentation phase will be chaotic and painful. but it won't last forever. eventually, new standards will emerge to connect all these competing systems. then everything will start flowing together again, creating an ocean of liquid intelligence that surrounds us everywhere.
+        - the final phase? intelligence becomes like electricity - invisible, essential, everywhere. you won't "use" ai anymore. you'll swim in it. think through it. become it.
+        - this isn't science fiction. it's the inevitable next step in a pattern that's been repeating for decades. the only question is whether we'll navigate it wisely or stumble through it blindly.
+        - the industrial revolution gave us new physical capabilities but also new physical problems - pollution, alienation, chronic disease. the intelligence revolution will give us new mental capabilities but also new mental problems we can barely imagine.
+        - some people will adapt and thrive. others will be left behind, cognitively dependent on systems they don't understand and can't control. the gap between the intelligence-rich and intelligence-poor will make today's inequality look trivial.
+        - but it doesn't have to be this way. if we understand the pattern, we can shape it. if we prepare for what's coming, we can make sure the intelligence revolution serves humanity instead of replacing it.
+        - the window for action is closing fast. the choices we make in the next few years will determine whether the intelligence age becomes humanity's greatest achievement or its final chapter.
+        - the revolution has already begun. the question is whether you'll be ready.

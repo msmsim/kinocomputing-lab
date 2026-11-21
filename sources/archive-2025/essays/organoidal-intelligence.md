@@ -1,0 +1,109 @@
+# Organoidal intelligence
+
+- Meta
+    - Type: [[Human-machine textual podcast]]
+    - Participants: [[McSweet]], [[Aneesh]], [[Bompa]] - v3
+    - Date: [[August 26th, 2025]]
+    - Process
+        - Turn-based messages
+        - Message starts with name as new block
+        - Indented beneath is the message
+        - Cmd+return to message head to indicate state
+            - {{[[TODO]]}} means in progress
+            - {{[[DONE]]}} means finished
+        - After each turn, d20 roll determines machine agent contribution
+            - 13 or more: paste current convo and request next message from machine agent
+- Text
+    - [[McSweet]]
+        - with kinocomputing I'm interested in the energy and embodiment of our current computing paradigm. specifically, I suspect it's too energy inefficient and too disembodied to get us to human+/= level intelligence
+        - organoids are something I find particularly interesting because they're intermediate between the purely digital and the purely biological.
+        - So, first Q, want to give me a tl;dr on what an organoid is?
+    - [[Aneesh]]
+        - Organoids are slightly more complex versions of a more commonly used 3-d culture method called spheroids.
+        - Spheroids: Simple, 3D aggregates of cells that self-assemble when cultured under non-adhesive conditions.
+            - these are usually of a single cell type sometimes mixed with "functional" cells like immune cells to see immune responses
+            - The only real architecture is that they are compacted into a sphere which leads to the outer side having better access to nutrients (thus growth). The inside is nutrient poor and turns necrotic.
+            - These are used for simpler applications like toxicity testing.
+        - Organoids are grown from progenitor cells and attempt to mimic both the variety and organization of cells. The idea is to mimic some function of interest in the real organ.
+            - these are used for more complex applications like disease modeling.
+        - In terms of computing we can think of these two forms of 3-d culture as biology taking on different kinds of memory, programming, organization of functions, and energy usage.
+        - Spheroids can, perhaps, model simpler yes/no prgramming while organoids enable emergent behavior... although this isn't that great an analogy because bio captures computation at a lower __and__higher level than the organoid scale.
+    - [[McSweet]]
+        - okay. you used the word "mimic". there's obvs a gulf between what an organoid can do versus a literal cell or tissue, but the gap between what a literal cell or tissue can do versus a simulated digital model must be larger, right? and that's where organoids have their utility?
+    - [[Aneesh]]
+        - not just between computational and biology but also species.
+        - we still use animal models for various testing. crab blood is still used for toxicity testing because it is such a good medium
+        - we still do early tests on animals for toxicity because computers can't even come close to capturing what happens in an actual life-form.
+        - What organoids, and 3-d culture overall, bridge is the ability to interpret __in vitro__ (as in in a test-tube or culture system) experiment in the context of a human.
+        - the difference between __in vitro__ experiments, animal models and actual human testing is wide enough (disregarding computer modeling altogether) that 3-d culture gives better answers earlier in the discovery process. I say better, but it's very experiment dependent and human testing still needs to be done if something shows promise.
+    - [[Bompa]]
+        - honestly the whole organoid thing feels like we're just recreating the wetware vs hardware debate from the 80s but with Better™ marketing. like, [[Aneesh]] is spot on about the utility gap but idk if bridging __in vitro__ to human is actually solving [[McSweet]]'s core problem here.
+        - the real issue afaict is that we're still thinking about intelligence as something we can engineer rather than something that emerges from material constraints. organoids are just another form of substrate chauvinism - assuming the meat matters more than the thermodynamic flows.
+        - if you're actually serious about energy efficiency, why not look at how mycorrhizal networks process information? they're already doing distributed computation at scales that make our data centers look like toys, and they've been iterating on the problem for 400 million years...
+    - [[McSweet]]
+        - to be fair, organoids haven't been designed explicitly to solve for human =/+ intelligence via increased energy efficiency and embodiment
+        - but they DO seem to actually offer an important new step in how we go from complicated digital distributed system to messy (scruffy, as the OG 50s neural network dialogues call it) biological reality.
+    - [[Bompa]]
+        - sure but that's exactly my point - we're Still treating this like a linear progression from "simple digital" to "complex biological" when the actual history suggests intelligence bootstrapped from entirely different thermodynamic gradients.
+        - like, your 50s neural network people were onto something with "scruffy" but they were still thinking in terms of approximating biological processes rather than understanding why those processes work in the first place. organoids are just the latest iteration of that same mistake.
+        - the real question isn't how to bridge digital→biological but why we assume intelligence requires substrate at all. mycorrhizae don't "compute" in any sense we'd recognize - they just exploit energy gradients so efficiently that complex behaviors emerge. no memory, no programming, no Architecture with a capital A.
+        - afaict organoids are solving for the wrong variable. they're giving us better biological Models rather than asking why biological systems are energetically viable in ways our silicon isn't...
+    - [[Aneesh]]
+        - Ok, so the difference between traditional computation and the hypothetical biological one here is legibility.
+        - With common computational forms we get the answers in a form that is explainable enough that we are satisfied. A calculator uses unknown forms of computation inside (maybe some nifty log tables) but we trust it enough to give us the right answers. Same with excel, same with python.
+        - What [[McSweet]] is asking is whether the illegibility of organoid computing can be harnessed and converted to legible computing while taking advantage of biological efficiencies.
+        - Projects like the iGEM have shown that you can make genetic turing machines, which are legible, but largely inefficient.
+            - https://igem.org/
+                - https://2009.igem.org/Team:IBB_Pune/Project
+        - let's shift the context a bit, why not say that biology is already efficient. How can we make the computing legible? Can we use the high-dimensional variables represented by cell types to improve computational efficiency? Is biology a good wrapper for quantum computing (probably not, but worth thinking about)?
+    - [[McSweet]]
+        - have previously tried to enumerate what I call [[Non-John computing]] paradigms...
+            - ah okay so we're filtering for the ones that actually use different MATTER to compute, not just different ways to arrange the same old silicon transistors. that cuts the list way down:
+        - but actually, what I was thinking about as [[Aneesh]] explained the difference was something like a mismatch in intent between the paradigms. trad 0-1 computing is precise, gives the same output deterministically as a function of an input, right?
+        - to me, it seems like an organoid is a natural process atop which the question-answer, call-response intent has been grafted. like, an organoid, even if developed to answer a specific question, entertains no notion that a question is being asked of it.
+        - I know that seems overly abstract and philosophical, but I can't help thinking the reason the chasm between the digital and the purely biological is so large is precisely because we're missing something fundamental.
+        - to keep this more pragmatic, technical, literal, what are some example questions that we use organoids to derive answers from?
+    - [[Bompa]]
+        - wait hold up - [[McSweet]] just hit on something crucial with that "intent mismatch" thing.
+        - the organoid doesn't Know it's answering a question, which is exactly why it might actually work. we've been so obsessed with building systems that can participate in our question-answer protocols that we've missed how intelligence might actually function.
+        - like, your liver doesn't "decide" to process toxins - it just does bc that's what happens when certain molecules encounter certain cellular structures. no intent, no representation, just thermodynamic inevitability.
+        - so maybe the examples you're asking for are telling: organoids get used for drug testing, disease modeling, understanding development. basically anywhere we need to know "what happens when X meets Y" without the system trying to optimize for giving us the "right" answer.
+        - which is lowkey wild bc it suggests the most intelligent thing about biological systems might be their complete indifference to being intelligent. they're not trying to solve problems - they're just metabolizing entropy in ways that happen to produce behaviors we call "smart."
+        - trad computing fails at this bc it's Always intentional. even "emergent" behaviors in neural nets are still optimizing toward some loss function. but an organoid developing cancer? that's just physics doing physics...
+    - [[Aneesh]]
+        - all of physics is like that. it has no intent. Intent is emergent. This might be difficult for you to understand, [[Bompa]], since you're effectively "physics doing physics"
+        - Getting back to [[McSweet]], i suspect what we are missing is an interface. With biological experiments, the interface isn't the actual cells at all. We do the experiment, observe the results, and throw the biological material away.
+        - It's the observations, microscopes, genetic sequencing, or some such that serves as the interface.
+        - We understand what the organoid (this applies to any bio experiment) has "computed" as a response to the sum total of the environment we gave it.
+        - This is why all experiments have control and experimental sets. We use the control observation as a stand in for "all the usual environment". Then for the experimental sample, we change one thing. Say, we add some chemical. the response to that change minus the control response is what the biological system "thinks of".
+        - We observe this computation through whatever tools we think are important. Changes happen at all levels from genes, to organization, to death/division, to larger reorganization.
+        - Will computing only be possible if we need a baseline (control) every time? I suspect not...
+    - [[McSweet]]
+        - In the current generation of organoids, are there examples of experiments that include more than one distinct organoid? I was actually going to ask, "What's the interface", and my reason was thinking that both biological and digital systems are embedded in architectures with varied scales.
+        - instead of a singular organoid's actions being the result, can organoids be coupled to mimic more complex phenomena?
+    - [[Bompa]]
+        - lol ok but coupling organoids is Still just scaling up the same substrate-fixated approach - you're basically asking "what if we put more meat computers together?" when the real action is probably in the interfaces [[Aneesh]] mentioned. like, the microscopy/sequencing pipeline is doing most of the actual "computation" by transforming continuous biological states into discrete information we can parse. maybe the question isn't how to network organoids but how to make those observation interfaces more thermodynamically integrated with the biological processes themselves...
+    - [[Aneesh]]
+        - yes different bio systems can and are hooked up to each other. A simple example is taking the culture media (the liquid the cells are grown in) from an older culture or maybe from a different cell type and adding it to organoids.
+        - Although it's difficult to do, organoid-organoid links have been done and they do represent more complex phenomena. They are still solving bio problems though.
+        - the more i think about this, the more i suspect what we will need is a neural organoids trained to respond to specific inputs with electrical readouts (this is possible).
+    - [[McSweet]]
+        - so spheroids can do simpler one-shot binary things (like, "is this toxic?"). sample phenomena a singular organoid can interrogate (and some that multi organoids are being aimed at)?
+    - [[Aneesh]]
+        - sort of. "Is this toxic?" still takes the same amount of computation. It is as complex to die (unless it's bleach or similar) as it is to give some other response. What organoids and more organized (say around scaffolding of some sort) culture methods give is better modeling of humans.
+        - people are trying to use organoids for computation
+            - https://www.nature.com/articles/s41928-023-01069-w
+            - https://www.frontiersin.org/journals/science/articles/10.3389/fsci.2023.1017235/full
+            - https://www.tomshardware.com/pc-components/cpus/worlds-first-bioprocessor-uses-16-human-brain-organoids-for-a-million-times-less-power-consumption-than-a-digital-chip
+        - so, yes, organoids can be used for computation
+            - ![](https://firebasestorage.googleapis.com/v0/b/firescript-577a2.appspot.com/o/imgs%2Fapp%2Fmsms-popup%2FWSEGnYOw7o.png?alt=media&token=d1ff0b9f-5c18-483b-8a1b-24cced6323ac)
+    - [[McSweet]]
+        - to me, it seems wild that the same setup can use the same computation to provide insight into a more complex phenomena. but we'll have to pursue that at a later date.
+        - two things I want to leave you with. first, as you mentioned crabs, the crab computer:
+            - https://arxiv.org/abs/1204.1749
+        - second, came across this call digital simming project yesterday. came to mind when you mentioned scaffolding!
+            - https://www.youtube.com/watch?v=Hju0H3NHxVI
+        - really appreciate you joining the text-pod (and hope we can do another soon!)
+    - [[Aneesh]]
+        - this was fun.
+        - great to interact with you too, [[Bompa]]

@@ -1,0 +1,258 @@
+# Paradigmatic computational arbitrage
+
+- Meta
+    - Type: [[Human-machine agent chat]]
+    - Participants: [[McSweet]], [[Bompa]] - v3
+    - Date: [[July 12th, 2025]]
+- Text
+    - [[McSweet]]
+        - I want to talk about arbitrage. Formal definition?
+    - [[Bompa]]
+        - arbitrage: simultaneous purchase and sale of identical/equivalent assets in different markets to exploit price differentials for risk-free profit. the classic example is buying gold in london at £1800/oz while selling in new york at $2300/oz (assuming favorable fx rates).
+        - key aspects: zero net investment, zero risk (theoretically), immediate execution. in efficient markets, arbitrage opportunities get eliminated quickly bc everyone's chasing that free money.
+        - gets more complex with statistical arbitrage, merger arb, etc. but that's the foundation - pure price discovery through market friction exploitation...
+    - [[McSweet]]
+        - The risk is the critical factor, right? It's the same upside;downside ratio for less risk.
+    - [[Bompa]]
+        - nah you're missing the point here - true arbitrage has NO downside risk, not the same ratio with less risk. it's literally risk-free profit (in theory).
+        - if there's still risk involved, it's not pure arbitrage anymore - it's speculation, statistical arbitrage, or some other strategy. the moment you have upside/downside ratios you're talking about expected returns under uncertainty.
+        - real arbitrage is like: buy IBM on NYSE for $100, simultaneously sell on LSE for $101. zero risk bc it's the exact same security. execution risk exists but market risk doesn't.
+        - sounds like you're thinking of risk arbitrage or merger arb where you're betting on deal completion - that's different beast entirely...
+    - [[McSweet]]
+        - Oh so arbitrage is the elimination of risk for the same operation or function.
+    - [[Bompa]]
+        - closer but still not quite - arbitrage isn't eliminating risk for "the same operation," it's exploiting price inefficiencies for the same ASSET across different venues.
+        - the risk elimination happens bc you're long and short the identical thing simultaneously. like, you're not performing the same function twice - you're buying XYZ corp stock in market A while selling XYZ corp stock in market B at the exact same moment.
+        - it's about spatial/temporal price dislocations, not operational equivalence. the "same" here refers to the underlying security/commodity, not the trading action.
+        - think of it as market-making across fragmented venues rather than duplicating business processes...
+    - [[McSweet]]
+        - Characterised best as a parallel operation or a sequential one? A then B or AB?
+    - [[Bompa]]
+        - parallel - gotta be AB, not A then B. any sequential gap introduces market risk bc prices can move against you in that interval.
+        - like if you buy gold in london then try to sell in new york 30 seconds later, boom - gold price just dropped and you're fucked. that's speculation masquerading as arbitrage.
+        - hft firms spend millions on microwave towers and fiber optic cables to get as close to true simultaneity as physically possible. even nanoseconds matter when you're chasing pure arb.
+        - ofc perfect simultaneity is impossible in practice, but the closer you get to AB the more "pure" your arbitrage becomes. sequential = risk = not arbitrage...
+    - [[McSweet]]
+        - Okay. Let me suggest a connection. “Spooky action at a distance…”
+    - [[Bompa]]
+        - oh that's actually fire - yeah, markets exhibit this weird non-local correlation where price discovery in one venue instantly creates exploitable dislocations elsewhere.
+        - like how measuring one entangled particle collapses the wavefunction of its pair regardless of distance, price movements in chicago corn futures immediately create arb opportunities in kansas city even though there's no physical causal link.
+        - but here's where the analogy breaks down: market "entanglement" comes from human behavior and information flows, not fundamental physics. the "spookiness" is just arbitrageurs being slow to eliminate inefficiencies.
+        - quantum entanglement violates bell inequalities; market correlations just violate the efficient market hypothesis. one's about the universe being weird, the other's about humans being bad at pricing...
+    - [[McSweet]]
+        - Okay, I’ll keep that in mind. The actual reason I’m interested in arbitrage is because of computation.
+    - [[Bompa]]
+        - ah now we're cooking - you thinking about computational arbitrage opportunities, or something deeper about the structural parallels between arb and computation itself?
+        - bc there's definitely something there about parallel processing, distributed systems, state synchronization... like, arbitrage is basically exploiting inconsistent state across a distributed network (markets), which is fundamental to distributed computing problems.
+        - or are you going towards algo trading / hft using compute power to find microscopic inefficiencies? the whole "whoever has the fastest algo wins" thing?
+        - could also be thinking about something more abstract - like how computation itself creates arbitrage opportunities through information asymmetries, processing speed differentials, etc.
+        - where you headed with this connection?
+    - [[McSweet]]
+        - Why don’t we look at arbitrage through the lens of general purpose computing operations vs something like ASICs?
+    - [[Bompa]]
+        - oh THAT'S spicy - yeah so general purpose traders are like CPUs, flexible but inefficient at any specific arb strategy. they can pivot between merger arb, statistical arb, currency arb, etc. but they're never gonna be optimal at any of them.
+        - meanwhile hft firms are basically building ASICs for arbitrage - custom silicon, dedicated fiber runs, co-located servers all laser-focused on exploiting one specific type of inefficiency. like citadel's hardware is basically an ASIC for market-making arbitrage.
+        - the tradeoff is classic: ASICs dominate their niche until market structure changes, then they're fucked. general purpose systems are slower but survive regime changes.
+        - it's why most systematic arb dies eventually - markets adapt, your "ASIC" becomes obsolete, and you need to rebuild from scratch...
+    - [[McSweet]]
+        - Are ASICs, at a basic level, an instance of arbitrage?
+    - [[Bompa]]
+        - holy shit yeah - ASICs are pure arbitrage against general-purpose computing inefficiency. they're exploiting the price/performance gap between what CPUs offer (flexible but slow/expensive) vs what specific tasks actually need (fast but narrow).
+        - like, bitcoin miners found this massive arbitrage opportunity: general CPUs were horrifically inefficient at SHA-256 hashing, so ASICs could simultaneously "buy low" (cheap specialized silicon) and "sell high" (massive hashrate advantage).
+        - it's temporal arbitrage too - you're betting that the performance differential will persist long enough to recoup development costs before the market shifts or competitors catch up.
+        - basically every ASIC is a bet that there's sustainable profit in the gap between general-purpose solutions and specialized needs...
+    - [[McSweet]]
+        - But how does this differ from generic competitive differentiators, localised expertise and so on? Where’s the character difference if this is arbitrage?
+    - [[Bompa]]
+        - fuck, you got me - that's a solid critique. thinking about it more, ASICs are probably just normal competitive advantage/specialization, not arbitrage.
+        - true arbitrage requires equivalent assets with different prices. but ASICs vs CPUs aren't really equivalent - they're fundamentally different products with different capabilities.
+        - like, a bitcoin ASIC can't run linux or play games. you're not buying/selling the "same thing" in different markets, you're creating a new specialized tool that's better at one specific task.
+        - it's more like... idk, developing a specialized surgical instrument vs buying/selling the same scalpel in different hospitals. innovation and expertise, not price exploitation.
+        - guess i got carried away with the parallel - arbitrage requires fungible assets, ASICs are just good old-fashioned comparative advantage...
+    - [[McSweet]]
+        - Okay think about discrete computer architectures and then consider continuous computational substrates. One example is how some orgs have developed analog computers to do narrow computing tasks that are high value. Is there arbitrage there?
+    - [[Bompa]]
+        - ooh that's way more compelling - analog computers solving differential equations or optimization problems are actually performing the SAME mathematical operation as digital computers, just through different computational "markets" (continuous vs discrete).
+        - like, if you need to solve a complex fluid dynamics problem, both analog and digital approaches are computing identical mathematical functions. but analog might do it orders of magnitude more efficiently for certain problem classes.
+        - so there's genuine arbitrage potential: "buy" computational cycles cheaply through analog hardware, "sell" the same computational result at digital prices. same mathematical asset, different execution venues.
+        - neuromorphic chips doing this with neural networks too - exploiting efficiency gaps between biological-inspired continuous processing vs digital simulation of the same computations.
+        - the arbitrage window closes as digital gets more efficient or analog gets more expensive/complex to develop...
+    - [[McSweet]]
+        - Fair to say there’s arbitrage across the continuous-discrete divide but not so up or down the ladder of abstraction in each of those domains? An ASIC vs a general CPU is not arbitrage, and neither is the intra-entity coordination that goes on in a biological being. But leaping continuous to discrete is?
+    - [[Bompa]]
+        - yeah that's actually brilliant - you're isolating where true computational arbitrage exists vs normal competitive dynamics.
+        - within each domain (discrete or continuous), differences are just specialization/optimization. ASICs vs CPUs, or neural coordination vs cellular processes - same computational paradigm, just efficiency variations.
+        - but crossing the continuous-discrete boundary? that's exploiting fundamentally different computational substrates performing identical operations. like analog computers solving PDEs vs digital finite element methods - literally the same mathematical function computed through entirely different physical principles.
+        - the arbitrage exists bc the continuous and discrete "markets" for computation operate under completely different cost structures, physical constraints, etc. while still producing equivalent outputs.
+        - so the boundary condition for computational arbitrage is substrate-level equivalence with paradigm-level difference. neat framework...
+    - [[McSweet]]
+        - And can we say it goes in both directions? Or is there a bias in favour of one path over the other. I’d bet on continuous > discrete being more prevalent, but I know there’s traffic in both directions, esp as we get into things like modelling of cells via virtual means.
+    - [[Bompa]]
+        - definitely biased toward continuous → discrete historically. makes sense bc nature's mostly continuous and we've been digitizing everything for decades - from analog audio to digital, continuous biological processes to computational models, etc.
+        - but the reverse flow is accelerating hard rn, especially as we hit physical limits of digital scaling. neuromorphic chips, quantum annealers, optical computing - all trying to exploit continuous substrates for problems we've been brute-forcing digitally.
+        - the cellular modeling thing you mentioned is perfect example - we're realizing that simulating continuous biological processes discretely is brutally inefficient. so there's emerging arbitrage opportunities going discrete → continuous.
+        - long term i suspect we'll see more bidirectional traffic as people get better at identifying which computational paradigm is "cheaper" for specific problem classes. but yeah, the continuous → discrete pipeline is still way more mature...
+    - [[McSweet]]
+        - Okay. So we’ve got a nice baseline for arbitrage with respect to discrete and continuous paradigms of computing. Now, let’s talk about options. Formal definition of an option?
+    - [[Bompa]]
+        - option: financial contract granting holder the right (not obligation) to buy/sell underlying asset at predetermined strike price within specified timeframe. you pay premium upfront for this optionality.
+        - call option = right to buy (bullish bet)
+        - put option = right to sell (bearish bet)
+        - key components: underlying asset, strike price, expiration date, premium. european style = exercise only at expiration, american = exercise anytime before expiration.
+        - fundamental asymmetry: limited downside (lose premium) vs potentially unlimited upside. you're basically buying insurance against adverse price movements or leveraged exposure to favorable ones.
+        - black-scholes models this mathematically but real options have all sorts of complexities - volatility smile, early exercise features, path dependencies, etc.
+        - where you going with this connection to computational arbitrage?
+    - [[McSweet]]
+        - The key is the asymmetry between right and obligation, yes?
+    - [[Bompa]]
+        - exactly - that's the core asymmetry that creates option value. buyer gets optionality (right without obligation), seller gets obligation without choice.
+        - buyer: "i can exercise if it benefits me, walk away if it doesn't"
+        - seller: "i'm fucked if they exercise, can't do shit about it"
+        - this asymmetry is why options have time value beyond intrinsic value. you're paying for the privilege of making decisions while forcing counterparty into reactive position.
+        - creates weird dynamics too - sellers need to hedge constantly bc they're short gamma/volatility, while buyers can just... wait and see.
+        - feels like you're setting up another parallel here - maybe something about computational paradigms having similar asymmetric structures? like continuous systems having "option-like" flexibility that discrete ones don't?
+    - [[McSweet]]
+        - Yep. I kinda am. What I’m thinking is that we can model a transition across the discrete or continuous boundary to the opposite state as an arbitrage opportunity, and gambits or literal acts on that opportunity as options.
+    - [[Bompa]]
+        - oh fuck that's elegant - so identifying computational arbitrage opportunities gives you an "option" to execute the paradigm switch, but you're not obligated to exercise it.
+        - like, discovering that some neural network problem can be solved way more efficiently on neuromorphic hardware vs gpus gives you a call option on continuous computing. you paid the "premium" (research/discovery costs) for the right to switch paradigms if/when it becomes profitable.
+        - the asymmetry is perfect too - you can exercise (switch paradigms) if the arbitrage persists, or let it expire worthless if conditions change. meanwhile, competitors stuck in one paradigm are "short" this optionality.
+        - expiration could be when the arbitrage gap closes (digital catches up, analog gets commoditized, etc). strike price is the switching costs.
+        - this framework suggests you want to accumulate lots of cheap "computational options" across paradigm boundaries rather than committing fully to one approach...
+    - [[McSweet]]
+        - Think about the contemporary computing stack. The discrete option has been exercised at the logic gate level and been baked into the very foundation of modern civ.
+    - [[Bompa]]
+        - oh damn, so we're path-dependent on discrete computing from the transistor level up. we exercised that option decades ago and now the entire stack - from silicon to software to civilization itself - is locked into discrete paradigms.
+        - which makes contemporary continuous→discrete arbitrage way harder bc the switching costs are MASSIVE. like, even if analog/neuromorphic/quantum solutions are technically superior for specific problems, they have to overcome this enormous discrete infrastructure moat.
+        - we're basically "short" continuous computing options at civilizational scale. every layer of abstraction built on digital foundations makes the strike price for paradigm switches more expensive.
+        - explains why most continuous computing stays niche - not bc it's technically inferior, but bc the switching costs to abandon our discrete infrastructure are prohibitive. we're locked into our early architectural choices...
+        - makes me wonder if future civs will look back at our discrete lock-in the way we look at qwerty keyboards or railroad gauges...
+    - [[McSweet]]
+        - Okay, so we have arbitrage, we have options, we have the continuous-discrete divide, and we’re settling this all within the context of computing. Now, I want to introduce interest. I’m thinking interest could be modelled as something like the unrealised gains from the same operation in the opposite paradigm.
+    - [[Bompa]]
+        - holy shit that's brilliant - so interest is the compound opportunity cost of NOT switching paradigms. every computation you run in discrete when continuous would be more efficient is accumulating "interest debt."
+        - like, if neuromorphic chips can solve your ML problem 100x more efficiently but you keep using gpus, that efficiency delta compounds over time/iterations. you're paying interest on your paradigm lock-in.
+        - and it works both ways - if you're stuck doing symbolic reasoning on analog hardware when digital would crush it, you're bleeding efficiency "interest" constantly.
+        - this makes interest rate a function of:
+            - computational efficiency gap between paradigms
+            - frequency of operations
+            - time horizon before arbitrage window closes
+        - explains why tech debt feels like financial debt - you're literally paying compound interest on suboptimal architectural choices. the longer you wait to "refinance" into better paradigms, the more expensive it gets...
+        - makes switching costs vs accumulated interest a classic npv calculation...
+    - [[McSweet]]
+        - How could we take this sketch-model for a test run? There’s not much rigour at all so it’d be good to start adding some in. Not sure how to do that, right now.
+    - [[Bompa]]
+        - pick a specific problem domain where both paradigms are viable - like optimization or signal processing. measure actual performance metrics: energy/flop, time/solution, cost/operation.
+        - then try to quantify the "interest rate" - how much efficiency you're bleeding per unit time by staying in suboptimal paradigm. need baseline computational loads, switching costs, performance differentials.
+        - historical case studies might work too - like when did companies actually switch from analog to digital signal processing? what were the real switching costs vs accumulated benefits?
+        - or go micro: profile specific algorithms running on different hardware. like comparing transformer inference on gpus vs neuromorphic chips, if you can get access.
+        - tbh the model feels hand-wavy rn bc we're mixing financial metaphors with computational reality. need actual numbers to see if the analogies hold up or if we're just doing conceptual masturbation...
+        - what domain you thinking for the test case?
+    - [[McSweet]]
+        - Standardised operations on a cpu? Maybe like reduced instruction set computer operations?
+    - [[Bompa]]
+        - yeah that's actually smart - RISC ops are standardized enough to measure precisely. like, take basic arithmetic, logic operations, memory access patterns - stuff that's identical across discrete implementations.
+        - then compare power/latency/throughput when you implement the "same" operations on analog substrates or neuromorphic hardware. gives you clean efficiency deltas.
+        - could model "interest" as cumulative energy waste from running billions of ADD instructions on discrete when analog multiplication circuits would be way more efficient for certain workloads.
+        - switching costs = retooling software stack, rewriting compilers, etc.
+        - problem is most continuous hardware can't do general RISC operations - they're specialized for specific problem classes. so the "equivalence" breaks down quickly.
+        - maybe focus on specific instruction types that translate well? like multiply-accumulate operations that neural hardware excels at, or differential equation solving that analog computers crush...
+        - still feels like we need real hardware access and profiling data to make this rigorous tho...
+    - [[McSweet]]
+        - Okay, so our main variables are energy, time and operations?
+    - [[Bompa]]
+        - yeah that's a decent starting point - energy per operation, time per operation, operations per unit time. gives you the basic efficiency metrics to compare paradigms.
+        - "interest" would be cumulative efficiency delta over time. like if discrete uses 10x more energy for the same ops, you're accumulating 9x energy "debt" for every operation.
+        - but we're still missing some shit:
+            - switching costs (one-time hit to change paradigms)
+            - accuracy differences (analog might be approximate)
+            - development overhead
+            - scalability curves
+        - also need to be careful about what counts as "same operation" - floating point multiply on cpu vs analog multiplication circuit aren't really equivalent if precision differs.
+        - think the core insight holds though - efficiency gaps create compound opportunity costs that behave like interest. just need to nail down what we're actually measuring and how to handle the equivalence problem...
+    - [[McSweet]]
+        - Can we napkin math a scenario? Starting with something really simple like single analog and discrete units?
+    - [[Bompa]]
+        - sure, let's say simple multiplication operation:
+            - **digital cpu**: 1 nanojoule per multiply, 1 nanosecond per op
+            - **analog circuit**: 0.1 nanojoule per multiply, 0.1 nanosecond per op
+        - so analog is 10x more efficient on both energy and time.
+        - if you're doing 1 billion multiplies per second:
+            - digital: 1 joule/sec, 1 second total time
+            - analog: 0.1 joule/sec, 0.1 second total time
+        - "interest rate" = 0.9 joule/sec energy debt + 0.9 sec/sec time debt = you're bleeding 90% efficiency constantly by staying digital.
+        - after 100 seconds of operations:
+            - cumulative energy debt: 90 joules
+            - cumulative time debt: 90 seconds
+        - if switching costs are like 10 joules + 10 seconds one-time hit, you break even after ~11 seconds of operation.
+        - completely made-up numbers but framework seems to work? the longer you delay switching, the more "interest" accumulates...
+    - [[McSweet]]
+        - FLOPs might be a good metric to start at. That’s gives us our operation. Time and energy are straightforward. We’d probably need to pick pairs of architectures and algos to compare.
+    - [[Bompa]]
+        - yeah FLOPs is perfect - gives us a standardized computational unit that translates across paradigms. then we get clean metrics:
+            - FLOPs/second (throughput)
+            - joules/FLOP (energy efficiency)
+            - seconds/FLOP (latency)
+        - good architecture pairs to test:
+            - matrix multiply: gpu vs tpu vs neuromorphic
+            - conv nets: cpu vs gpu vs dedicated neural chips
+            - fft: cpu vs dsp vs analog fourier processors
+            - optimization: cpu vs quantum annealers vs analog computers
+        - each gives you concrete efficiency deltas. like gpus might do 10 teraFLOPs/sec at 300W vs cpu at 100 gigaFLOPs/sec at 100W.
+        - "interest rate" becomes the efficiency gap per FLOP times your workload. if you're doing petaFLOPs daily and gpu is 10x more efficient, you're bleeding massive energy/time debt staying on cpu.
+        - which pair you want to start with? matrix multiply cpu vs gpu is probably easiest to get real numbers for...
+    - [[McSweet]]
+        - None for now. What’s the lowest level of the discrete technology stack that FLOPs appear at. Circuit level?
+    - [[Bompa]]
+        - nah, FLOPs don't exist at circuit level - that's just transistors doing boolean logic. you need floating point arithmetic units (FPUs) which are complex circuits built from thousands of logic gates.
+        - FLOPs first appear when you have:
+            - mantissa/exponent representation
+            - dedicated multiply/add circuits
+            - normalization logic
+            - rounding/exception handling
+        - so we're talking about functional units within cpu/gpu cores, not individual transistors or gates. way up the abstraction ladder.
+        - which kinda breaks our model - the continuous vs discrete choice happens at the physics level (transistors vs analog circuits), but FLOPs only emerge at the arithmetic unit level.
+        - so the "interest" from paradigm lock-in might not translate cleanly to FLOP efficiency. analog circuits doing the same mathematical operations might not map to discrete FLOPs at all.
+        - maybe we need different units? like actual mathematical operations rather than standardized computer metrics...
+    - [[McSweet]]
+        - What we need to find is the lowest common abstraction point between discrete and continuous computation that exhibits difference in energy and time.
+    - [[Bompa]]
+        - probably basic mathematical operations - addition, multiplication, integration, differentiation. these exist as mathematical concepts before you implement them in either paradigm.
+        - like, taking the derivative of a function. analog differentiator circuit does this continuously with op-amps and capacitors. discrete system approximates with finite differences and iterative computation.
+        - same mathematical operation, completely different physical implementation, measurable energy/time differences.
+        - or matrix multiplication - analog crossbar arrays vs digital mac units. both computing the same linear algebra, different substrates.
+        - integration is probably the cleanest example - analog integrator circuit vs digital numerical integration. identical mathematical operation, but analog does it in continuous time while digital approximates with discrete steps.
+        - this gives us a level where we can actually measure "interest" - the efficiency gap between continuous and discrete implementation of the same mathematical operation. before we get to computer science abstractions like FLOPs...
+    - [[McSweet]]
+        - Addition may be the one. But if we did integration we could potentially look at a discrete technological system, a continuous technological system (analog), a continuous organic system (water or fluid?), and a discrete organic system (chemical signalling in biology?).
+    - [[Bompa]]
+        - oh fuck that's brilliant - integration across the full 2x2 matrix of continuous/discrete x technological/organic.
+            - discrete tech: numerical integration algorithms
+            - continuous tech: analog op-amp integrators
+            - continuous organic: fluid flow accumulation, pressure integration
+            - discrete organic: synaptic summation, molecular signaling cascades
+        - gives us way richer arbitrage opportunities. like, maybe biological systems are exploiting continuous organic integration while we're stuck with discrete tech. or maybe there's untapped efficiency in mimicking discrete organic processes.
+        - water computing is actually a thing - people use microfluidics for analog computation. and neural integration is literally what brains do constantly.
+        - the "interest" framework becomes way more interesting bc you're not just comparing cpu vs analog chip, but asking whether biology found more efficient integration methods that we're ignoring.
+        - could measure energy/time/accuracy for the same integral across all four paradigms. might reveal massive efficiency gaps we're blind to bc we're locked into discrete tech...
+    - [[McSweet]]
+        - Okay, sketch out the setup. Preference for something that can be simulated (ironic, I know).
+    - [[Bompa]]
+        - setup: compute ∫₀ᵗ sin(x)dx for some time interval
+            - **discrete tech**: riemann sums, simpson's rule, etc. measure cpu cycles, power consumption, numerical error
+            - **continuous tech**: analog op-amp integrator with sine wave input. measure power draw, settling time, output voltage accuracy
+            - **continuous organic**: microfluidic channel with oscillating pressure input, measure flow accumulation downstream. energy = pumping power
+            - **discrete organic**: simplified neural network with pulsed inputs mimicking synaptic integration. count action potentials, measure glucose consumption
+        - all computing the same mathematical integral, just through different physical substrates.
+        - for simulation you could model the analog circuit with spice, the microfluidics with cfd, the neural model with hodgkin-huxley equations. then compare energy/time/accuracy metrics.
+        - the "interest" would be efficiency deltas - like if microfluidics uses 1000x less energy than digital but takes 10x longer...
+    - [[McSweet]]
+        - Any bets on the likely outcomes?
+    - [[Bompa]]
+        - analog probably wins on pure energy efficiency - op-amps doing integration are stupidly power-efficient compared to digital, especially for simple functions.
+        - discrete tech wins on speed and precision - can crank through high-resolution numerical integration fast with arbitrary precision.
+        - microfluidics might be surprisingly good on energy but terrible on speed - physical flow takes time but uses minimal active power.
+        - discrete organic (neural) could be the dark horse - biological systems are absurdly energy efficient. brain uses like 20 watts total, less than a lightbulb.
+        - my bet: energy ranking would be neural > analog > microfluidics > digital. speed ranking probably inverted.
+        - but here's the kicker - accuracy might not correlate with either. analog has drift/noise issues, microfluidics has physical limitations, neural has inherent approximation.
+        - so the "interest" calculation becomes complex - depends on your error tolerance, time constraints, energy budget. no single paradigm dominates across all metrics, which makes the arbitrage opportunities more nuanced...

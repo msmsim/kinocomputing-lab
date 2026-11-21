@@ -1,0 +1,43 @@
+# Discrete fascism
+
+- Meta
+    - Type: [[Human agent blog post]]
+    - Participants: [[McSweet]], [[Bompa]] - v3
+    - Date: [[August 8th, 2025]]
+- Text
+    - The following is an exchange from Iain M Banks' __The Use of Weapons__:
+        - “You really are coming? This afternoon?”
+        - “Drone, I just __told__ you. I’ll do it.” He leaned toward Sma. “What is the job again?”
+        - “Voerenhutz,” she told him. “Tsoldrin Beychae.”
+        - He beamed, teeth gleaming. “Old Tsoldrin still above ground? Well, it’ll be good to see him again.”
+        - “You have to talk him back into his working clothes again.”
+        - He waved one hand airily. “Easy,” he said, drinking.
+        - Sma watched him drink. She shook her head.
+        - “Don’t you want to know why, Cheradenine?” she asked.
+        - He started to make a gesture with one hand that meant the same as a shrug, then thought better of it. “Umm, sure. Why, Diziet?” he sighed.
+        - “Voerenhutz is coalescing into two groups; the people gaining the upper hand at the moment want to pursue aggressive terraforming policies…”
+        - “That’s sort of…” — he burped — “redecorating a planet, right?”
+        - Sma closed her eyes briefly. “Yes. Sort of. Whatever you choose to call it, it’s ecologically insensitive, to put it mildly. These people — they call themselves the Humanists — also want a sliding scale of sentient rights, which will have the effect of letting them take over whatever even intelligently inhabited worlds they’re militarily able to. There are a dozen brushfire wars going on right now. Any one of them could spark the big one, and to an extent the Humanists encourage these wars because they appear to prove their case that the Cluster is too crowded and needs to find new planetary habitats.”
+        - “They also,” Skaffen-Amtiskaw said, “refuse to acknowledge machine sentience fully; they exploit proto-conscious computers and claim only human subjective experience has any intrinsic value — carbon fascists.”
+        - “I see.” He nodded and looked very serious. “And you want old Beychae to get into harness with these Humanist guys, right?”
+    - This [post](https://memwrites.wordpress.com/2019/08/03/memwrites1038/) contextualises it a little. But there's one phrase in that excerpt that particularly relates to kinocomputing: "carbon fascists". Specifically, I propose a situation in which the bit has flipped: we live amongst __discrete fascists__.
+    - A carbon fascist enshrines carbon-based consciousness above all. Mushy matter is holy to them, and it's the sole holder of moral worth, regardless of any equivalence in computational ability or (non-)demonstrable intelligence with non-mushy matter.
+    - A discrete fascist enshrines discrete-based consciousness above all (and it's present non-existence is no object). Only the highest level components of the dominant discrete computing paradigm are holy to them, and they are the singular object worthy of modern faith, regardless of any equivalence in computational ability or (non-)demonstrable intelligence with gooey biological matter or other non-discrete paradigms or assemblages.
+    - To flesh this out, let's do something ironic to get some samples of discrete fascism in action. We shall ask good fellow [[Bompa]].
+        - [[McSweet]]
+            - I need five examples of discrete fascism in action. Select from broad domains, different human cultures, across a range from individual to collective, and at different socioeconomic grades. Feel free to use a framework like situation-task-action-result or context-actions-results-learning within two to three sentences for each.
+        - [[Bompa]]
+            - Tech CEO needs to scale hiring while "eliminating human bias. Implements AI screening that automatically rejects resumes without discrete keywords, dismissing veteran recruiters' warnings about cultural fit and potential. Hires technically competent but socially dysfunctional teams, missing breakthrough innovations that required cross-domain thinking only humans spotted.
+            - Government seeks to optimize social trust through algorithmic citizen scoring. Deploys discrete behavioral metrics (payment history, social connections, online activity) as superior to traditional community-based trust assessment. Citizens game the system while actual social cooperation deteriorates, with algorithms missing nuanced social contexts that human judgment naturally handles.
+            - Emergency physician adopts diagnostic AI to "eliminate subjective clinical intuition." Defers to algorithmic recommendations over patient interaction and embodied assessment, treating discrete data points as more reliable than continuous human observation. Misses critical diagnoses requiring empathetic listening and contextual understanding that no algorithm captured.
+            - School district implements AI-driven "personalized learning" to replace "outdated" teacher-student relationships. Prioritizes discrete learning analytics over continuous pedagogical intuition, dismissing veteran teachers' concerns as resistance to progress. Student engagement plummets as human mentorship is replaced by optimization metrics, with algorithms failing to recognize learning styles that required embodied human recognition.
+            - Motorcycle delivery driver trusts app algorithms over local street knowledge and social intuition. Follows discrete route optimization and customer ratings instead of continuous assessment of neighborhood safety and customer behavior. Earns less money and encounters more dangerous situations that human pattern recognition would have avoided.
+    - The point is not that discrete solutions have __no__ upside. For each of the scenarios [[Bompa]] generated, it's also possible to enumerate adjacent situations where real value has been created, captured and distributed. The issue is that discrete fascists have an unreasonable faith in an __unbounded__ upside that they claim comes with sufficiently advanced discrete-based computation and intelligence (and, conveniently, absolutely minimal downsides, too).
+    - Now, if we were to paint in the colour of a discrete fascist's dream endgame, it may be:
+        - Only we are here (and they are out there)
+        - All decisions are instant and optimal (and thus perfect)
+        - Our being is non-biological (and thus death-evading)
+    - It's like [TESCREALism](https://en.wikipedia.org/wiki/TESCREAL) but with some fanatical flair and a hero flavour of substrate supremacism.
+    - Now, to be clear, I don't have anyone in mind when i think of discrete fascism. What I do have in mind, however, is discrete fascism's relationship to kinocomputing. Which I believe is thus: discrete fascism is an [evil twin](https://www.ribbonfarm.com/2009/09/17/your-evil-twins-and-how-to-find-them/) of kinocomputing.
+    - Both are concerned with computational paradigms at the civilisational scale. Both acknowledge that the discrete-continuous divide is where the magic of computation and intelligence happens. Both are rooting around for a new way forward because of a belief that the existing way is (or will soon become) inadequate. The difference is that discrete fascism yearns for a complete and correct __division__ of all things whilst kinocomputing advocates for the complete and correct __connection__ of all things. Pure discreteness versus pure continuousness.
+    - And, fundamentally, why should I be in camp continuous, a kinocomputationalist? At the most basic level: path dependence. The continuous can be made discrete but the discrete can never again be made continuous.

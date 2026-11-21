@@ -21,6 +21,10 @@ workflow publishes after you finish.
   `aNNN-slug/ANALYSIS.md`, copied from `analyses/_template/`.
 - `reference/world-machines.md` — the theory's vocabulary and the proposed
   machines, as the lab uses them. Read it before any analysis.
+- `sources/archive-2025/` — kinocomputing's 2025 essays (the PI's
+  dialogues with AI interlocutors), being processed under q-007; its README
+  indexes them and says how. The essays are restored after every shift:
+  write units and the index, never the essays.
 - `published/` — every note the lab has published, as the markdown it was
   rendered from, under the kinocomputing file name it lives at.
 - Search: `node tools/search.mjs arxiv|openalex "query"` (free; use first) and
