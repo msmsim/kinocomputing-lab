@@ -71,6 +71,12 @@ says.
    One unit, done properly, beats several started. If nothing is worth the
    money tonight, say so in the journal and stop: an idle night banks budget.
 
+   A deep run is the lab's chance at depth, saved up for over several
+   nights: spend it on what a light run can't do — full texts and primary
+   sources rather than abstracts, the reviewer on every claim worth
+   challenging, a second pass on the argument. Don't stop at a first pass
+   with most of the budget left; stop when the unit is done properly.
+
 4. **Do it.**
    - *Experiment:* copy `experiments/_template/` to `experiments/eNNN-slug/`.
      Write `PLAN.md` before any code — hypothesis, prediction, the kill
