@@ -1,0 +1,122 @@
+[
+  {
+    "n": 1,
+    "id": "https://openalex.org/W4393253334",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 2,
+    "id": "https://openalex.org/W4399861657",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 3,
+    "id": "https://openalex.org/W4400933297",
+    "D": false,
+    "N": true
+  },
+  {
+    "n": 4,
+    "id": "https://openalex.org/W4404366933",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 5,
+    "id": "https://openalex.org/W4404741184",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 6,
+    "id": "https://openalex.org/W4406980205",
+    "D": false,
+    "N": true
+  },
+  {
+    "n": 7,
+    "id": "https://openalex.org/W4407317998",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 8,
+    "id": "https://openalex.org/W4407448670",
+    "D": true,
+    "N": true
+  },
+  {
+    "n": 9,
+    "id": "https://openalex.org/W4408591400",
+    "D": true,
+    "N": true
+  },
+  {
+    "n": 10,
+    "id": "https://openalex.org/W4411327671",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 11,
+    "id": "https://openalex.org/W4413572213",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 12,
+    "id": "https://openalex.org/W4416844263",
+    "D": false,
+    "N": true
+  },
+  {
+    "n": 13,
+    "id": "https://openalex.org/W7114776079",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 14,
+    "id": "https://openalex.org/W7125772289",
+    "D": true,
+    "N": false
+  },
+  {
+    "n": 15,
+    "id": "https://openalex.org/W7137836392",
+    "D": false,
+    "N": true
+  },
+  {
+    "n": 16,
+    "id": "https://openalex.org/W7160739265",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 17,
+    "id": "https://openalex.org/W7161561924",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 18,
+    "id": "https://openalex.org/W7161594730",
+    "D": true,
+    "N": false
+  },
+  {
+    "n": 19,
+    "id": "https://openalex.org/W7170060628",
+    "D": false,
+    "N": false
+  },
+  {
+    "n": 20,
+    "id": "https://openalex.org/W7223100646",
+    "D": false,
+    "N": false
+  }
+]

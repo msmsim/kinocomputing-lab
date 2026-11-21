@@ -2,8 +2,9 @@
 id: q-006
 title: Do alternative-hardware papers judge themselves on the digital yardstick?
 kind: experiment
-status: open
+status: active
 priority: 3
+note: lab-2026-11-21-yardstick-literature-count
 ---
 
 Tests a001 step 4 / claim c-003. Of a sample of recent papers on physical,
@@ -18,3 +19,4 @@ hand-checked subsample, so the rule's error is stated.
 ## Log
 
 - 2026-11-21: opened by shift 5, from a001's next-shift list. Not started.
+- 2026-11-21 (shift 6): pre-registered e004 (experiments/e004-yardstick-literature-count/PLAN.md; 150 of 299 abstracts, rule D, 50% line). Seeds 1 and 2: 16% and 15%, killed. Hand check of 20: 1 true, rule flagged 4, none true. Claim c-006 at real-data, review weakened, wording narrowed. Not done: a larger hand check, full texts, a second source (arXiv).

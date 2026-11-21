@@ -1,11 +1,12 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.53",
-    "2 claim(s)",
-    "updated lab-2026-11-21-physics-bodies-placement",
-    "updated lab-2026-11-21-stack-split-two-machines",
-    "updated lab-2026-11-21-incumbent-stack-two-machines"
+    "$0.13",
+    "1 claim(s)",
+    "published lab-2026-11-21-digital-yardstick-claim",
+    "published lab-2026-11-21-yardstick-literature-count"
   ],
-  "report": []
+  "report": [
+    "- Replication of e004-yardstick-literature-count on seed 2: agrees (share_using_digital_yardstick_rule_D 0.1467, was 0.16)."
+  ]
 }

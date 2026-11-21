@@ -1,0 +1,17 @@
+{
+  "metric": "share_using_digital_yardstick_rule_D",
+  "value": 0.1467,
+  "wilson95": [
+    0.0989,
+    0.2121
+  ],
+  "secondary": {
+    "share_native_only_rule_N_without_D": 0.2933,
+    "share_both_D_and_N": 0.0933
+  },
+  "pool_size": 299,
+  "n": 150,
+  "seed": 2,
+  "kill_share": 0.5,
+  "killed": true
+}

@@ -223,3 +223,4 @@ only if it predicts something that rival does not. Candidates are under
   Next test to pre-register: scaling returns flattening while spend rises
   (capability per dollar falling) would favour Dusk over market structure;
   the yardstick count (q-006) tests c-003.
+- 2026-11-21 (shift 6): yardstick count (q-006, e004) run. Under a quarter of abstracts in the sample report against a digital baseline (rule 16%, hand 5%, n=20); the 50% line is not reached. Weakens c-003's yardstick half on abstracts, not full texts. Claim c-006 at real-data; the bodies half untouched.
