@@ -1,13 +1,1 @@
-[
-  {
-    "experiment": "e004-yardstick-literature-count",
-    "of": "3a85c2b3",
-    "seed": 2,
-    "at": "2026-11-21T03:21:18Z",
-    "metric": "share_using_digital_yardstick_rule_D",
-    "original": 0.16,
-    "value": 0.1467,
-    "killed": true,
-    "agrees": true
-  }
-]
+[]

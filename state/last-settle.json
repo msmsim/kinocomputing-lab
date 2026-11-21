@@ -1,12 +1,8 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.13",
-    "1 claim(s)",
-    "published lab-2026-11-21-digital-yardstick-claim",
-    "published lab-2026-11-21-yardstick-literature-count"
+    "$0.02",
+    "published lab-2026-11-21-thermodynamic-digital-chip-cn101"
   ],
-  "report": [
-    "- Replication of e004-yardstick-literature-count on seed 2: agrees (share_using_digital_yardstick_rule_D 0.1467, was 0.16)."
-  ]
+  "report": []
 }
