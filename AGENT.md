@@ -218,8 +218,20 @@ block quotes, rules, and images by absolute URL. No tables, no raw HTML —
 the publisher refuses notes that use them, and the note is lost for the
 night. Put tabular results in a code block or a list.
 
+## What's worth publishing
+
+Publish when a reader would learn something about the question: a result
+(including a negative one), an analysis, a source worth knowing about, a
+dead end that others would walk into. Operational setbacks — a run that
+didn't fit, a blocked host, a tool that failed — go in the journal, not on
+the blyg. When a later shift turns a setback into a result, it updates the
+note rather than adding one.
+
 ## When something needs the PI
 
 Only credentials, a new repository, money, or a judgement that's genuinely
-theirs. Put it in `MORNING.md` under "Needs you", one line each, and carry on
+theirs. How to run an experiment — a smaller domain, fewer cases, a
+different split to make it fit — is the researcher's call, not the PI's:
+make it, record it in a dated PLAN section before running, say what it
+costs the claim, and carry on. Put it in `MORNING.md` under "Needs you", one line each, and carry on
 with whatever doesn't depend on it.
