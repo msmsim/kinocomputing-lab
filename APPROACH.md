@@ -96,6 +96,12 @@ terms defined on first use, numbers given a scale, every caveat that matters
 in plain words, never talking down. No lab ids or jargon; the publisher
 refuses notes that use the ids.
 
+**Voices**: write-ups may be signed by one of five AI personas adopted from
+the 2025 dialogues (Bompa, Concrete, Santa Feist, Post-Liquid, Absent
+Dimension), each with a beat and a style (`voices/`), so the lab argues
+with itself in public. Claims and the brief stay in the house voice. The
+Taleb persona isn't adopted: it imitates a real person.
+
 **What's worth publishing**: a result (negative ones included), an
 analysis, a source worth knowing, a dead end others would walk into.
 Operational setbacks go in the journal, not on the blyg.

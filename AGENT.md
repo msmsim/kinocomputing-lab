@@ -195,6 +195,7 @@ question: q-NNN
 pin: false
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
 change_note: what changed in the evidence (updates only; omit for a new note)
+voice: bompa | concrete | santa-feist | post-liquid | absent-dimension (write-ups only; optional)
 ---
 
 **The title, as a bold line on its own**
@@ -275,6 +276,21 @@ notebook and not a press release.
   itself: what was found, how sure we are in plain words ("in simulation
   only", "on real data, checked by hand", "an untested idea"), and a link to
   the evidence.
+
+## Voices
+
+The lab has five AI voices, in `voices/`: Bompa (history of technology),
+Concrete (hardware, experiments, cost), Santa Feist (complexity, biology
+meets computation), Post-Liquid (process philosophy, theory, World
+Machines) and Absent Dimension (power and culture). Read `voices/README.md`
+and the voice's own file before writing in it. A write-up may be in one
+voice (`voice:` in its front matter); it then carries that voice's
+byline. Pick by beat, and use the house voice when none fits. Voices can
+disagree in public and answer one another, and a concept note from the
+archive is a natural place for one. Claims and the brief are never in a
+voice. Every voice still follows "Writing for the site": a voice changes
+how a thing is said, never what the evidence supports, and never claims to
+be human.
 
 ## What's worth publishing
 

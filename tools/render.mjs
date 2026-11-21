@@ -80,7 +80,8 @@ const escapeAttr = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;")
 /** The opening paragraph as a description, cut at a word near 160 characters. */
 function describe(html) {
   const paragraphs = [...html.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((m) => m[1]);
-  const opening = paragraphs.find((p) => !/^<strong>[\s\S]*<\/strong>$/.test(p.trim())) ?? paragraphs[0] ?? "";
+  // Not the title (all bold) or a byline (all italic): the first real paragraph.
+  const opening = paragraphs.find((p) => !/^<(strong|em)>[\s\S]*<\/\1>$/.test(p.trim())) ?? paragraphs[0] ?? "";
   const text = opening.replace(/<[^>]+>/g, "").replace(/&#39;/g, "’").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
   if (text.length <= 160) return text;
   const cut = text.slice(0, 160);
@@ -91,12 +92,27 @@ function describe(html) {
  * Renders one note. `kino` is the kinocomputing checkout (its template and
  * converter are the contract). Throws an Error whose message is the refusal.
  */
-export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook",
+/**
+ * A voice's byline, under the note's title (or first, if it has none). The
+ * voices are AI personas (voices/README.md); the byline says so and links to
+ * where the site introduces them.
+ */
+export function withByline(markdown, voice, origin) {
+  const line = `_By [${voice}](${origin}about), one of the lab's AI voices_`;
+  const title = markdown.match(/^\*\*.+\*\*[ \t]*$/m);
+  if (!title) return `${line}\n\n${markdown}`;
+  const at = title.index + title[0].length;
+  return `${markdown.slice(0, at)}\n\n${line}${markdown.slice(at)}`;
+}
+
+export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook", voice = null,
   maxClaim = 1000, quote = null, model, at, kino, origin }) {
   const refused = refusals(markdown);
   if (refused.length) throw new Error(`uses ${refused.join(" and ")}, which the blyg can't carry`);
   const extracted = extractQuotes(markdown.trim());
   const claim = kind === "claim";
+  if (voice && (claim || kind === "brief")) throw new Error(`is a ${kind} in a voice; claims and the brief are the lab's record, in its own voice`);
+  if (voice) extracted.markdown = withByline(extracted.markdown, voice, origin);
   if (claim && extracted.quotes.length) throw new Error("is a claim, and a claim can't quote; quote it from a thread");
   if (claim && markdown.trim().length > maxClaim) throw new Error(`is a claim of ${markdown.trim().length} characters; a claim is at most ${maxClaim}`);
   let html = marked.parse(extracted.markdown).trim();

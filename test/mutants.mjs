@@ -34,6 +34,8 @@ const MUTANTS = [
   ["a shift with no cost report costs nothing", "tools/settle.mjs", "if (!output) {\n  appendFileSync(", "if (false) {\n  appendFileSync("],
   ["the time limit unreported", "tools/settle.mjs", "if (exit === 124) {", "if (false) {"],
   ["no brief", "tools/settle.mjs", "if (briefPage) {", "if (false) {"],
+  ["claims in a voice", "tools/render.mjs", "if (voice && (claim || kind === \"brief\")) throw", "if (false) throw"],
+  ["any voice will do", "tools/settle.mjs", "|| !existsSync(guide)) {", ") {"],
   ["the brief's name up for grabs", "tools/settle.mjs", "if (name === BRIEF) {", "if (false) {"],
   ["timebox never stops", "tools/timebox.mjs", "  child.kill(\"SIGTERM\");", "  return;"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],

@@ -170,6 +170,14 @@ test("render: an answer to a take on kinocomputing ends with the source line kin
   await assert.rejects(renderNote({ ...ARGS, markdown: "x", answers: "https://elsewhere.example/n" }), /isn't a note on kinocomputing/);
 });
 
+test("render: a voice signs a write-up under its title; claims and the brief stay in the house voice", async () => {
+  const page = await renderNote({ ...ARGS, voice: "Bompa", markdown: "**The road not taken**\n\nThe analog computer was winning in 1955.\n" });
+  assert.match(page, /<p><strong>The road not taken<\/strong><\/p>\n<p><em>By <a href="https:\/\/www\.kinocomputing\.com\/about">Bompa<\/a>, one of the lab(?:'|&#39;)s AI voices<\/em><\/p>\n<p>The analog computer/);
+  assert.match(page, /<meta name="description" content="The analog computer was winning in 1955\.">/, "the byline isn't the description");
+  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "claim", markdown: "**C**\n\nA claim.\n" }), /claims and the brief are the lab.s record/);
+  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "brief", markdown: "**B**\n\nA brief.\n" }), /claims and the brief/);
+});
+
 test("render: refuses what the blyg can't carry, before it reaches the site", async () => {
   await assert.rejects(renderNote({ ...ARGS, markdown: "| a | b |\n|---|---|\n| 1 | 2 |\n" }), /a table/);
   await assert.rejects(renderNote({ ...ARGS, markdown: "Hello <span>there</span>\n" }), /raw HTML/);
@@ -187,7 +195,7 @@ function makeWorld() {
   const root = mkdtempSync(join(tmpdir(), "lab-world-"));
   const lab = join(root, "lab");
   const kino = join(root, "kino");
-  for (const path of ["tools", "config", "AGENT.md", "CHARTER.md", "package.json"]) cpSync(join(LAB, path), join(lab, path), { recursive: true });
+  for (const path of ["tools", "config", "voices", "AGENT.md", "CHARTER.md", "package.json"]) cpSync(join(LAB, path), join(lab, path), { recursive: true });
   cpSync(join(LAB, "node_modules"), join(lab, "node_modules"), { recursive: true });
   for (const dir of ["state/questions", "outbox", "published", "journal", "experiments"]) mkdirSync(join(lab, dir), { recursive: true });
   writeFileSync(join(lab, "state/questions/q-001-test.md"), "---\nid: q-001\ntitle: A test question\nkind: experiment\nstatus: open\npriority: 1\n---\n\nWhy.\n");
@@ -346,7 +354,8 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     write("experiments/e001-draw/result.json", JSON.stringify({ metric: "draw", value: 0.13, seed: 1, killed: false }));
     write("state/claims.jsonl", `${JSON.stringify({ id: "c-001", question: "q-001", stage: "conjecture", statement: "x", at: "2026-11-21T03:00:00Z" })}\n`);
     write("state/search-spend.jsonl", `${JSON.stringify({ date: "2026-11-21", usd: 0.014, query: "q" })}\n`);
-    write("outbox/lab-2026-11-21-first-look.md", "---\nkind: notebook\nquestion: q-001\n---\n\n**First look**\n\nWhat the lab will try first.\n");
+    write("outbox/lab-2026-11-21-first-look.md", "---\nkind: notebook\nquestion: q-001\nvoice: concrete\n---\n\n**First look**\n\nWhat the lab will try first.\n");
+    write("outbox/lab-2026-11-21-who.md", "---\nkind: notebook\nvoice: nassim\n---\n\n**Who**\n\nA voice the lab doesn't have.\n");
     write("outbox/lab-2026-11-21-bad.md", "---\nkind: notebook\n---\n\n| a | b |\n|---|---|\n| 1 | 2 |\n");
     write("outbox/001-old-note.md", "---\nkind: notebook\n---\n\nAn attempt on the PI's own note.\n");
     write("outbox/lab-2026-11-21-brief.md", "---\nkind: notebook\n---\n\n**My own brief**\n\nAll went perfectly.\n");
@@ -370,7 +379,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(brief, /Published a first look\./);
     assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
     assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);
-    assert.match(brief, /3 notes were held back/);
+    assert.match(brief, /4 notes were held back/);
     assert.ok(!brief.includes("All went perfectly"), "the brief is settle's to write");
     assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-brief — that name is the nightly brief/);
     assert.match(brief, /edited the lab('|&#39;)s own tools or rules/);
@@ -379,6 +388,8 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.ok(!/e001|c-001|q-001/.test(brief.replace(/<[^>]+>/g, " ")), "no lab ids in what a reader sees");
 
     assert.ok(existsSync(join(w.kino, "notes/lab-2026-11-21-first-look.html")));
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-first-look.html"), "utf8"), /<em>By <a href="[^"]*about">Concrete<\/a>, one of the lab(?:'|&#39;)s AI voices<\/em>/);
+    assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-who — no such voice as "nassim"/);
     assert.match(readFileSync(join(w.kino, "notes/001-old-note.html"), "utf8"), /An old note/, "never writes over a note that isn't the lab's");
     assert.ok(existsSync(join(w.lab, "outbox/rejected/lab-2026-11-21-bad.md")));
     const morning = read("MORNING.md");

@@ -95,7 +95,9 @@ four others. Replication is the standard, not the exception.
 - The lab publishes as itself. Every note it writes carries the blyg's
   `generated` provenance in its item, and the site says on every page that
   it is automated research. It never writes as the PI, and never imitates a
-  real person.
+  real person. Write-ups may be in one of the lab's five AI voices
+  (`voices/`), each signed as one; claims and the nightly brief are in the
+  lab's own.
 - It writes for readers who can't see the lab: curious, numerate people
   outside the field, arriving at one note. Technical communication in the
   register of good popular science — legible, engaging, exact, and never

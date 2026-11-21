@@ -232,10 +232,20 @@ for (const { file, name, data, body } of parsed) {
     reject(file, claim ? `— over the ${config.publish.max_claims_per_night}-claim nightly limit` : `— over the ${config.publish.max_notes_per_night}-note nightly limit`);
     continue;
   }
+  // A voice is one of voices/: its name is the file's heading.
+  let voice = null;
+  if (data.voice) {
+    const guide = join(LAB, "voices", `${data.voice}.md`);
+    if (!/^[a-z0-9-]+$/.test(String(data.voice)) || data.voice === "readme" || !existsSync(guide)) {
+      reject(file, `— no such voice as "${data.voice}"`);
+      continue;
+    }
+    voice = readFileSync(guide, "utf8").match(/^# (.+)$/m)?.[1] ?? data.voice;
+  }
   let page;
   try {
     page = await renderNote({
-      markdown: body, name, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
+      markdown: body, name, voice, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
       answers: !update && data.answers ? data.answers : null, kind: data.kind, maxClaim: config.publish.max_claim_chars,
       quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });

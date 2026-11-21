@@ -123,6 +123,7 @@ never one you push from. The pilot ran this way.
 | Path | What |
 |---|---|
 | `state/questions/` | The agenda: one file per question |
+| `voices/` | The lab's five AI voices: who each is, its beat and style |
 | `sources/archive-2025/` | Kinocomputing's 2025 essays, as source material: indexed, split into units, rolled forward selectively |
 | `state/claims.jsonl` | Every claim, append-only, with its stage |
 | `state/steers.jsonl` | What the lab did with each steer |
