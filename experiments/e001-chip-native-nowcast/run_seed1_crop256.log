@@ -1,0 +1,290 @@
+/Users/ms/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/claude-501/matplotlib-2q2o611m because there was an issue with the default path (/Users/ms/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+Fontconfig error: No writable cache directories
+	/usr/local/var/cache/fontconfig
+	/Users/ms/.cache/fontconfig
+	/Users/ms/.fontconfig
+Matplotlib is building the font cache; this may take a moment.
+Pysteps configuration file found at: /tmp/claude-501/pyst/lib/python3.11/site-packages/pysteps/pystepsrc
+
+crop 256x256 at rows 534:790, cols 235:491; frame 14 exceedance in window 0.3265 (domain 0.0614)
+Inputs validated and initialized successfully.
+Computing STEPS nowcast
+-----------------------
+
+Inputs
+------
+input dimensions: 256x256
+km/pixel:         1.0
+time step:        5 minutes
+
+Methods
+-------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+noise generator:        nonparametric
+noise adjustment:       no
+velocity perturbator:   bps
+conditional statistics: no
+precip. mask method:    incremental
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters
+----------
+number of time steps:     12
+ensemble size:            20
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+velocity perturbations, parallel:      10.88,0.23,-7.68
+velocity perturbations, perpendicular: 5.76,0.31,-2.72
+precip. intensity threshold: 0.1
+Nowcast components initialized successfully.
+Rain fraction is: 0.7196502685546875, while minimum fraction is 0.0
+Extrapolation complete and precipitation fields aligned.
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.995855      | 0.984016      |
+-----------------------------------------
+| 2     | 0.985394      | 0.936415      |
+-----------------------------------------
+| 3     | 0.947633      | 0.820497      |
+-----------------------------------------
+| 4     | 0.861973      | 0.689837      |
+-----------------------------------------
+| 5     | 0.703348      | 0.404578      |
+-----------------------------------------
+| 6     | 0.049821      | 0.034069      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.825652     | -0.833251    | 0.050290     |
+------------------------------------------------------
+| 2     | 1.684015     | -0.708976    | 0.120095     |
+------------------------------------------------------
+| 3     | 1.436503     | -0.515885    | 0.273583     |
+------------------------------------------------------
+| 4     | 1.040271     | -0.206848    | 0.495990     |
+------------------------------------------------------
+| 5     | 0.822223     | -0.169013    | 0.700619     |
+------------------------------------------------------
+| 6     | 0.048243     | 0.031665     | 0.998257     |
+------------------------------------------------------
+AR model and noise applied to precipitation cascades.
+Velocity perturbations initialized successfully.
+Precipitation mask initialized successfully.
+FFT objects initialized successfully.
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing nowcast for time step 4... done.
+Computing nowcast for time step 5... done.
+Computing nowcast for time step 6... done.
+Computing nowcast for time step 7... done.
+Computing nowcast for time step 8... done.
+Computing nowcast for time step 9... done.
+Computing nowcast for time step 10... done.
+Computing nowcast for time step 11... done.
+Computing nowcast for time step 12... done.
+origin 14 done
+Inputs validated and initialized successfully.
+Computing STEPS nowcast
+-----------------------
+
+Inputs
+------
+input dimensions: 256x256
+km/pixel:         1.0
+time step:        5 minutes
+
+Methods
+-------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+noise generator:        nonparametric
+noise adjustment:       no
+velocity perturbator:   bps
+conditional statistics: no
+precip. mask method:    incremental
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters
+----------
+number of time steps:     12
+ensemble size:            20
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+velocity perturbations, parallel:      10.88,0.23,-7.68
+velocity perturbations, perpendicular: 5.76,0.31,-2.72
+precip. intensity threshold: 0.1
+Nowcast components initialized successfully.
+Rain fraction is: 0.70751953125, while minimum fraction is 0.0
+Extrapolation complete and precipitation fields aligned.
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.994539      | 0.980928      |
+-----------------------------------------
+| 2     | 0.980830      | 0.944141      |
+-----------------------------------------
+| 3     | 0.940053      | 0.844504      |
+-----------------------------------------
+| 4     | 0.844814      | 0.682266      |
+-----------------------------------------
+| 5     | 0.630918      | 0.383503      |
+-----------------------------------------
+| 6     | 0.150436      | 0.061170      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.741492     | -0.751054    | 0.068906     |
+------------------------------------------------------
+| 2     | 1.442819     | -0.471019    | 0.171897     |
+------------------------------------------------------
+| 3     | 1.256868     | -0.337018    | 0.321077     |
+------------------------------------------------------
+| 4     | 0.937606     | -0.109837    | 0.531823     |
+------------------------------------------------------
+| 5     | 0.646174     | -0.024180    | 0.775622     |
+------------------------------------------------------
+| 6     | 0.144504     | 0.039432     | 0.987851     |
+------------------------------------------------------
+AR model and noise applied to precipitation cascades.
+Velocity perturbations initialized successfully.
+Precipitation mask initialized successfully.
+FFT objects initialized successfully.
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing nowcast for time step 4... done.
+Computing nowcast for time step 5... done.
+Computing nowcast for time step 6... done.
+Computing nowcast for time step 7... done.
+Computing nowcast for time step 8... done.
+Computing nowcast for time step 9... done.
+Computing nowcast for time step 10... done.
+Computing nowcast for time step 11... done.
+Computing nowcast for time step 12... done.
+origin 20 done
+Inputs validated and initialized successfully.
+Computing STEPS nowcast
+-----------------------
+
+Inputs
+------
+input dimensions: 256x256
+km/pixel:         1.0
+time step:        5 minutes
+
+Methods
+-------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+noise generator:        nonparametric
+noise adjustment:       no
+velocity perturbator:   bps
+conditional statistics: no
+precip. mask method:    incremental
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters
+----------
+number of time steps:     12
+ensemble size:            20
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+velocity perturbations, parallel:      10.88,0.23,-7.68
+velocity perturbations, perpendicular: 5.76,0.31,-2.72
+precip. intensity threshold: 0.1
+Nowcast components initialized successfully.
+Rain fraction is: 0.6799774169921875, while minimum fraction is 0.0
+Extrapolation complete and precipitation fields aligned.
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.994410      | 0.980768      |
+-----------------------------------------
+| 2     | 0.982080      | 0.927822      |
+-----------------------------------------
+| 3     | 0.951978      | 0.861240      |
+-----------------------------------------
+| 4     | 0.868059      | 0.734036      |
+-----------------------------------------
+| 5     | 0.690194      | 0.449651      |
+-----------------------------------------
+| 6     | 0.241039      | 0.028582      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.715487     | -0.725130    | 0.072707     |
+------------------------------------------------------
+| 2     | 1.652687     | -0.682843    | 0.137686     |
+------------------------------------------------------
+| 3     | 1.409198     | -0.480285    | 0.268544     |
+------------------------------------------------------
+| 4     | 0.936700     | -0.079075    | 0.494907     |
+------------------------------------------------------
+| 5     | 0.725408     | -0.051021    | 0.722682     |
+------------------------------------------------------
+| 6     | 0.244646     | -0.014963    | 0.970407     |
+------------------------------------------------------
+AR model and noise applied to precipitation cascades.
+Velocity perturbations initialized successfully.
+Precipitation mask initialized successfully.
+FFT objects initialized successfully.
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... done.
+Computing nowcast for time step 3... done.
+Computing nowcast for time step 4... done.
+Computing nowcast for time step 5... done.
+Computing nowcast for time step 6... done.
+Computing nowcast for time step 7... done.
+Computing nowcast for time step 8... done.
+Computing nowcast for time step 9... done.
+Computing nowcast for time step 10... done.
+Computing nowcast for time step 11... done.
+Computing nowcast for time step 12... done.
+origin 26 done
+{
+  "metric": "f60_gap_closed",
+  "value": 0.162937158111855,
+  "killed": true
+}
+EXIT 0

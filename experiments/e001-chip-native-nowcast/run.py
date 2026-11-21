@@ -40,6 +40,9 @@ SEED = int(os.environ.get("SEED", "1"))
 RESULT_PATH = os.environ.get("RESULT_PATH", "result.json")
 DATA_DIR = os.environ.get("DATA_DIR", "data")
 N_MEMBERS = int(os.environ.get("N_MEMBERS", "20"))
+# Side of a square window cut from the domain, centred on the rain of frame
+# FIT_LAST (PLAN.md, amendment 2026-11-21 02:15). 0 = the full domain.
+CROP = int(os.environ.get("CROP", "0"))
 
 # --- the data: pysteps example radar sequence (FMI, 2016-09-28) -------------
 
@@ -189,6 +192,23 @@ def load_frames(paths):
         field, _ = conversion.to_rainrate(field, meta)
         frames.append(np.where(np.isfinite(field), field, 0.0))
     return np.stack(frames)
+
+
+def crop_window(rate):
+    """Cut a CROP x CROP window centred on the centroid of frame FIT_LAST's
+    1 mm/h exceedance (domain centre if it is dry). Uses fit frames only."""
+    m, n = rate.shape[1:]
+    rows, cols = np.nonzero(rate[FIT_LAST] > EXCEED_MMH)
+    cy = rows.mean() if rows.size else (m - 1) / 2
+    cx = cols.mean() if cols.size else (n - 1) / 2
+    r0 = int(np.clip(round(cy - CROP / 2), 0, m - CROP))
+    c0 = int(np.clip(round(cx - CROP / 2), 0, n - CROP))
+    window = rate[:, r0:r0 + CROP, c0:c0 + CROP]
+    print(f"crop {CROP}x{CROP} at rows {r0}:{r0 + CROP}, cols {c0}:{c0 + CROP}; "
+          f"frame {FIT_LAST} exceedance in window "
+          f"{float((window[FIT_LAST] > EXCEED_MMH).mean()):.4f} "
+          f"(domain {float((rate[FIT_LAST] > EXCEED_MMH).mean()):.4f})", flush=True)
+    return np.ascontiguousarray(window), (r0, c0)
 
 
 def to_db(rate):
@@ -388,6 +408,9 @@ def main():
 
     paths = fetch_sequence(DATA_DIR)
     rate = load_frames(paths)
+    crop_at = None
+    if CROP:
+        rate, crop_at = crop_window(rate)
     db = to_db(rate)
     shape = rate.shape[1:]
     bp = filter_gaussian(shape, N_LEVELS)
@@ -403,7 +426,7 @@ def main():
     os.makedirs(parts_dir, exist_ok=True)
     per_origin = []
     for t0 in ORIGINS:
-        part = os.path.join(parts_dir, f"origin_{t0}_n{N_MEMBERS}.json")
+        part = os.path.join(parts_dir, f"origin_{t0}_n{N_MEMBERS}_crop{CROP}.json")
         if os.path.exists(part):
             with open(part) as fh:
                 per_origin.append(json.load(fh))
@@ -430,6 +453,7 @@ def main():
     detail = {
         "sequence": "%s frames 14:45-18:00 UTC, pysteps-data@%s" % (SEQ_SUBDIR, PYSTEPS_DATA_SHA[:8]),
         "n_members": N_MEMBERS,
+        "crop": {"side_px": CROP, "top_left_rc": crop_at} if CROP else None,
         "origins": list(ORIGINS),
         "fit_frames": [0, FIT_LAST],
         "sigma_per_scale_db": sigma.round(4).tolist(),

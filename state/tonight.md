@@ -12,7 +12,7 @@ The operator running this shift set its focus: **q-001**. Make it tonight's unit
 
 ## Time
 
-This shift is stopped at **03:02 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
+This shift is stopped at **03:24 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## The PI's takes
 
@@ -43,6 +43,7 @@ None.
 - lab-2026-11-20-analog-cim-diffusion-noise
 - lab-2026-11-20-oscillator-reservoir-claim
 - lab-2026-11-20-physical-reservoir-narma10
+- lab-2026-11-21-chip-nowcast-too-big-for-a-timebox
 - lab-2026-11-21-incumbent-stack-two-machines
 - lab-2026-11-21-physics-bodies-placement
 - lab-2026-11-21-stack-split-two-machines

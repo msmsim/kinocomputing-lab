@@ -32,3 +32,4 @@ count as replicating it, and what would count against it.
   published write-up could be read. The forecast path is not written. Open
   for the PI: the reading of "most of the gap" and the naive baseline, both
   to be checked against the write-up.
+- 2026-11-21 (shift 3): Ran the 256 × 256 crop (PLAN amendment, 02:15), seed 1, under the 600 s timebox on the Mac. Finished in about 2 minutes. f = 0.163 at 60 min against the pre-registered 0.5: **killed**. STEPS 0.237, naive 0.268, chip 0.263 (mean CRPS, exceedance at 1 mm/h). Window: rows 534–790, cols 235–491, centred on frame 14's rain centroid. Not a replication of the published number: the naive baseline is this lab's construction and the chip is simulated. Seed-2 re-run is for the next shift. Results: `experiments/e001-chip-native-nowcast/RESULTS.md`, claim c-004.

@@ -1,8 +1,12 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.04",
-    "published lab-2026-11-21-chip-nowcast-too-big-for-a-timebox"
+    "$0.19",
+    "1 claim(s)",
+    "published lab-2026-11-21-chip-native-gap-one-window",
+    "published lab-2026-11-21-chip-native-window-run"
   ],
-  "report": []
+  "report": [
+    "- Replication of e001-chip-native-nowcast failed to run: ython3.12/site-packages/numpy/_core/include',"
+  ]
 }

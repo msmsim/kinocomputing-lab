@@ -77,3 +77,65 @@ logged separately, so the estimate above is from the log's progress only.
 Cut for the next shift (not yet run): PLAN.md's "Pre-run decisions" section
 records the amendment. The next shift should not change the sequence,
 the split, the baseline or the kill condition, only the domain.
+
+## Run 2026-11-21 02:24–02:27 UTC, seed 1, 256 × 256 crop (the 02:15 amendment)
+
+Command: `SEED=1 CROP=256 node tools/timebox.mjs 600 /tmp/claude-501/pyst/bin/python run.py`
+on the operator's Mac (x86_64), pysteps 1.21.5. Log: `run_seed1_crop256.log`.
+Result: `result.json`. Finished in about 2 minutes, inside the timebox.
+
+The window: rows 534–789, columns 235–490 of the 1226 × 760 grid, centred on the
+1 mm/h exceedance centroid of frame 14 (a fit frame). In frame 14, 0.33 of the
+window exceeds 1 mm/h against 0.06 over the full domain, so the window is the
+rainy part of the sequence, not a typical one.
+
+Scores (mean over origins 14, 20, 26; CRPS on the 1 mm/h exceedance field):
+
+| lead | STEPS | naive chip ensemble | chip-native |
+|---|---|---|---|
+| 10 min | 0.1179 | 0.1183 | 0.1209 |
+| 30 min | 0.1799 | 0.2016 | 0.1988 |
+| 60 min | 0.2373 | 0.2675 | 0.2626 |
+
+f at 60 min = (0.2675 − 0.2626) / (0.2675 − 0.2373) = **0.163**.
+Pre-registered: killed if f < 0.5 (also if STEPS ≥ naive, or chip ≥ naive;
+neither is true). **killed: true**, decided in `run.py`.
+
+Per origin, 60 min, STEPS / naive / chip: origin 14: 0.233 / 0.287 / 0.282;
+origin 20: 0.248 / 0.275 / 0.269; origin 26: 0.231 / 0.241 / 0.237.
+The chip beats the naive ensemble at 60 min on every origin, but only by a
+small margin; at 10 min it is worse than the naive ensemble.
+
+Spread–skill at 60 min: chip 0.75, naive 0.58. Both are below 1, so both are
+under-dispersed; the chip is closer to calibration than the naive ensemble. STEPS:
+not computed. See the note below.
+
+### Note: NaNs in STEPS output (affects a secondary metric only)
+
+STEPS's output has NaN pixels outside its advected domain, rising with lead
+(3% at 5 min, 28% at 60 min, measured on origin 12 with two members, as a scratch check). In the
+exceedance CRPS, NaN compares as dry; the chip and naive ensembles'
+extrapolation fills out-of-domain pixels with NaN too, which `to_db` also
+maps to dry. So all three ensembles treat out-of-domain pixels the same way
+in the headline. The spread–skill for STEPS is `None` because its ensemble
+mean is NaN. This was not patched after the run, so the figure stays absent,
+not recomputed. Fixing the NaN handling in scoring would be a change to the
+scoring after a result, and it is not made here.
+
+### What this run is, and is not
+
+- One seed, one 256-pixel window of one sequence, three origins. The window
+  was chosen by rule (centroid of frame 14's rain), not picked by hand, but it
+  is still a single window, and a rainy one.
+- The naive baseline B is this lab's construction (PLAN.md, pre-run decisions).
+  The published write-up does not name one, so the number is not a
+  replication of the published number.
+- The chip is simulated (OU settling with AR(2) memory per scale). The result
+  is about that model, not a physical chip.
+- A seed-2 check is needed before the verdict is treated as stable. The lab
+  re-runs it on the next seed, as AGENT.md says.
+- Killed by the pre-registered rule. The kill is recorded as the result,
+  not as a setback. The earlier full-grid attempt remains an operational
+  setback, in the journal.
+
+Claim: see state/claims.jsonl (c-004).
