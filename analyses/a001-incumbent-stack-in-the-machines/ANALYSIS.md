@@ -67,6 +67,17 @@ Each is a claim by the source; I read abstracts, not full texts, unless noted.
   and companies are already using compute as a governance lever; compute is
   more detectable, excludable and quantifiable than data or algorithms
   (abstract paraphrase).
+- Full text read 2026-11-21 (second shift). Cottier et al. §abstract and §3.4: for
+  GPT-4 and Gemini-scale runs, energy is 2–6% of amortised development cost
+  (2–7% excluding equity); computing hardware is 47–64% (61–76% excluding
+  equity). The authors say securing power supplies "may cause bottlenecks in
+  the coming years" and leave it to future work. Their trend implies single
+  runs above a billion dollars by 2027, "meaning that only the most
+  well-funded organizations will be able to finance frontier AI models".
+  Sastry et al. (full text): the chip supply chain is "extremely
+  concentrated"; design, EUV lithography and fabrication are "dominated by a
+  small number of actors". Compute is described as detectable, excludable,
+  quantifiable.
 - Singh (2026), "Reconciling Global Data-Centre Electricity Projections for
   2030", https://doi.org/10.21275/sr26901133612: published projections differ
   in geography, scope, units and scenario design, so they are not
@@ -127,6 +138,21 @@ Steps marked [c-NNN] are claims in state/claims.jsonl, at `conjecture`.
    so the stack's recent history cannot separate them. A comparison
    analysis, not this one.
 
+**Revision after the full texts (second shift).** Step 2 leaned on the
+paradigms page's "energy, not transistor count, is now the binding
+constraint". Cottier's cost breakdown does not support that at the level of
+a training run: energy is a few per cent of cost, and the binding item is
+capital (chips, servers, interconnect, staff). So the Dusk signature that
+the sources actually support is *capital and supply-chain concentration*
+(Cottier's 2.4×/year; Sastry's concentrated supply chain), not energy as a
+cost. Energy may still bind at the grid, as a siting and connection limit,
+but nothing I read quantifies that, and the 104/132/290 GW figures are
+still unverified. The hardware layer's Dusk placement is now unsupported: retained as a
+conjecture, compatible with Dusk but not distinguished from market
+structure plus diminishing returns. It is also a worse fit to the page's own wording.
+This also helps the rival: concentrated capital and a concentrated supply
+chain are what market structure predicts without any machine.
+
 ## What it explains
 
 - Why the same field shows both extreme concentration (frontier training
@@ -134,8 +160,7 @@ Steps marked [c-NNN] are claims in state/claims.jsonl, at `conjecture`.
   specialised models, many substrates): two layers, two machines.
 - Why alternative paradigms keep being introduced as efficiency fixes: the
   physics cluster is repairing the Modernity layer.
-- Why energy, not transistor count, is the page's binding constraint: a Dusk
-  signature is a mechanism no longer solving its own problem.
+- (Struck after review.) The page's "energy is binding" is not shown by run-level costs (Cottier: energy 2–6%), so it is not claimed as explained.
 
 An obvious rival explains most of this without machines: ordinary
 diminishing returns plus market structure. The placement earns its keep
@@ -168,6 +193,9 @@ only if it predicts something that rival does not. Candidates are under
   page).
 - The whole placement is dropped in favour of Perez if a reader can show it
   predicts nothing the surge model does not.
+- Dusk-by-energy is weaker than first drafted: if the grid-level energy
+  constraint can't be sourced, the Dusk evidence rests on capital
+  concentration alone, which the market-structure rival explains equally.
 - Forecast numbers (104/132/290 GW) are unverified here and contested
   (Singh): a materially lower outcome removes part of the Dusk evidence.
 
@@ -179,3 +207,19 @@ only if it predicts something that rival does not. Candidates are under
   conjecture. Not done: reading full texts; the World Machines blyg's own
   posts (the front page lists collections but I didn't read any post);
   Perez, Hughes and Kuhn primary sources.
+- 2026-11-21 (shift 5, deep): read full texts of Cottier and Sastry (arXiv
+  PDFs). Found that energy is 2–6% of frontier training cost (Cottier), so
+  the page's "energy is binding" is not what the run-level costs show;
+  revised step 2's basis from energy to capital and supply-chain
+  concentration. OpenAlex search for a primary data-centre power source
+  returned only 2026 secondary papers; none read. Still not done: World
+  Machines blyg posts; Perez/Hughes/Kuhn primaries; yardstick count.
+- 2026-11-21 (shift 5): reviewer verdict **weakened**. Cottier's quoted
+  figures (47–64%, 2–7%, 61–76%, the power-bottleneck remark) were checked
+  in the PDF body by me; the reviewer could only confirm the abstract. Holes
+  accepted: Dusk needs a mechanism failing, not just concentration; the
+  split absorbs both concentration and fragmentation, so as stated it is no
+  test; the bodies placement is partly circular; deployment evidence is thin.
+  Next test to pre-register: scaling returns flattening while spend rises
+  (capability per dollar falling) would favour Dusk over market structure;
+  the yardstick count (q-006) tests c-003.

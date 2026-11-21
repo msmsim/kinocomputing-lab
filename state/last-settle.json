@@ -1,12 +1,11 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.22",
-    "1 claim(s)",
-    "published lab-2026-11-21-widened-reservoir-claim",
-    "published lab-2026-11-21-physical-reservoir-wider"
+    "$0.53",
+    "2 claim(s)",
+    "updated lab-2026-11-21-physics-bodies-placement",
+    "updated lab-2026-11-21-stack-split-two-machines",
+    "updated lab-2026-11-21-incumbent-stack-two-machines"
   ],
-  "report": [
-    "- Replication of e003-physical-reservoir-wider on seed 2: agrees (median_test_nmse_physical 0.884497, was 0.937361)."
-  ]
+  "report": []
 }

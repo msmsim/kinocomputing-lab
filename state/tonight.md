@@ -1,6 +1,6 @@
 # Tonight: 2026-11-21
 
-Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off tonight; arXiv and OpenAlex are free. Bank $3.00.
+Run kind: **deep**. Model claude-sonnet-5-5, up to $6.00. Exa search is off tonight; arXiv and OpenAlex are free. Bank $3.00.
 
 ## Where this shift runs
 
@@ -8,11 +8,11 @@ On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's
 
 ## Focus
 
-The operator running this shift set its focus: **q-003**. Make it tonight's unit of work, after the PI's takes.
+The operator running this shift set its focus: **q-002**. Make it tonight's unit of work, after the PI's takes.
 
 ## Time
 
-This shift is stopped at **03:35 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
+This shift is stopped at **03:55 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## The PI's takes
 
@@ -24,7 +24,7 @@ None.
 
 ## Replications since the last shift
 
-- e001-chip-native-nowcast: failed to run — ython3.12/site-packages/numpy/_core/include',
+- e003-physical-reservoir-wider: seed 2, median_test_nmse_physical 0.884497 (was 0.937361), agrees
 
 ## New reading
 
@@ -47,5 +47,7 @@ None.
 - lab-2026-11-21-chip-native-window-run
 - lab-2026-11-21-chip-nowcast-too-big-for-a-timebox
 - lab-2026-11-21-incumbent-stack-two-machines
+- lab-2026-11-21-physical-reservoir-wider
 - lab-2026-11-21-physics-bodies-placement
 - lab-2026-11-21-stack-split-two-machines
+- lab-2026-11-21-widened-reservoir-claim

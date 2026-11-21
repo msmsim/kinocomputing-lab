@@ -2,6 +2,7 @@
 kind: analysis
 question: q-002
 pin: false
+change_note: Full texts of Cottier and Sastry read; reviewer weakened both quoted claims; energy-as-binding-constraint dropped.
 ---
 
 **Where the incumbent computing stack sits in the machines**
@@ -22,4 +23,6 @@ The alternatives split the same way.
 
 **What would change it.** If compute stays concentrated while capability keeps rising without extra power, reading A weakens. If physics-cluster work is judged on substrate-native measures and wins recognition that way, the "Dusk repair" placement breaks. If a Perez-style surge model predicts the same history ([Knell, 2021](https://doi.org/10.1007/s43253-021-00037-4)), the machines add nothing here. The lab's own toy reservoir lost to a digital baseline on the digital baseline's task (the lab's e002 write-up, published last night): that is weak evidence the yardstick is the incumbent's.
 
-**Not done.** Full texts, the World Machines blyg's posts, and primary sources for Perez, Hughes and Kuhn. The next test is a small literature count: of published alternative-hardware papers, how many report accuracy against a digital baseline versus substrate-native measures.
+**Update after full texts and review.** In Cottier, energy is only 2-6% of frontier training cost; chips, servers and staff dominate. So the Dusk evidence is capital and supply-chain concentration, not energy as a cost, and that is what market structure predicts too. A hostile review judged the placement not yet distinguished from that rival, and the claims below are quoted at their revised, weakened state. The next test to pre-register is whether scaling returns flatten while spend rises.
+
+**Not done.** Primary Perez, Hughes and Kuhn sources, the World Machines blyg's posts, and a primary source for the power figures. (Full texts of Cottier and Sastry are now read.)  Previously: full texts, the World Machines blyg's posts, and primary sources for Perez, Hughes and Kuhn. The next test is a small literature count: of published alternative-hardware papers, how many report accuracy against a digital baseline versus substrate-native measures.

@@ -2,10 +2,11 @@
 kind: claim
 question: q-002
 pin: false
+change_note: Reviewed; weakened. Bodies half is partly circular; yardstick evidence thin; the literature count (q-006) is opened to test it.
 ---
 
-**Physics computing repairs Modernity; bodies computing diverges**
+**Physics and bodies, placed in the machines**
 
-A conjecture: argued, not tested. "Let physics compute" reads as a Dusk repair of Modernity's stack: same tasks, same yardstick, less energy. "Let bodies compute" reads closer to Divergence-native, because giving up copyability makes its results local by construction. The proposed discriminator is whether a paradigm is judged on the incumbent's single scale. The sources are the paradigms page's descriptions only, and the body entries are heterogeneous.
+A consistent but untested reading, reviewed and weakened: "let physics compute" is judged on the incumbent's yardstick (a Dusk repair); "let bodies compute" reads closer to Divergence-native. The bodies half is partly circular (local by construction), and the yardstick evidence is one page's wording plus one lab experiment. A literature count of alternative-hardware papers is the next test.
 
-Evidence: [the working analysis](https://github.com/msmsim/kinocomputing-lab/blob/main/analyses/a001-incumbent-stack-in-the-machines/ANALYSIS.md). Stage: conjecture. Review: none yet.
+Evidence: [the working analysis](https://github.com/msmsim/kinocomputing-lab/blob/main/analyses/a001-incumbent-stack-in-the-machines/ANALYSIS.md). Stage: conjecture. Review: weakened.

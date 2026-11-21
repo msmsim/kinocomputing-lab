@@ -32,3 +32,4 @@ working file on a light night if the reading is long.
 ## Log
 
 - 2026-11-21 (deep, operator focus): started a001 (analyses/a001-incumbent-stack-in-the-machines/). First pass from abstracts and the paradigms page. Claims c-002 and c-003 at conjecture. Note: lab-2026-11-21-incumbent-stack-two-machines. Open: full texts, the WM blyg posts, Perez/Hughes/Kuhn primaries, the yardstick literature count (a candidate new experiment question).
+- 2026-11-21 (shift 5, deep): read Cottier and Sastry full texts; energy only 2-6% of run cost, so Dusk basis re-set to capital concentration; reviewer weakened c-002/c-003. Opened q-006 to test c-003.

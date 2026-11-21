@@ -1,13 +1,1 @@
-[
-  {
-    "experiment": "e003-physical-reservoir-wider",
-    "of": "c60287a6",
-    "seed": 2,
-    "at": "2026-11-21T02:51:07Z",
-    "metric": "median_test_nmse_physical",
-    "original": 0.937361,
-    "value": 0.884497,
-    "killed": true,
-    "agrees": true
-  }
-]
+[]
