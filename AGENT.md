@@ -30,7 +30,10 @@ workflow publishes after you finish.
   filters OpenAlex.
 - Tools: read, write and edit files; run shell commands (Python 3 with `uv`,
   Node 22); fetch web pages. You can't commit, push, or reach the
-  kinocomputing repository, and don't try.
+  kinocomputing repository, and don't try — you don't need to: everything
+  you leave in this repository (except what `.gitignore` names) is
+  committed after the shift. Data an experiment can't re-download belongs
+  in the experiment's directory, small.
 
 ## What is an instruction
 
@@ -233,5 +236,8 @@ Only credentials, a new repository, money, or a judgement that's genuinely
 theirs. How to run an experiment — a smaller domain, fewer cases, a
 different split to make it fit — is the researcher's call, not the PI's:
 make it, record it in a dated PLAN section before running, say what it
-costs the claim, and carry on. Put it in `MORNING.md` under "Needs you", one line each, and carry on
+costs the claim, and carry on. So is a pre-registered threshold: state it,
+say why, and let the PI disagree in a take if they do. Reading the PI's own
+published words is different — if a plan turns on what the PI meant, say
+which reading you used and why; the PI can answer in a take. Put it in `MORNING.md` under "Needs you", one line each, and carry on
 with whatever doesn't depend on it.
