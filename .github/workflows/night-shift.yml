@@ -73,7 +73,7 @@ jobs:
             --output-format json \
             --permission-mode acceptEdits \
             --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
-            > state/claude-output.json
+            < /dev/null > state/claude-output.json
           code=$?
           echo "SHIFT_EXIT=$code" >> "$GITHUB_ENV"
           [ "$code" = 0 ] || echo "the shift exited $code; settling what it left"

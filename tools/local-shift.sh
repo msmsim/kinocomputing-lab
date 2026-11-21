@@ -51,7 +51,7 @@ if [ "$(jq -r .skip state/run.json)" != "true" ]; then
       --permission-mode acceptEdits \
       --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
       --settings config/local-sandbox.json \
-      > state/claude-output.json
+      < /dev/null > state/claude-output.json
   export SHIFT_EXIT=$?
   set -e
   [ "$SHIFT_EXIT" = 0 ] || echo "the shift exited $SHIFT_EXIT; settling what it left"

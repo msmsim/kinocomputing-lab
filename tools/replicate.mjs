@@ -29,6 +29,15 @@ const PER_RUN_MS = Number(process.env.REPLICATE_TIMEOUT_MS ?? 10 * 60_000);
 const TOTAL_MS = Number(process.env.REPLICATE_TOTAL_MS ?? 30 * 60_000);
 const COMMAND = (process.env.REPLICATE_CMD ?? "uv run --quiet run.py").split(" ");
 
+/** The line of a failed run's stderr that says what went wrong, then its tail. */
+export function why(stderr) {
+  const lines = (stderr || "").split("\n").map((l) => l.trim()).filter(Boolean);
+  if (!lines.length) return "no result written";
+  const said = lines.filter((l) => /error|exception|failed|denied|not found/i.test(l) && !/^hint:/i.test(l));
+  const head = (said.find((l) => /^\w*(Error|Exception)\b|clang: error|error:/.test(l)) ?? said.at(-1) ?? lines.at(-1)).slice(0, 200);
+  return `${head}\n${lines.slice(-8).join("\n")}`.slice(0, 1200);
+}
+
 export function replicateAll(lab = LAB, at = now()) {
   const dir = join(lab, "experiments");
   const done = [];
@@ -61,7 +70,7 @@ export function replicateAll(lab = LAB, at = now()) {
     });
     let record;
     if (run.status !== 0 || !existsSync(out)) {
-      record = { of, seed, at, agrees: false, error: run.error?.code === "ETIMEDOUT" ? "timed out" : (run.stderr || "no result written").trim().slice(-500) };
+      record = { of, seed, at, agrees: false, error: run.error?.code === "ETIMEDOUT" ? "timed out" : why(run.stderr) };
     } else {
       try {
         const again = JSON.parse(readFileSync(out, "utf8"));
