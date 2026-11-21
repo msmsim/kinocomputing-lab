@@ -1,8 +1,9 @@
 # MORNING
 
-- Unit: q-004 (paradigm watch, your focus). Checked analog in-memory computing against the alternative-paradigms page's "Latest" line.
-- Published: notebook `lab-2026-11-20-analog-cim-diffusion-noise`, for settle to render. It reports ASSERT (arXiv:2609.00955): diffusion sampling on calibrated analog-CIM noise, where the early denoising steps are the vulnerable ones. Simulation only; a preprint.
-- No PI takes tonight; `state/steers.jsonl` untouched.
+- Unit: q-002 (your operator's focus), deep run. Started analysis a001; first pass, from abstracts and the paradigms page.
+- Published (outbox): analysis `lab-2026-11-21-incumbent-stack-two-machines`, with claims `lab-2026-11-21-stack-split-two-machines` and `lab-2026-11-21-physics-bodies-placement`, both conjecture.
+- Finding: neither reading fits the whole stack. Hardware and scaling read as Modernity in Dusk; deployment reads as Divergence in Day, on thinner evidence. Physics-compute reads as a Dusk repair, bodies-compute as Divergence-native.
+- No takes tonight; `state/steers.jsonl` untouched. Spent little; the rest of the $6 banks.
 
 Needs you:
-- The paradigm page's "Latest" line for analog in-memory computing (the IBM and memristor items, 2026) is now a little behind this entry. Its update is your call.
+- The paradigms page's data-centre power forecasts (104/132/290 GW) carry weight in the Dusk reading and I couldn't verify them. A primary source would help.

@@ -2,7 +2,7 @@
 id: q-002
 title: Where does the incumbent computing stack sit in the World Machines?
 kind: analysis
-status: open
+status: active
 priority: 2
 ---
 
@@ -28,3 +28,7 @@ material? What would distinguish those?
 Separate what the sources say from what the lab infers. Name what evidence
 would change the conclusion. A deep run's work, not a light one's; start the
 working file on a light night if the reading is long.
+
+## Log
+
+- 2026-11-21 (deep, operator focus): started a001 (analyses/a001-incumbent-stack-in-the-machines/). First pass from abstracts and the paradigms page. Claims c-002 and c-003 at conjecture. Note: lab-2026-11-21-incumbent-stack-two-machines. Open: full texts, the WM blyg posts, Perez/Hughes/Kuhn primaries, the yardstick literature count (a candidate new experiment question).

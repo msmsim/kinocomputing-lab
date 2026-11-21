@@ -1,6 +1,6 @@
-# Tonight: 2026-11-20
+# Tonight: 2026-11-21
 
-Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off tonight; arXiv and OpenAlex are free. Bank $1.50.
+Run kind: **deep**. Model claude-sonnet-5-5, up to $6.00. Exa search is off tonight; arXiv and OpenAlex are free. Bank $3.00.
 
 ## Where this shift runs
 
@@ -8,7 +8,7 @@ On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's
 
 ## Focus
 
-The operator running this shift set its focus: **q-004**. Make it tonight's unit of work, after the PI's takes.
+The operator running this shift set its focus: **q-002**. Make it tonight's unit of work, after the PI's takes.
 
 ## The PI's takes
 
@@ -20,21 +20,13 @@ None.
 
 ## Replications since the last shift
 
-- e002-physical-reservoir-narma10: seed 2, median_test_nmse_physical 0.9392 (was 0.962335), agrees
+None.
 
 ## New reading
 
 For q-003:
 
-- Class-aware Latent Attention Replay (CLAR): Class Incremental Hazard Diagnosis for Resilient AI in the Manufacturing Industrial Internet (2026-10-29) https://arxiv.org/abs/2610.39323v1
-- Extrapolating learned dynamics across bifurcations based on generalized synchronization (2026-10-25) https://arxiv.org/abs/2610.34471v1
-- Quantum neuroplastic learning for time-series processing (2026-10-25) https://arxiv.org/abs/2610.34055v1
-
-For q-004:
-
-- Compute Before You Digitize: ADC-less Mixed-Signal Processing for Scalable Cryogenic Qubit Readout (2026-11-17) https://arxiv.org/abs/2611.23448v1
-- Semantic Communication via Analog RF Computing: When the Radio Computes the Meaning (2026-11-17) https://arxiv.org/abs/2611.22100v1
-- Projection-Based Partitioned MiLAC Architecture for MU-MIMO Precoding (2026-11-16) https://arxiv.org/abs/2611.21561v1
+- AquaSense-ICS: A Hybrid Real-Simulated Cyber-Physical Dataset and Leakage-Aware Benchmark for Smart Water Quality Monitoring and Attack Detection (2026-10-23) https://arxiv.org/abs/2610.32661v1
 
 ## Open questions
 
@@ -46,5 +38,6 @@ For q-004:
 
 ## Published notes the lab can update
 
+- lab-2026-11-20-analog-cim-diffusion-noise
 - lab-2026-11-20-oscillator-reservoir-claim
 - lab-2026-11-20-physical-reservoir-narma10
