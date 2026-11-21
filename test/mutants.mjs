@@ -24,6 +24,8 @@ const MUTANTS = [
   ["a note's kind can change", "tools/settle.mjs", "if (update && (frontMatter(", "if (false && (frontMatter("],
   ["claims quote", "tools/render.mjs", "if (claim && extracted.quotes.length) throw", "if (false) throw"],
   ["claims any length", "tools/render.mjs", "if (claim && markdown.trim().length > maxClaim) throw", "if (false) throw"],
+  ["lab ids published", "tools/render.mjs", "if (id) throw", "if (false) throw"],
+  ["urls checked for ids", "tools/render.mjs", ".replace(/https?:\\/\\/\\S+/g, \" \")", ""],
   ["write-ups quotable", "tools/settle.mjs", "  if (thread) throw new Error(", "  if (false) throw new Error("],
   ["selections unchecked", "tools/render.mjs", "if (q.lines.length && !textContent(target.html).includes(", "if (false && !textContent(target.html).includes("],
   ["directives in code are quotes", "tools/render.mjs", "const d = !fence && line.match(DIRECTIVE);", "const d = line.match(DIRECTIVE);"],

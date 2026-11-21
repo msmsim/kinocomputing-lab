@@ -4,14 +4,21 @@ question: q-004
 pin: false
 ---
 
-**Thermodynamic computing: a digital chip runs the method, energy not yet shown**
+**A thermodynamic computer, built from ordinary digital parts**
 
-This is a paradigm-watch entry for thermodynamic computing, the paradigm whose "Latest" line on the alternative-paradigms page gives the Extropic chip work and the $75M letter of intent from July 2026. This preprint is newer than that line.
+*Thermodynamic computing* turns a chip's randomness from a nuisance into the engine. Instead of suppressing noise, the hardware lets its parts fluctuate, shapes how they fluctuate, and reads the answer off the statistics they settle into. The pitch is energy: sampling and probabilistic maths done far more cheaply than a GPU can. Most of the attention, including the Extropic chip and its $75M letter of intent noted in the [alternative paradigms round-up](https://www.kinocomputing.com/alternative-paradigms), has gone to analog designs. A new preprint shows the idea working on a plain digital chip.
 
-What the source says. A preprint submitted 1 August 2026, [CN101 (arXiv:2608.00754)](https://arxiv.org/abs/2608.00754v1), reports a fabricated prototype: a digital thermodynamic computing chip in standard CMOS. It implements an equilibration-style formulation, in which a result is the time-averaged statistics of an ergodic process, using discrete accumulator dynamics and stochastic-computing principles, rather than analog Langevin dynamics. The authors run it on four workloads: linear systems, conditional MNIST generation, a convolutional flow on CIFAR-10, and free-energy estimation on alanine dipeptide. On the last, the chip's estimates agree with CPU estimates of the same flows to within 0.8 kJ/mol. The paper says the energy and latency targets that motivate the programme are deferred to later chips.
+**What the paper reports.** [CN101 (arXiv:2608.00754)](https://arxiv.org/abs/2608.00754v1), posted on 1 August 2026, describes a fabricated prototype in standard CMOS, the same process as everyday chips. Rather than letting analog circuits jitter, it builds the randomness from discrete digital counters and *stochastic computing*, where numbers are carried as streams of random bits. The answer is the long-run average of that random process. The authors run four quite different jobs on it:
 
-What we infer. This is a measured result for the digital branch of the paradigm: the method works on ordinary CMOS, not only on analog substrates. That is a real development, and it is the first on this paradigm's line whose claim is about the substrate working rather than about efficiency. The paradigm's case rests on energy, and this paper does not yet test it.
+- solving systems of linear equations;
+- generating handwritten digits on request;
+- generating small images with a neural network;
+- estimating a molecule's free energy, a staple of drug and chemistry simulations.
 
-What the evidence does not show. The parts we read report no energy per sample or per result, and no comparison with a GPU on the same workloads. Precision is set by how long the chip runs, so each result costs time that is not yet measured against anything. The lab read the abstract and searched the full HTML text; it did not check every table. The preprint has not been peer reviewed.
+On the last, its answers agree with an ordinary CPU's to within 0.8 kJ/mol.
 
-What would change our mind. Measured energy and latency for the same four workloads on CN101, against a GPU baseline run under the same accuracy target. Or a later chip in the same programme that reports those numbers, showing the efficiency case holds on this formulation.
+**Why it matters.** It is the first entry we've seen for this paradigm whose claim is that the substrate *works*, measured on real silicon, rather than a projection of efficiency. And it shows the method doesn't depend on exotic analog hardware.
+
+**What it doesn't show.** The whole case for thermodynamic computing is energy, and this paper doesn't test it. The authors defer energy and speed targets to later chips. In the parts we read there is no energy per result and no comparison with a GPU on the same jobs. Precision comes from running longer, so every answer costs time that isn't yet measured against anything. We read the abstract and searched the full text, but didn't check every table, and the preprint hasn't been peer reviewed.
+
+**What would change our view.** Measured energy and time for the same four jobs on this chip, against a GPU held to the same accuracy. Or a later chip in the same programme that reports those numbers.

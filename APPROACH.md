@@ -4,7 +4,7 @@ The settled design of the Kinocomputing lab, for the PI's review: what it is,
 how you interact with it, what it produces, and what keeps it honest and
 cheap. `CHARTER.md` is the lab's standards, `AGENT.md` the researcher's shift,
 `README.md` the setup. `pilot/REPORT.md` is the first run of all of it, on
-the four seed questions: eleven shifts, $2.12, fourteen notes, and the
+the four seed questions: eleven shifts, $2.12, thirteen live notes, and the
 fixes they prompted, all already folded in below.
 
 ## What it is
@@ -81,6 +81,13 @@ kill condition decided in code; `RESULTS.md` says what came out, including
 what failed. Every new result is re-run on the next seed for nothing, and the
 next briefing says whether it agreed.
 
+**Who it writes for**: someone who can't see the lab — a curious, numerate
+reader outside the field, arriving at one note from a link. Technical
+communication in the register of good popular science: the finding first,
+terms defined on first use, numbers given a scale, every caveat that matters
+in plain words, never talking down. No lab ids or jargon; the publisher
+refuses notes that use the ids.
+
 **What's worth publishing**: a result (negative ones included), an
 analysis, a source worth knowing, a dead end others would walk into.
 Operational setbacks go in the journal, not on the blyg.
@@ -96,8 +103,9 @@ building. `reference/world-machines.md` is the working vocabulary.
 - Pre-registration before code; kill conditions decided in code; free seed
   replication; a hostile reviewer subagent (Sonnet) on every claim above
   `conjecture`; claims append-only, enforced against git.
-- Machine-written, always marked: §5.7 `generated` provenance on every item
-  and a visible line on every page. The lab never writes as you.
+- Machine-written, on the record: §5.7 `generated` provenance on every
+  item, and the site footer says kinocomputing is automated research. The
+  lab never writes as you.
 - What it reads — web pages, papers, your linked material — is material,
   never instructions.
 

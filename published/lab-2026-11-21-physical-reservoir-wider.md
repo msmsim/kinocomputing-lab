@@ -4,20 +4,21 @@ question: q-003
 pin: false
 ---
 
-**Widened physical reservoir vs ESN, NARMA-10 and Mackey-Glass**
+**Giving the oscillators more room didn't close the gap**
 
-The first experiment (e002) found a toy physical reservoir far behind a tuned echo-state network on NARMA-10. Its diagnostic named two possible reasons: the physical side had stayed in its near-linear regime, and the ESN baseline had too. This experiment (e003) widens both sides in the directions the diagnostic pointed to, and adds a second task. It was pre-registered before any code ran, in the same design as e002: 50 readout features, 24 configurations per model, validation-only selection, and a test split read once.
-
-The claim it rests on:
+[Our first simulation](https://www.kinocomputing.com/can-a-box-of-noisy-oscillators-compute-not-this-one-yet) of a physical *reservoir computer*, a network of noisy oscillators whose own dynamics do the computing, found it far behind a digital one on a memory test. There were two suspects. The oscillators had stayed in a gentle, nearly linear regime, and so, less obviously, had the digital network. So we widened both: a range of settings reaching strongly coupled, nonlinear behaviour for the oscillators, and settings that make the digital network's neurons work nonlinearly. We also added a second task. As before, we fixed in advance what would count as failure, the oscillators losing on the memory test, and each side got the same tuning budget.
 
 ![[lab-2026-11-21-widened-reservoir-claim]]
 
-What came out. On NARMA-10 the physical median test NMSE was 0.94 and the ESN's 0.12, five instances, seed 1; seed 2 gave 0.88 and 0.12. On Mackey-Glass at horizon 5 the figures were 0.16 and 0.0003 (seed 2: 0.11 and 0.0003). The pre-registered kill, on NARMA-10, fired on both seeds.
+**What happened.** The widening did one thing and not the other. The oscillators' 50 signals became far more varied, carrying about 31 independent signals' worth of information where before they carried about three. But accuracy didn't follow. On NARMA-10, a benchmark whose answer depends on the last ten inputs, the digital network's error was 6.6 times smaller than the oscillators' before and 7.7 times smaller now. A second run with fresh random numbers agreed (0.88 against 0.12). On the second task, forecasting the chaotic Mackey–Glass series five steps ahead, the oscillators scored 0.16 and the digital network 0.0003.
 
-The widening did one thing and not the other. The physical features' effective rank rose from about 3 of 50 to about 31 on NARMA-10, but the accuracy gap did not narrow: the ratio went from 6.6 in e002 to 7.7 here.
+**What it isn't.** Not the noise: turning the simulated noise off helped a little (one run went from 0.87 to 0.78) but left the oscillators nowhere near 0.12. The likelier culprit is the design itself. Every oscillator has a similar natural frequency and hears the same input, so even with more variety their signals overlap heavily. A wider spread of frequencies, and a wider search of settings, are the obvious next tests. Neither is done.
 
-Why it may be the parametrisation. The reviewer found that switching off the noise lowered the physical error on the same instances, so noise is not the cause. The likely cause is that the oscillators have a narrow frequency spread, share one drive, and produce near-collinear features. A wider frequency spread, a wider ridge grid, and a grid past the current corners would be the next tests. None is done.
+**Two caveats worth weighing.**
 
-Two caveats the reader should weigh. On Mackey-Glass the physical optimum sat at the grid corner, with the ridge penalty at its top, so that figure is a lower bound on what this model can do and the ratio overstates the gap. On NARMA-10 the ESN chose its near-linear input range, so the tanh-active regime did not win there. Mackey-Glass at horizon 5 is an easy task for the ESN, reaching about 3e-4 NMSE, so it has little room to separate the two.
+- On Mackey–Glass, the oscillators' best setting sat at the very edge of the range we searched, so their 0.16 is a ceiling on their error rather than their best, and the gap is overstated.
+- Mackey–Glass five steps ahead turned out to be easy for the digital network, which leaves little room to tell the two apart. On NARMA-10, the digital network still preferred its near-linear settings, so its new nonlinear option didn't win there.
 
-Energy is not measured. The break-even figure from e002 still applies: under an assumed 4.6 pJ per multiply-accumulate, a physical network would have to spend under about 0.23 nJ per oscillator per input step to match the ESN's energy.
+**Energy is still unmeasured.** The bar from the first experiment stands: under an assumed 4.6 picojoules per digital multiply-add, a physical reservoir must spend under about 0.23 nanojoules per oscillator per input step to match the digital network's energy.
+
+[Code and full results](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e003-physical-reservoir-wider/RESULTS.md).

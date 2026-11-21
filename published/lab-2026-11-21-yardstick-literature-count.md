@@ -4,16 +4,18 @@ question: q-006
 pin: false
 ---
 
-**Few alternative-hardware abstracts test against digital**
+**Do new computers judge themselves by the old ones?**
 
-The lab's analysis of the digital yardstick (a001) rests on a claim that alternative-hardware papers judge themselves on the incumbent's benchmarks. This experiment (e004) tests the premise with a pre-registered count of abstracts: 150 sampled from 299 articles, six OpenAlex queries, a keyword rule for a named digital comparator plus a comparison word, and a 50% line set before the data was fetched.
+A common story about alternative computing hardware, which we had leaned on ourselves in [placing these technologies in World Machines theory](https://www.kinocomputing.com/where-todays-computing-sits-in-the-world-machines), goes like this. Analog, photonic, thermodynamic and neuromorphic chips sell themselves as doing what digital computers do, only cheaper, and so they are judged by the incumbent's yardstick. If that were true, you would expect their papers to lead with head-to-head comparisons against digital hardware. So we counted.
 
-The claim it rests on:
+**The method.** We pulled 299 articles from 2024 on, from six searches of the OpenAlex research index (analog, photonic, thermodynamic, neuromorphic, reservoir and memristor hardware), and sampled 150 abstracts. A keyword rule flagged any abstract naming a digital comparator, such as a GPU or a CPU, alongside a comparison word. Before fetching anything we set the line: if half or more of the abstracts compare against digital, the story holds. Then, to check the rule itself, we coded 20 abstracts by hand without looking at what the rule had said.
 
 ![[lab-2026-11-21-digital-yardstick-claim]]
 
-What came out. The rule gave 16% (seed 1) and 15% (seed 2). The pre-registered kill fired on both seeds, so the premise fails at this line. The rule's error is large, in the direction that matters. Of the 20 abstracts hand-coded blind, the four the rule flagged were all background mentions or simulator names, and the one paper that did compare to a digital network was missed because it said "classical". The hand share is 5%.
+**What happened.** The rule flagged 16% of abstracts (15% on a second random sample), far below the line. And the hand check showed the rule was worse than useless in the direction that mattered. All four abstracts it flagged among the 20 merely mentioned GPUs in passing, or named a simulator. The one abstract that genuinely compared itself with a digital network slipped past, because it said "classical" rather than naming the hardware. The hand-checked share is 5%.
 
-What it does not show. Abstracts only, so a yardstick in a results table is invisible here. One snapshot and six queries, so the population is biased toward papers that name their hardware. Some papers in the pool are off topic. The 50% line is the researcher's judgement, and the PI may want to set it differently. The hand check is 20 papers: enough to show the rule's error, not enough to estimate the share finely.
+**What it doesn't show.** Abstracts aren't papers: a digital comparison tucked into a results table is invisible here. Six searches favour papers that name their hardware, and a few in the pool were off topic. Twenty hand-coded abstracts are enough to expose the rule's errors, not to pin the true share down finely. And the 50% line is a judgement call.
 
-What it means for the analysis. c-003's yardstick half (physics is judged on the incumbent's scale, a Dusk repair) is weakened by this result, not refuted: the premise of step 4 does not hold for abstracts, and the analysis should say so. The bodies half is untouched. A larger hand check, full texts, and a second source are the next steps.
+**What it changes.** It weakens one half of [our reading](https://www.kinocomputing.com/physics-computing-as-repair-body-computing-as-new-ground) that physics-based computing is a repair job on the digital machine, judged by its rules: at least in their abstracts, these papers mostly don't frame themselves that way. The other half of that reading, about computing with living and embodied systems, is untouched. A larger hand check, full texts and a second index are the next steps.
+
+[Code, data and full results](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e004-yardstick-literature-count/RESULTS.md).

@@ -4,8 +4,8 @@ question: q-003
 pin: false
 ---
 
-**Widened reservoir still trails tuned ESN in simulation**
+**A wider oscillator design still trails the digital one**
 
-In simulation only, for one parametrisation: oscillator frequencies from 0.8 to 1.2, damping 0.2, noise 0.01, readout on displacement only. With 50 readout features and 24-configuration grids on both sides, the physical reservoir had higher median test error than a tuned same-width echo-state network: 0.94 against 0.12 on NARMA-10, and 0.16 against 0.0003 on Mackey-Glass at horizon 5, where the physical side sits at a grid edge. Both results hold on two seeds. One parametrisation, two tasks, one simulation: this says nothing about physical reservoirs in general, about any device, or about energy.
+Pushed into a more strongly coupled, more nonlinear regime, a simulated network of 50 noisy oscillators still lost to a same-size digital reservoir: an error of 0.94 against 0.12 on the NARMA-10 memory test (1.0 means no better than guessing the average), and 0.16 against 0.0003 when forecasting the chaotic Mackey–Glass series five steps ahead. Both held on a second run with fresh random numbers. The Mackey–Glass gap is overstated: the oscillators' best setting sat at the edge of the range searched.
 
-Evidence: experiments/e003-physical-reservoir-wider/RESULTS.md. Stage: simulated. Review: weakened (wording narrowed to this parametrisation; the Mackey-Glass ratio overstates the gap).
+How sure: simulation only, one design, two tasks. Nothing here about real devices or energy. [Code and full results](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e003-physical-reservoir-wider/RESULTS.md).

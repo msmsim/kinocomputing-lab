@@ -4,7 +4,7 @@
 // notes/_note.html, filled, with each optional section kept only when there is
 // a value for it. Added for the lab: the §5.7 disclosure meta
 // (`blyg:generated`, naming the model), which kinocomputing's build turns into
-// provenance and a visible line; and the item's kind (P21). A claim is a
+// provenance; and the item's kind (P21). A claim is a
 // fragment — short, quotable, a leaf. Everything else the lab writes is a
 // thread, and a thread can quote.
 //
@@ -63,6 +63,18 @@ function refusals(markdown) {
   return [...found];
 }
 
+// The lab's own ids — questions, claims, experiments, analyses. A reader on
+// kinocomputing can't see the lab, so a note that leans on them doesn't make
+// sense where it is published (AGENT.md, "Writing for the site"). Addresses
+// are left out of the check: a link may point into the lab's repository.
+const LAB_ID = /\b(?:[qc]-\d{3}|[ea]\d{3})\b/i;
+
+/** The first lab id a reader would see in the note's text, if any. */
+export function labIdIn(html) {
+  const text = html.replace(/<[^>]+>/g, " ").replace(/https?:\/\/\S+/g, " ");
+  return text.match(LAB_ID)?.[0] ?? null;
+}
+
 const escapeAttr = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /** The opening paragraph as a description, cut at a word near 160 characters. */
@@ -89,6 +101,8 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   if (claim && markdown.trim().length > maxClaim) throw new Error(`is a claim of ${markdown.trim().length} characters; a claim is at most ${maxClaim}`);
   let html = marked.parse(extracted.markdown).trim();
   if (!html) throw new Error("is empty");
+  const id = labIdIn(html);
+  if (id) throw new Error(`says "${id}", which readers on kinocomputing can't look up; say what it is instead`);
   const { htmlToMarkdown, textContent } = await import(pathToFileURL(join(kino, "tools", "blyg.mjs")).href);
   for (const [i, q] of extracted.quotes.entries()) {
     if (!quote) throw new Error(`quotes ${q.name}, and nothing here can resolve quotes`);

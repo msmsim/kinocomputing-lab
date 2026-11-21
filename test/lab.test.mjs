@@ -165,6 +165,12 @@ test("render: refuses what the blyg can't carry, before it reaches the site", as
   await assert.rejects(renderNote({ ...ARGS, markdown: "| a | b |\n|---|---|\n| 1 | 2 |\n" }), /a table/);
   await assert.rejects(renderNote({ ...ARGS, markdown: "Hello <span>there</span>\n" }), /raw HTML/);
   await assert.rejects(renderNote({ ...ARGS, markdown: "   \n" }), /empty/);
+  // The reader can't see the lab: its ids in a note's text are refused, in a
+  // link's address they're fine.
+  for (const id of ["q-003", "e002", "a001", "c-003", "E004"]) {
+    await assert.rejects(renderNote({ ...ARGS, markdown: `**T**\n\nAs ${id} showed.\n` }), /can't look up/, id);
+  }
+  await renderNote({ ...ARGS, markdown: "**T**\n\n[The code](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e002-x/RESULTS.md), and https://example.org/e002 too. In 2024, a3 b-12.\n" });
 });
 
 /** A throwaway lab and kinocomputing, side by side, the lab a git repo. */

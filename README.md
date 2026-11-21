@@ -30,8 +30,11 @@ kinocomputing's own Action registers the notes as blyg items; Cloudflare deploys
 The agent's step holds only the Anthropic key. It can't push, and it never sees
 kinocomputing's files: settle, which it doesn't control, renders its markdown
 through kinocomputing's own template and converter and refuses anything that
-wouldn't publish cleanly. Everything it publishes is marked machine-written —
-§5.7 `generated` provenance in the blyg item, and a line on the page.
+wouldn't publish cleanly. Everything it publishes carries §5.7 `generated`
+provenance in its blyg item, and the site footer says on every page that
+kinocomputing is automated research. It writes for readers who can't see
+the lab: no lab ids or jargon, terms defined, in the register of good
+popular science (`AGENT.md`, "Writing for the site").
 
 ## On kinocomputing
 
@@ -41,8 +44,7 @@ pinned when it is replicated. Experiment, analysis and notebook write-ups are
 **threads** that quote the claims they rest on — and your notes, where they
 answer or build on them — as §10 transclusions: snapshots at the version
 quoted. When a claim moves on, the write-ups quoting its old version are
-stale, and the next briefing lists them. Every note is marked
-machine-written. At most two write-ups and four claims a night.
+stale, and the next briefing lists them. At most two write-ups and four claims a night.
 
 ## Steering, for the PI
 

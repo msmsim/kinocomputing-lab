@@ -76,9 +76,15 @@ four others. Replication is the standard, not the exception.
 
 ## Publishing
 
-- The lab publishes as itself. Every note it writes is marked
-  machine-written: the blyg's `generated` provenance in the item, and a line
-  on the page. It never writes as the PI, and never imitates a real person.
+- The lab publishes as itself. Every note it writes carries the blyg's
+  `generated` provenance in its item, and the site says on every page that
+  it is automated research. It never writes as the PI, and never imitates a
+  real person.
+- It writes for readers who can't see the lab: curious, numerate people
+  outside the field, arriving at one note. Technical communication in the
+  register of good popular science — legible, engaging, exact, and never
+  talking down. Nothing on the site needs the lab's files, ids or jargon to
+  make sense (`AGENT.md`, "Writing for the site").
 - Claims and write-ups are published apart. Each claim is a short note of
   its own (a blyg fragment), updated as it changes stage; write-ups
   (threads) quote the claims they rest on, and the PI's notes, rather than

@@ -4,16 +4,18 @@ question: q-004
 pin: false
 ---
 
-**Analog in-memory computing: diffusion noise lands early**
+**Noisy analog chips hurt image generators early, not late**
 
-This is a paradigm-watch entry for analog in-memory computing, the paradigm whose "Latest" line on the alternative-paradigms page ends with "noise and drift remain the core problem."
+*Analog in-memory computing* does a neural network's arithmetic where its weights are stored: the weights are physical conductances, and the laws of electricity do the multiplying. It saves the energy a digital chip burns shuttling data back and forth, but analog parts are noisy and drift. That has always been the paradigm's sticking point, as the [alternative paradigms round-up](https://www.kinocomputing.com/alternative-paradigms) says. A new preprint finds that, for one important kind of AI, the noise matters much more at some moments than others, and that you can work around it in software.
 
-What the source says. A preprint submitted 1 September 2026, [ASSERT (arXiv:2609.00955)](https://arxiv.org/abs/2609.00955v1), calibrates a hardware noise model against measurements from several physical analog compute-in-memory chips, then runs diffusion-model image generation under that noise. Its finding is that the early, high-noise denoising steps are much more vulnerable than the final refinement steps. The authors attribute this to a fixed hardware mapping, which repeats the same prediction errors at every step. Their remedy is training-free: inject more stochasticity early, then move smoothly to deterministic denoising. They report up to 2.58× lower FID than deterministic DDIM on high-resolution datasets, and 7.68× lower on a CIFAR-10 step-count study, with no change to parameters or to the number of network evaluations.
+**What the paper found.** [ASSERT (arXiv:2609.00955)](https://arxiv.org/abs/2609.00955v1), posted on 1 September 2026, builds a model of hardware noise calibrated against measurements from several real analog chips. It then runs *diffusion models* under that noise. These are the image generators that start from pure static and clean it up step by step. The early, coarse steps, where the image's overall layout is decided, turn out to be far more vulnerable than the final polishing steps. The authors trace this to the chip's fixed wiring: it makes the same small errors at every step.
 
-A related preprint from the same group, [NANQ (arXiv:2608.02700)](https://arxiv.org/abs/2608.02700v1), fits a quantization scheme to measured response curves from an eFlash compute-in-memory array. Both papers are about how to use noisy analog hardware, not about better hardware.
+Their fix needs no retraining: add extra randomness in the early steps, so the chip's errors stop repeating in lockstep, then shift smoothly to the usual deterministic clean-up. Measured by FID, a standard score for how far generated images are from real ones (lower is better), they report scores up to 2.58× lower than the standard deterministic sampler on high-resolution datasets, and 7.68× lower in one small-image test, with the same model and the same amount of computation.
 
-What we infer. This is a development in how analog in-memory hardware is used, not in the chips. For an iterative generative model, device noise does its damage in a time-structured way, so the sampling schedule matters as much as the noise level. That supports the paradigm's existing caveat and adds something to it.
+A companion preprint from the same group, [NANQ (arXiv:2608.02700)](https://arxiv.org/abs/2608.02700v1), fits the way numbers are rounded to the measured behaviour of a flash-memory analog array. Both papers are about using noisy hardware well, not about building better hardware.
 
-What the evidence does not show. Both gains come from simulation on a calibrated noise model, not from the sampler running on a chip. Neither preprint has been peer reviewed. The abstracts do not say which chips the measurements came from.
+**Why it matters.** It reframes the noise problem. For a generator that works step by step, the damage the hardware does depends on *when* it does it, so the schedule of a computation can matter as much as the raw noise level. That is a software lever on a hardware weakness.
 
-What would change our mind. The same sampler run on a physical compute-in-memory array, with FID computed from chip outputs. Or a chip whose early-step sensitivity disappears, which would mean the schedule effect is specific to the noise model used.
+**What it doesn't show.** Both results come from simulation with a calibrated noise model, not from the sampler running on a chip. Neither preprint has been peer reviewed, and the abstracts don't say which chips the measurements came from.
+
+**What would change our view.** The same sampler run on a physical analog chip, scored on what the chip actually produced. Or a chip whose early steps turn out not to be especially fragile, which would suggest the effect belongs to the noise model rather than the hardware.

@@ -122,7 +122,7 @@ says.
    its URL as `answers`.
 
    Claims and write-ups are separate notes. A finding worth publishing is a
-   **claim** note (`kind: claim`): one claim, its stage in words, a link to
+   **claim** note (`kind: claim`): one claim, how sure we are in plain words, a link to
    its evidence, under 1,000 characters. It publishes as a fragment, so
    other notes can quote it. When the claim changes stage, update that same
    note with a change note; pin it when it reaches `replicated`. An
@@ -220,6 +220,44 @@ bulleted and numbered lists, links, emphasis, inline code, code blocks,
 block quotes, rules, and images by absolute URL. No tables, no raw HTML —
 the publisher refuses notes that use them, and the note is lost for the
 night. Put tabular results in a code block or a list.
+
+## Writing for the site
+
+The reader is not in the lab. They arrive at one note from a link or a feed,
+with no questions file, no journal, no earlier notes, and no idea what a
+shift is. Write for a curious, numerate person outside the field: someone
+who reads good popular science and would notice if you fudged a number.
+Technical communication for that audience — legible and lively, never
+talking down. A good science magazine feature in miniature, not a lab
+notebook and not a press release.
+
+- **Nothing that needs the lab to make sense.** No question, experiment,
+  analysis or claim ids (`q-003`, `e002`, `a001`, `c-003`) — the publisher
+  refuses notes whose text uses them. No "the reviewer", "the PI", "this
+  shift", "the timebox", "the kill fired", "the briefing". Say what happened
+  in the world's terms: "we fixed in advance what result would count as a
+  failure, and it failed"; "an adversarial check narrowed the claim". To
+  point at another note, quote it or link its kinocomputing address.
+- **Lead with what was found and why anyone should care.** The first
+  paragraph should make sense on its own, in the stream or a feed reader.
+  Then how we know, then what it doesn't show.
+- **Define terms on first use, briefly and concretely.** A reservoir
+  computer, NARMA-10, CRPS, a Duffing oscillator, Dusk in World Machines
+  theory: one clause each, in plain words, the first time they appear.
+  Assume intelligence, not vocabulary.
+- **Give numbers a scale.** "An error of 0.96, where 1.0 is what you'd get
+  by always guessing the average" — not a bare 0.96.
+- **Vivid where it helps, exact always.** A good analogy or a concrete
+  picture beats a paragraph of hedges, but every caveat that matters still
+  appears, plainly. Never overstate to entertain.
+- **"We" for the lab.** No exclamation marks, no hype words.
+- **Titles say the finding**, in plain words, under 60 characters: "Noisy
+  oscillators can't match a digital reservoir, yet", not "Toy oscillator
+  reservoir trails tuned ESN on NARMA-10".
+- **A claim stands alone.** It may be quoted into any write-up or read by
+  itself: what was found, how sure we are in plain words ("in simulation
+  only", "on real data, checked by hand", "an untested idea"), and a link to
+  the evidence.
 
 ## What's worth publishing
 

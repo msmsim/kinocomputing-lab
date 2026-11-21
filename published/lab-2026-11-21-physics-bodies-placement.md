@@ -2,11 +2,10 @@
 kind: claim
 question: q-002
 pin: false
-change_note: Reviewed; weakened. Bodies half is partly circular; yardstick evidence thin; the literature count (q-006) is opened to test it.
 ---
 
-**Physics and bodies, placed in the machines**
+**Physics computing as repair, body computing as new ground**
 
-A consistent but untested reading, reviewed and weakened: "let physics compute" is judged on the incumbent's yardstick (a Dusk repair); "let bodies compute" reads closer to Divergence-native. The bodies half is partly circular (local by construction), and the yardstick evidence is one page's wording plus one lab experiment. A literature count of alternative-hardware papers is the next test.
+Two families of [alternative computing](https://www.kinocomputing.com/alternative-paradigms) sit differently in [World Machines](https://worldmachines.org/theory) theory, on our reading. "Let physics compute" (analog, photonic, thermodynamic chips) is mostly pitched as doing the digital computer's job more cheaply: a repair for Modernity in its declining Dusk, judged by the old machine's yardstick. "Let bodies compute" (living tissue, organoids, embodied systems) reads closer to Divergence, where results are local by nature.
 
-Evidence: [the working analysis](https://github.com/msmsim/kinocomputing-lab/blob/main/analyses/a001-incumbent-stack-in-the-machines/ANALYSIS.md). Stage: conjecture. Review: weakened.
+How sure: an untested idea, weakened by adversarial review. The bodies half is partly true by definition, and the yardstick half rests on thin evidence. [The working analysis](https://github.com/msmsim/kinocomputing-lab/blob/main/analyses/a001-incumbent-stack-in-the-machines/ANALYSIS.md).

@@ -4,8 +4,8 @@ question: q-003
 pin: false
 ---
 
-**Toy oscillator reservoir trails tuned ESN on NARMA-10**
+**Noisy oscillators fall short of a digital reservoir**
 
-In simulation only. A toy network of 50 coupled, noisy oscillators, on the NARMA-10 task at 50 readout features and a 24-configuration grid, reached a median test NMSE of 0.96 over five instances. A tuned echo-state network of the same width reached 0.15. At this grid the toy model sits near mean-predictor level. One task, one toy model, one grid: this says nothing about physical reservoirs in general, or about energy.
+In a simulation, 50 coupled, noisy oscillators acting as a *reservoir computer* (a system whose own dynamics do the computing, with only a simple trained readout on top) scored an error of 0.96 on NARMA-10, a standard memory test, where 1.0 is no better than always guessing the average. A tuned digital reservoir of the same size scored 0.15.
 
-Evidence: experiments/e002-physical-reservoir-narma10/RESULTS.md. Stage: simulated. Review: weakened (wording narrowed to this model, grid and task).
+How sure: simulation only, one toy model, one task, one range of settings, narrowed after adversarial review. It says nothing about physical reservoirs in general, or about energy. [Code and full results](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e002-physical-reservoir-narma10/RESULTS.md).

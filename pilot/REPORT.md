@@ -34,9 +34,17 @@ two deep shifts on Sonnet 5.5 cost $0.44 and $0.53.
 
 14 notes on kinocomputing — six claims (fragments) and eight write-ups
 (threads quoting them) — four experiments, one World Machines analysis in
-two passes, and two new questions the lab opened for itself. All notes are
-on kinocomputing's `blygger-hackathon-pilot` branch and register cleanly
-from scratch (checked: conformant, every quote resolves).
+two passes, and two new questions the lab opened for itself. Thirteen are
+live: the fourteenth, a setback note, was deleted before merging.
+
+**After the pilot, on the PI's review:** the notes were written for someone
+inside the lab — question and experiment ids, "the kill fired", "Stage:
+conjecture" — and a reader on kinocomputing can't see the lab. All
+thirteen were rewritten for an outside reader, in the register of good
+popular science (same findings, numbers and caveats; terms defined; titles
+that say the finding), and went out as version 2 with a change note.
+`AGENT.md` now has "Writing for the site", and the publisher refuses a note
+whose text uses a lab id.
 
 ### q-001 — replicate the chip-native nowcasting result (three shifts)
 
@@ -163,11 +171,11 @@ by mistake and said so in its journal; its real review ran each time.
 - The lab's `state/seen.json` and `state/budget.json` are removed: the first
   real run takes a fresh baseline of the live site (so none of your
   existing notes replay as takes) and starts the bank that day.
-- The pilot's notes reach kinocomputing when `blygger-hackathon-pilot` is
-  merged; the first Action registers them with real ids, all at once (the
-  pilot's v2s arrive as v1s). `lab-2026-11-21-chip-nowcast-too-big-for-a-timebox`
-  is the setback note the S6 fix now prevents; delete its page if you'd
-  rather it never went live (deleting a note withdraws it).
+- The pilot's notes reached kinocomputing when `blygger-hackathon-pilot`
+  was merged, and were registered all at once (the pilot's v2s arrived as
+  v1s); the rewrites are their v2s. The setback note the S6 fix now
+  prevents, `lab-2026-11-21-chip-nowcast-too-big-for-a-timebox`, was
+  deleted before the merge and never went live.
 
 ## Open, for you
 
@@ -181,6 +189,5 @@ by mistake and said so in its journal; its real review ran each time.
    is enough.
 4. **Your paradigms page** is behind on analog CIM and thermodynamic
    computing; the lab won't edit your notes, by design.
-5. **Merging order:** kinocomputing `blygger-hackathon-pilot` (includes
-   `-threads`, `-lab`, `-qol`) to main; the lab repo created from
-   `blygger-hackathon-pilot`.
+5. **Merging order:** kinocomputing is merged and live. Left: the lab repo,
+   created from `blygger-hackathon-pilot`.
