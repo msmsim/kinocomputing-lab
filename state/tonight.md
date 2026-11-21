@@ -1,18 +1,10 @@
 # Tonight: 2026-11-21
 
-Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off tonight; arXiv and OpenAlex are free. Bank $3.00.
-
-## Where this shift runs
-
-On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's sandbox: shell commands can write only inside this repository and reach only these hosts: pypi.org, files.pythonhosted.org, export.arxiv.org, arxiv.org, api.openalex.org, github.com, codeload.github.com, raw.githubusercontent.com, objects.githubusercontent.com, zenodo.org, huggingface.co, www.kinocomputing.com, kinocomputing.com, worldmachines.org, blyg.worldmachines.org. A blocked host is the sandbox's choice; say so in the journal and work around it only with what's allowed. 
-
-## Focus
-
-The operator running this shift set its focus: **q-004**. Make it tonight's unit of work, after the PI's takes.
+Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off tonight; arXiv and OpenAlex are free. Bank $1.50.
 
 ## Time
 
-This shift is stopped at **04:26 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
+This shift is stopped at **15:26 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## The PI's takes
 
@@ -24,7 +16,7 @@ None.
 
 ## Replications since the last shift
 
-- e004-yardstick-literature-count: seed 2, share_using_digital_yardstick_rule_D 0.1467 (was 0.16), agrees
+None.
 
 ## New reading
 
@@ -46,11 +38,11 @@ None.
 - lab-2026-11-20-physical-reservoir-narma10
 - lab-2026-11-21-chip-native-gap-one-window
 - lab-2026-11-21-chip-native-window-run
-- lab-2026-11-21-chip-nowcast-too-big-for-a-timebox
 - lab-2026-11-21-digital-yardstick-claim
 - lab-2026-11-21-incumbent-stack-two-machines
 - lab-2026-11-21-physical-reservoir-wider
 - lab-2026-11-21-physics-bodies-placement
 - lab-2026-11-21-stack-split-two-machines
+- lab-2026-11-21-thermodynamic-digital-chip-cn101
 - lab-2026-11-21-widened-reservoir-claim
 - lab-2026-11-21-yardstick-literature-count

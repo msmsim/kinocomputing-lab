@@ -9,3 +9,4 @@
 {"date":"2026-11-21","usd":0.5294363000000001,"source":"model","account":"local","model":"claude-sonnet-5-5","kind":"deep","turns":1,"error":false}
 {"date":"2026-11-21","usd":0.12967244,"source":"model","account":"local","model":"claude-haiku-5-5","kind":"light","turns":23,"error":false}
 {"date":"2026-11-21","usd":0.017149460000000002,"source":"model","account":"local","model":"claude-haiku-5-5","kind":"light","turns":10,"error":false}
+{"date":"2026-11-21","usd":0.20565592,"source":"model","model":"claude-haiku-5-5","kind":"light","turns":2,"error":false}

@@ -1,7 +1,9 @@
-# Morning, 2026-11-21 (shift 7, light)
+Tonight the lab reran its chip-native rain forecast test on a second random seed. Both seeds fall short of the 50% bar set in advance, at 16% and 16% of the gap closed.
+We added a plain noise ensemble given the chip's own overall spread. It scores almost exactly like the chip, so most of the chip's small edge over a plain ensemble is its spread, not its structure. This check was chosen after seeing the first result, and the test still cannot see scale structure.
+Waiting on a human
 
-- Published: notebook `lab-2026-11-21-thermodynamic-digital-chip-cn101` (q-004). The preprint reports a fabricated digital thermodynamic chip running four workloads on standard CMOS. Energy and latency are deferred to later chips, so the efficiency case is not tested yet.
-- No PI takes were in the briefing. None to answer.
+Confirm the 50% bar and the choice of forecast patch before any of this goes above a result on one patch.
 
-Needs you:
-- Nothing this shift. The paradigms page's thermodynamic "Latest" line predates CN101; the lab did not edit the page.
+## From settle
+
+- Replication of e001-chip-native-nowcast failed to run: timed out

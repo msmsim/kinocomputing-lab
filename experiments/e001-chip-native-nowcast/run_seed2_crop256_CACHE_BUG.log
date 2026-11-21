@@ -1,0 +1,8 @@
+Pysteps configuration file found at: /home/runner/work/_temp/setup-uv-cache/environments-v2/run-5ae53f9286e2305b/lib/python3.12/site-packages/pysteps/pystepsrc
+
+crop 256x256 at rows 534:790, cols 235:491; frame 14 exceedance in window 0.3265 (domain 0.0614)
+{
+  "metric": "f60_gap_closed",
+  "value": 0.162937158111855,
+  "killed": true
+}

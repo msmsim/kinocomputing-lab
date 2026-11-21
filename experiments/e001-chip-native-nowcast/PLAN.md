@@ -198,3 +198,34 @@ result speaks to: the headline f will describe one 256-pixel window of this
 sequence, and the claim will say so.
 
 Not run at the time of writing. The verdict is still open.
+
+## Amendment 2026-11-21 14:31 UTC (after the crop run, before the check)
+
+**Why.** The reviewer's verdict on the crop run (RESULTS.md, claim c-004) said
+the chip's spread (0.75) differs from the naive ensemble's (0.58), so the chip's
+advantage may be a marginal-variance effect rather than scale structure. That
+is testable without new physics.
+
+**The check.** A third ensemble, `naive_vm` (variance-matched naive): i.i.d.
+Gaussian per pixel and timestep, like the naive baseline, but with the standard
+deviation set to the chip's own pooled RMS perturbation in dB for that origin
+(all members, all timesteps, all pixels). Same deterministic part, same
+transform, same scoring. Its RNG stream is `[SEED, t0, 3]`, so the chip and
+naive streams are unchanged.
+
+**What it can show.** It has the chip's marginal variance and none of its scale
+structure or memory. If the chip still beats `naive_vm` at 60 minutes, the
+advantage is not only the marginal variance. If `naive_vm` matches the chip, the
+crop's advantage is the marginal variance. It cannot show structure either way:
+pixelwise CRPS at one lead is blind to spatial coherence, so a structure test
+is still open.
+
+**Reported, not gating.** The headline f, the kill rule and the claim's
+threshold stay exactly as pre-registered. `f_vm = (naive_vm − chip) / (naive_vm − STEPS)`
+at 60 minutes is reported beside f. `naive_vm` does not enter `killed`.
+
+**Cache.** Per-origin parts are now keyed by seed (`origin_{t0}_s{SEED}_…`). The
+earlier key was seed-blind: a seed-2 run loaded seed 1's parts and reported
+seed 1's numbers. Those parts are kept, renamed with `_s1`. Seed 2 was recomputed
+from scratch; the cache-hit file was removed, its log kept as
+`run_seed2_crop256_CACHE_BUG.log`.

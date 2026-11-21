@@ -318,9 +318,12 @@ def forecast_origin(t0, rate, db, bp, c_sd, sigma, phi):
     # Chip-native: per-scale perturbations, dB units, added to the shared part.
     rng_chip = np.random.default_rng([SEED, t0, 1])
     chip_members = np.empty((N_MEMBERS, len(src)) + shape, dtype=np.float32)
+    ss = 0.0  # sum of squared chip perturbations (dB), for naive_vm
     for j in range(N_MEMBERS):
         noise = chip_noise(rng_chip, shape, bp, c_sd, sigma, phi)
+        ss += float(np.sum(noise ** 2))
         chip_members[j] = from_db(ext_db + noise)[src]
+    chip_rms = math.sqrt(ss / (N_MEMBERS * N_STEPS * int(np.prod(shape))))
 
     # Naive chip ensemble: same deterministic part and marginal variance,
     # i.i.d. per pixel and per timestep, no scale structure, no memory.
@@ -331,13 +334,24 @@ def forecast_origin(t0, rate, db, bp, c_sd, sigma, phi):
         noise = total_sd * rng_naive.standard_normal((N_STEPS,) + shape)
         naive_members[j] = from_db(ext_db + noise)[src]
 
+    # Variance-matched naive (PLAN amendment 14:31): i.i.d. like naive, but with
+    # the chip's own pooled RMS perturbation in dB. Own RNG stream, so the chip
+    # and naive streams are unchanged.
+    rng_vm = np.random.default_rng([SEED, t0, 3])
+    vm_members = np.empty_like(chip_members)
+    for j in range(N_MEMBERS):
+        noise = chip_rms * rng_vm.standard_normal((N_STEPS,) + shape)
+        vm_members[j] = from_db(ext_db + noise)[src]
+
     obs = np.stack([rate[t0 + LEAD_SRC[m] + 1] for m in LEAD_MINUTES])
-    return {"STEPS": steps_members, "naive": naive_members, "chip": chip_members}, obs
+    return {"STEPS": steps_members, "naive": naive_members, "chip": chip_members,
+            "naive_vm": vm_members, "chip_rms_db": chip_rms}, obs
 
 
 def score_origin(members, obs):
     """Per-lead CRPS on the 1 mm/h exceedance field, plus spread–skill at 60 min."""
     out = {}
+    members = {k: v for k, v in members.items() if k != "chip_rms_db"}
     for i, minutes in enumerate(LEAD_MINUTES):
         y = (obs[i] > EXCEED_MMH).astype(np.float32)
         out[f"crps_{minutes}"] = {}
@@ -421,18 +435,19 @@ def main():
 
     # Resumable: each origin's scores are saved as they finish, so a run
     # interrupted partway (the runner or the shell may stop it) picks up
-    # where it left off. Same seeds, same numbers.
+    # where it left off. Same seeds, same numbers. The part's name carries the
+    # seed: a cache keyed without it once served seed 1's scores to a seed-2 run.
     parts_dir = os.path.join(os.path.dirname(os.path.abspath(RESULT_PATH)), "parts")
     os.makedirs(parts_dir, exist_ok=True)
     per_origin = []
     for t0 in ORIGINS:
-        part = os.path.join(parts_dir, f"origin_{t0}_n{N_MEMBERS}_crop{CROP}.json")
+        part = os.path.join(parts_dir, f"origin_{t0}_s{SEED}_n{N_MEMBERS}_crop{CROP}_vm.json")
         if os.path.exists(part):
             with open(part) as fh:
                 per_origin.append(json.load(fh))
             continue
         members, obs = forecast_origin(t0, rate, db, bp, c_sd, sigma, phi)
-        entry = {"origin": t0, **score_origin(members, obs)}
+        entry = {"origin": t0, "chip_rms_db": members["chip_rms_db"], **score_origin(members, obs)}
         del members
         with open(part, "w") as fh:
             json.dump(entry, fh, indent=2)
@@ -443,9 +458,9 @@ def main():
         vals = [o[key][name] for o in per_origin if o[key][name] is not None]
         return float(np.mean(vals)) if vals else None
 
-    crps60 = {n: mean_over("crps_60", n) for n in ("STEPS", "naive", "chip")}
+    crps60 = {n: mean_over("crps_60", n) for n in ("STEPS", "naive", "chip", "naive_vm")}
     killed, f = decide(crps60["STEPS"], crps60["naive"], crps60["chip"])
-    names = ("STEPS", "naive", "chip")
+    names = ("STEPS", "naive", "chip", "naive_vm")
     mean_crps = {}
     for minutes in LEAD_MINUTES:
         key = "crps_%d" % minutes
@@ -461,7 +476,10 @@ def main():
         "rho_per_scale": rho.round(4).tolist(),
         "white_level_sd": c_sd.round(4).tolist(),
         "mean_crps": mean_crps,
-        "spread_skill_60": {n: mean_over("spread_skill_60", n) for n in ("STEPS", "chip", "naive")},
+        "spread_skill_60": {n: mean_over("spread_skill_60", n) for n in ("STEPS", "chip", "naive", "naive_vm")},
+        "f60_vm_reported": (crps60["naive_vm"] - crps60["chip"]) / (crps60["naive_vm"] - crps60["STEPS"])
+            if crps60["naive_vm"] != crps60["STEPS"] else None,
+        "chip_rms_db_per_origin": [o["chip_rms_db"] for o in per_origin if "chip_rms_db" in o],
         "per_origin": per_origin,
     }
     result = {

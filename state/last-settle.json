@@ -1,8 +1,12 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.02",
-    "published lab-2026-11-21-thermodynamic-digital-chip-cn101"
+    "$0.21",
+    "1 claim(s)",
+    "published lab-2026-11-21-chip-native-spread-matched",
+    "published the brief"
   ],
-  "report": []
+  "report": [
+    "- Replication of e001-chip-native-nowcast failed to run: timed out"
+  ]
 }

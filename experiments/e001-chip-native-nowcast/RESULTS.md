@@ -139,3 +139,75 @@ scoring after a result, and it is not made here.
   setback, in the journal.
 
 Claim: see state/claims.jsonl (c-004).
+
+## Run 2026-11-21 14:26–14:32 UTC, seeds 1 and 2 on the GitHub runner, 256 × 256 crop, with the variance-matched arm
+
+Pre-registered in PLAN.md's amendment of 14:31 (the `naive_vm` arm). The
+headline f, the kill rule and the claim threshold are unchanged. `naive_vm` is
+reported beside them and does not enter `killed`.
+
+**Seed-2 cache bug, and what it did.** The first seed-2 attempt (14:27) returned
+seed 1's value to fifteen digits (0.162937158111855). The cause was the resume
+cache: per-origin parts were keyed by origin, crop and member count but not by
+seed, so the run loaded seed 1's parts. That attempt is not a replication. Its
+result file was removed and its log kept as `run_seed2_crop256_CACHE_BUG.log`.
+The key now includes the seed. Seed 2 was recomputed from scratch (and once
+more after the arm was added); the seed-1 parts from the Mac are kept under
+`_s1` names.
+
+**Reproduction.** Seed 1 was rerun from scratch on the runner, in a scratch
+directory, before the arm was added: f = 0.162984 (Mac: 0.162937). The
+difference is in the fourth significant figure and is floating-point noise
+from the machine. Same kill.
+
+| run | f at 60 min | killed | f_vm (reported) |
+|---|---|---|---|
+| seed 1, Mac (`result.json`, pre-arm) | 0.1629 | yes | not computed |
+| seed 1, runner, pre-arm (scratch) | 0.1630 | yes | not computed |
+| seed 1, runner (`result_seed1_crop256_runner.json`) | 0.1630 | yes | 0.015 |
+| seed 2, runner (`result_seed2_crop256.json`) | 0.1637 | yes | 0.024 |
+
+f_vm = (naive_vm − chip) / (naive_vm − STEPS) at 60 minutes, the same formula
+as f with the variance-matched ensemble in place of the naive one.
+
+**Mean CRPS at 60 minutes, exceedance of 1 mm/h, three origins (lower is better):**
+
+| run | STEPS | naive | chip | naive_vm |
+|---|---|---|---|---|
+| seed 1 | 0.2373 | 0.2675 | 0.2626 | 0.2630 |
+| seed 2 | 0.2330 | 0.2672 | 0.2616 | 0.2623 |
+
+At 10 minutes and 30 minutes the variance-matched ensemble also sits within about
+0.003 of the chip (for example at 30 minutes, seed 1: chip 0.1988, naive_vm
+0.1990, naive 0.2016).
+
+**Spread–skill at 60 minutes (ratio; 1 is calibrated):**
+
+| run | chip | naive | naive_vm |
+|---|---|---|---|
+| seed 1 | 0.75 | 0.58 | 0.75 |
+| seed 2 | 0.81 | 0.58 | 0.78 |
+
+The pooled RMS of the chip's dB perturbation is about 2.8 (seed 1) and 2.9
+(seed 2) on every origin, so `naive_vm` has the chip's marginal spread.
+
+**Reading.** On this one window the chip-native sampler's advantage over the
+naive ensemble is the extra spread. Give the naive ensemble the chip's marginal
+variance and it scores the same as the chip at 60 minutes, on both seeds. The
+chip's scale structure and memory add nothing measurable to pixelwise CRPS
+here. This does not show the chip's structure is useless: pixelwise CRPS at one
+lead is blind to spatial coherence and to memory across leads, which is what
+the chip was built for. A structure-sensitive score is still open.
+
+**Stage.** Claim c-004 stays `refuted` (scoped to this window and construction).
+The variance-matched result is a further narrowing and is recorded separately.
+
+**Review of this section (hostile reviewer, 2026-11-21, verdict weakened).** The
+figures match the result files. Points taken: the chip still leads the
+variance-matched arm by 0.0004 (seed 1) and 0.0007 (seed 2), against 0.0049 and
+0.0056 over plain naive, so "mostly the spread" is the supported reading, not
+"only". The variance-matched arm was added after seeing c-004's spread gap, so it
+is a post-hoc diagnostic, disclosed as one. The two seeds share origins and
+observations; they are not independent replicates. Pooled RMS was not checked at
+lead 60 alone, and there is no uncertainty estimate over origins or pixels. Not
+done tonight.
