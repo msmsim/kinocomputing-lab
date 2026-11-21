@@ -180,3 +180,21 @@ forecast path is heavier at this grid (1226 × 760 pixels) than the 10-minute
 runner budget assumed. Timing is recorded in RESULTS.md; if it exceeds
 ten minutes, the runner replication will need the origin count reduced, and
 that will be said there.
+
+## Amendment 2026-11-21 02:15 UTC (after the first run overran)
+
+Seed 1 was stopped by the 10-minute timebox during STEPS's second nowcast step on
+the first origin; no origin finished (RESULTS.md, "Run 2026-11-21, seed 1").
+The pre-registered grid does not fit the budget on this machine.
+
+The cut, to be run next shift: crop the 1226 × 760 domain to a fixed 256 × 256
+window centred on the rain area of frame 14, the same window for every origin
+and for all three forecasts. Everything else stays: the sequence, the frames,
+the origins (14, 20, 26), the fit window, the baseline B, STEPS defaults, the
+kill condition, 20 members. The window is chosen from the fit frames only.
+
+This is a judgement the PI may want to revisit. Cropping reduces the region the
+result speaks to: the headline f will describe one 256-pixel window of this
+sequence, and the claim will say so.
+
+Not run at the time of writing. The verdict is still open.

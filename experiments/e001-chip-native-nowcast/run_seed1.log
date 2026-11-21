@@ -1,0 +1,91 @@
+/Users/ms/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/claude-501/matplotlib-hdbswfhc because there was an issue with the default path (/Users/ms/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+Fontconfig error: No writable cache directories
+	/usr/local/var/cache/fontconfig
+	/Users/ms/.cache/fontconfig
+	/Users/ms/.fontconfig
+Matplotlib is building the font cache; this may take a moment.
+Pysteps configuration file found at: /tmp/claude-501/pyst/lib/python3.11/site-packages/pysteps/pystepsrc
+
+Inputs validated and initialized successfully.
+Computing STEPS nowcast
+-----------------------
+
+Inputs
+------
+input dimensions: 1226x760
+km/pixel:         1.0
+time step:        5 minutes
+
+Methods
+-------
+extrapolation:          semilagrangian
+bandpass filter:        gaussian
+decomposition:          fft
+noise generator:        nonparametric
+noise adjustment:       no
+velocity perturbator:   bps
+conditional statistics: no
+precip. mask method:    incremental
+probability matching:   cdf
+FFT method:             numpy
+domain:                 spatial
+
+Parameters
+----------
+number of time steps:     12
+ensemble size:            20
+parallel threads:         1
+number of cascade levels: 6
+order of the AR(p) model: 2
+velocity perturbations, parallel:      10.88,0.23,-7.68
+velocity perturbations, perpendicular: 5.76,0.31,-2.72
+precip. intensity threshold: 0.1
+Nowcast components initialized successfully.
+Rain fraction is: 0.22716472052889156, while minimum fraction is 0.0
+Extrapolation complete and precipitation fields aligned.
+************************************************
+* Correlation coefficients for cascade levels: *
+************************************************
+-----------------------------------------
+| Level |     Lag-1     |     Lag-2     |
+-----------------------------------------
+| 1     | 0.999665      | 0.998560      |
+-----------------------------------------
+| 2     | 0.996374      | 0.985734      |
+-----------------------------------------
+| 3     | 0.984572      | 0.950358      |
+-----------------------------------------
+| 4     | 0.924902      | 0.810363      |
+-----------------------------------------
+| 5     | 0.731671      | 0.477775      |
+-----------------------------------------
+| 6     | 0.085110      | 0.039264      |
+-----------------------------------------
+****************************************
+* AR(p) parameters for cascade levels: *
+****************************************
+------------------------------------------------------
+| Level |    Phi-1     |    Phi-2     |    Phi-0     |
+------------------------------------------------------
+| 1     | 1.948863     | -0.949517    | 0.008124     |
+------------------------------------------------------
+| 2     | 1.836503     | -0.843186    | 0.045740     |
+------------------------------------------------------
+| 3     | 1.596371     | -0.621385    | 0.137096     |
+------------------------------------------------------
+| 4     | 1.213329     | -0.311847    | 0.361246     |
+------------------------------------------------------
+| 5     | 0.822319     | -0.123891    | 0.676406     |
+------------------------------------------------------
+| 6     | 0.082365     | 0.032254     | 0.995853     |
+------------------------------------------------------
+AR model and noise applied to precipitation cascades.
+Velocity perturbations initialized successfully.
+Precipitation mask initialized successfully.
+FFT objects initialized successfully.
+Starting nowcast computation.
+Computing nowcast for time step 1... done.
+Computing nowcast for time step 2... timebox: stopped after 600s
+exit 124

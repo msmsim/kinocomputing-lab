@@ -1,7 +1,8 @@
 # e001 results
 
-Run: not run. `result.json` does not exist. No seed has been used.
-Replication: none.
+Run: seed 1 attempted 2026-11-21 02:04–02:14 UTC, stopped by the 600 s timebox
+(exit 124). No `result.json`, no origin finished, no seed-2 replication.
+See the dated section below.
 
 ## What came out
 
@@ -52,3 +53,27 @@ supported yet.
    Pin the pysteps version in the header (PyPI has 1.21.5 as latest).
 4. Then run once, check `killed` against a SEED + 1 replication, and only then
    write a claim.
+
+## Run 2026-11-21, seed 1 (timebox overrun)
+
+Command: `SEED=1 node tools/timebox.mjs 600 <pysteps 1.21.5 python> run.py`,
+on the operator's Mac (x86_64), log in `run_seed1.log`.
+
+What came out: the data loaded (40 frames, cached), the pysteps motion and
+STEPS initialised (1226 × 760 pixels, 20 members, 12 steps, 6 cascade levels),
+and STEPS completed nowcast step 1 and started step 2 before the timebox
+stopped it. `parts/` is empty: origin 14 did not finish, so nothing was
+scored. The timebox is a result: the forecast path, as pre-registered at full
+grid and 20 members, does not fit the budget on this machine. Extrapolating
+from two steps in ten minutes, one origin alone would take the better part of
+an hour, and the full set is three origins.
+
+Against the kill condition: not applicable. No f, no `killed`, no claim.
+
+Caveats on the timing: it is one run on one machine, with the pysteps import
+and the Matplotlib font-cache warning included; the per-step time was not
+logged separately, so the estimate above is from the log's progress only.
+
+Cut for the next shift (not yet run): PLAN.md's "Pre-run decisions" section
+records the amendment. The next shift should not change the sequence,
+the split, the baseline or the kill condition, only the domain.

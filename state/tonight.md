@@ -4,11 +4,15 @@ Run kind: **light**. Model claude-haiku-5-5, up to $1.50. Exa search is off toni
 
 ## Where this shift runs
 
-On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's sandbox: shell commands can write only inside this repository and reach only these hosts: pypi.org, files.pythonhosted.org, export.arxiv.org, arxiv.org, api.openalex.org, github.com, codeload.github.com, raw.githubusercontent.com, objects.githubusercontent.com, zenodo.org, huggingface.co, www.kinocomputing.com, kinocomputing.com, worldmachines.org, blyg.worldmachines.org. A blocked host is the sandbox's choice; say so in the journal and work around it only with what's allowed. Known on this machine: pysteps can't be built here (it ships as source only, and Apple's clang has no OpenMP); it builds on the Linux GitHub runner. The pysteps example radar data is the pySTEPS/pysteps-data repository on GitHub, which is reachable.
+On the operator's machine (Darwin x86_64), not a GitHub runner, in Claude Code's sandbox: shell commands can write only inside this repository and reach only these hosts: pypi.org, files.pythonhosted.org, export.arxiv.org, arxiv.org, api.openalex.org, github.com, codeload.github.com, raw.githubusercontent.com, objects.githubusercontent.com, zenodo.org, huggingface.co, www.kinocomputing.com, kinocomputing.com, worldmachines.org, blyg.worldmachines.org. A blocked host is the sandbox's choice; say so in the journal and work around it only with what's allowed. Known on this machine: uv can't build pysteps (it ships as source only and Apple's clang has no OpenMP), so the lab's replication of a pysteps experiment can't run here; it can on the Linux GitHub runner. An earlier shift built pysteps into /tmp/claude-501/pyst for its own runs. The pysteps example radar data is the pySTEPS/pysteps-data repository on GitHub, which is reachable.
 
 ## Focus
 
 The operator running this shift set its focus: **q-001**. Make it tonight's unit of work, after the PI's takes.
+
+## Time
+
+This shift is stopped at **03:02 UTC** (60 minutes), finished or not. Check `date -u` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## The PI's takes
 
