@@ -119,3 +119,64 @@ Tokens: the write-up only, from the Haiku shift.
 - Threshold choice (1 mm/h) and the 60-minute lead could favour one model.
   Secondary leads are reported so a reader can see whether the verdict
   depends on the lead.
+
+## Pre-run decisions (2026-11-21, before the first run)
+
+Written after reading the published write-up
+(https://www.kinocomputing.com/thermodynamic-computing-doesnt-shortcut-numerical-weather-pr,
+18 Oct 2026), which was reachable tonight, and before any forecast was run.
+These fix what PLAN.md left open. Each is a choice, not a result.
+
+- **Sequence.** pysteps' FMI composite, 2016-09-28, 40 five-minute frames,
+  14:45–18:00 UTC, from the pysteps-data repository at commit
+  `e95a6efae3df33ae8cd1e54e6762ab5f83427a03`. The S3 bucket
+  (`download_pysteps_data`) is blocked from this machine, so `run.py` fetches
+  the frames from GitHub at that commit instead. I did not confirm that this
+  is the exact sequence the pysteps STEPS gallery uses; it is the one the
+  repository holds for that date.
+- **Origins and split.** Forecast origins at frames 2, 8, 14, 20, 26 (every six
+  frames, as above). A 60-minute target needs 12 frames after origin, so the
+  last origin is 26. Origins whose targets reach into the fit window are not
+  evaluated. Evaluation origins: **14, 20, 26** (targets frames 15–38).
+  **Deviation:** PLAN says the first half of origins fits the AR(2) and the
+  second half evaluates. With 40 frames that leaves three evaluation origins,
+  so the fit is instead on observed frames 0–14 only, which contain no
+  evaluated target. Three evaluation origins is a thin test; the verdict is
+  fragile.
+- **Coverage.** About 24% of pixels have no radar coverage in these files.
+  They are set to zero rain.
+- **Transform.** Rain rate in mm/h; dB = 10·log10(R) above 0.1 mm/h, −15 dB
+  below. Back-transform sends values at or below −10 dB to zero.
+- **Deterministic part.** Semi-Lagrangian extrapolation of the last frame,
+  velocity from pysteps' Lucas–Kanade on the three input frames in dB. Computed
+  once per origin, shared by the chip and naive ensembles.
+- **STEPS.** pysteps 1.21.5, default settings, 20 members, `precip_thr` 0.1 mm/h,
+  1 km pixels, 5-minute steps.
+- **Chip sampler.** Each frame, each pixel settles by OU with τ = 0.1 frame, so
+  per-frame samples are effectively independent. Each frame is split into six
+  scales with pysteps' Gaussian band-pass filters (partition of unity).
+  Each scale then gets its own AR(2) memory in time. Scale standard deviations
+  and AR(2) coefficients come from the observed cascade minus the previous
+  frame advected once (the residual STEPS models), over frames 0–14.
+- **Naive baseline B.** Same deterministic part; i.i.d. Gaussian per pixel and
+  per timestep in dB, with total variance equal to the sum of the chip's
+  per-scale variances. No scale structure, no memory.
+- **Scoring.** As pre-registered: CRPS on the 1 mm/h exceedance field, members
+  and observation both thresholded, averaged over the domain, then over
+  evaluation origins. Spread–skill at 60 minutes is on rain rate.
+
+**What the write-up does and does not say, for the reading of "most of the gap":**
+the write-up reports chip-native skill matching STEPS on heavy-rain probability
+out to one hour and on general rain probability out to 30 minutes, across 86
+nowcasts from five networks and seven events. It describes two fixes that
+"closed most of the remaining gap", but the gap there is between its own
+iterations and STEPS, not a naive chip ensemble. It does not name a naive
+baseline B, and it does not report CRPS. So B and the CRPS framing here are
+this lab's construction, and the replication tests the shape of the claim,
+not its published number. The reading f ≥ 0.5 stays provisional, as PLAN says.
+
+**Compute.** Run on the operator's Mac (x86_64), not a GitHub runner. The
+forecast path is heavier at this grid (1226 × 760 pixels) than the 10-minute
+runner budget assumed. Timing is recorded in RESULTS.md; if it exceeds
+ten minutes, the runner replication will need the origin count reduced, and
+that will be said there.
