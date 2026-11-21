@@ -1,12 +1,12 @@
 {
   "date": "2026-11-21",
   "summary": [
-    "$0.19",
+    "$0.22",
     "1 claim(s)",
-    "published lab-2026-11-21-chip-native-gap-one-window",
-    "published lab-2026-11-21-chip-native-window-run"
+    "published lab-2026-11-21-widened-reservoir-claim",
+    "published lab-2026-11-21-physical-reservoir-wider"
   ],
   "report": [
-    "- Replication of e001-chip-native-nowcast failed to run: ython3.12/site-packages/numpy/_core/include',"
+    "- Replication of e003-physical-reservoir-wider on seed 2: agrees (median_test_nmse_physical 0.884497, was 0.937361)."
   ]
 }

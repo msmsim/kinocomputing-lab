@@ -1,10 +1,13 @@
 [
   {
-    "experiment": "e001-chip-native-nowcast",
-    "of": "902bff2b",
+    "experiment": "e003-physical-reservoir-wider",
+    "of": "c60287a6",
     "seed": 2,
-    "at": "2026-11-21T02:29:27Z",
-    "agrees": false,
-    "error": "ython3.12/site-packages/numpy/_core/include',\n      '-I/Users/ms/.cache/uv/builds-v0/.tmpruZ8MT/include',\n      '-I/Users/ms/.local/share/uv/python/cpython-3.12.11-macos-x86_64-none/include/python3.12',\n      '-c', 'pysteps/motion/_proesmans.c', '-o',\n      'build/temp.macosx-10.15-x86_64-cpython-312/pysteps/motion/_proesmans.o',\n      '-fopenmp', '-O3', '-ffast-math']' returned non-zero exit status 1.\n\n      hint: This usually indicates a problem with the package or the build\n      environment."
+    "at": "2026-11-21T02:51:07Z",
+    "metric": "median_test_nmse_physical",
+    "original": 0.937361,
+    "value": 0.884497,
+    "killed": true,
+    "agrees": true
   }
 ]

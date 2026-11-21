@@ -27,3 +27,13 @@ reservoirs buy nothing here.
   `c-001` (simulated, pending review). Diagnostic: physical features have
   effective rank about 3 of 50; the ESN baseline is near-linear at its chosen
   settings. Stronger test needs a new pre-registered experiment, not a retune.
+- 2026-11-21 (shift 4, light, focus q-003): pre-registered
+  `experiments/e003-physical-reservoir-wider/PLAN.md` before code. It widens the
+  physical grid into the cubic (β = 5) and coupled regime, widens the ESN into
+  the tanh-active input range, and adds a second task (Mackey–Glass, horizon 5).
+  Ran once, seed 1, in 2 min 58 s: NARMA-10 physical median NMSE 0.937 against
+  ESN 0.122, killed; Mackey–Glass 0.159 against 0.00032, killed. The physical
+  features' effective rank rose (about 3 to 31 on NARMA-10); accuracy did not
+  follow. The ridge penalty is at its grid edge for both models, a scratch check
+  showed it doesn't reverse the kill. Claim `c-005` (simulated, review weakened; wording narrowed to this
+  parametrisation). Seed 2 run in the repository agrees on both tasks.
