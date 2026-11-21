@@ -41,15 +41,20 @@ if [ "$(jq -r .skip state/run.json)" != "true" ]; then
   MODEL="$(jq -r .model state/run.json)"
   MAX_USD="$(jq -r .max_usd state/run.json)"
   # The agent sees neither KINO_DIR nor the surface: only this repo.
+  MINUTES="$(jq -r .shift.minutes config/lab.json)"
+  set +e
   env -u KINO_DIR -u LAB_SURFACE_DIR UV_CACHE_DIR="$PWD/.uv-cache" \
-    claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
+    node tools/timebox.mjs "$((MINUTES * 60))" claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
       --model "$MODEL" \
       --max-budget-usd "$MAX_USD" \
       --output-format json \
       --permission-mode acceptEdits \
       --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
       --settings config/local-sandbox.json \
-      > state/claude-output.json || echo "the shift exited non-zero; settling what it left"
+      > state/claude-output.json
+  export SHIFT_EXIT=$?
+  set -e
+  [ "$SHIFT_EXIT" = 0 ] || echo "the shift exited $SHIFT_EXIT; settling what it left"
 fi
 
 bash tools/restore-machinery.sh

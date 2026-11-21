@@ -99,6 +99,9 @@ const published = existsSync(join(LAB, "published"))
 const replications = readJson(join(LAB, "state/replications.json"), []);
 
 const model = config.models[money.kind];
+// The shift has a wall clock as well as a budget: the runner stops it at
+// config.shift.minutes, and an unfinished shift loses its write-up.
+const deadline = new Date(new Date(at).getTime() + config.shift.minutes * 60_000).toISOString().slice(11, 16);
 const run = {
   date: today,
   at,
@@ -126,6 +129,10 @@ const lines = [
   "",
   ...(process.env.LAB_ENV_NOTE ? ["## Where this shift runs", "", process.env.LAB_ENV_NOTE, ""] : []),
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
+  "## Time",
+  "",
+  `This shift is stopped at **${deadline} UTC** (${config.shift.minutes} minutes), finished or not. Check \`date -u\` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
+  "",
   "## The PI's takes",
   "",
   ...(steers.length ? steers.flatMap((s) => [

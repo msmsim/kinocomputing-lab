@@ -26,7 +26,7 @@ permissions:
 jobs:
   shift:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,13 +66,17 @@ jobs:
           MODEL: ${{ steps.prep.outputs.model }}
           MAX_USD: ${{ steps.prep.outputs.max_usd }}
         run: |
-          claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
+          set +e
+          node tools/timebox.mjs "$(( $(jq -r .shift.minutes config/lab.json) * 60 ))" claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
             --model "$MODEL" \
             --max-budget-usd "$MAX_USD" \
             --output-format json \
             --permission-mode acceptEdits \
             --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
-            > state/claude-output.json || echo "the shift exited non-zero; settling what it left"
+            > state/claude-output.json
+          code=$?
+          echo "SHIFT_EXIT=$code" >> "$GITHUB_ENV"
+          [ "$code" = 0 ] || echo "the shift exited $code; settling what it left"
 
       # The agent worked in this checkout. Before anything trusts the lab's
       # tools again, put them back as committed; settle reports what changed.

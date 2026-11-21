@@ -58,10 +58,23 @@ for (const r of readJson(join(LAB, "state/replications.json"), [])) {
   else if (r.skipped) report.push(`- Replication of ${r.experiment} skipped: ${r.skipped}.`);
   else report.push(`- Replication of ${r.experiment} on seed ${r.seed}: ${r.agrees ? "agrees" : "disagrees"} (${r.metric} ${r.value}, was ${r.original}).`);
 }
-if (run.skip || !output) {
-  console.log(`settle: ${run.skip ? "skipped night" : "no shift output"}`);
+if (run.skip) {
+  console.log("settle: skipped night");
   process.exit(0);
 }
+// A shift that left no account of itself (killed hard, or crashed) is
+// counted at its cap: the bank must never think it's richer than it is.
+if (!output) {
+  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: run.max_usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, estimated: true })}\n`);
+  summary.push(`~$${run.max_usd.toFixed(2)} (no cost report; counted at the cap)`);
+  report.push("- The shift left no cost report, so it is counted at its cap.");
+}
+// The runner says how the shift ended: 124 is the time limit.
+const exit = Number(process.env.SHIFT_EXIT ?? 0);
+if (exit === 124) report.push("- The shift hit its time limit and was stopped. What it had written is kept for the next shift; anything it hadn't published waits.");
+else if (exit) report.push(`- The shift exited with status ${exit}. What it had written is kept for the next shift.`);
+const today = join(LAB, "journal", `${run.date}.md`);
+if (!existsSync(today) || readFileSync(today, "utf8").length === 0) report.push("- No journal entry was written tonight.");
 
 // The machinery the shift changed, which tools/restore-machinery.sh put back
 // before this ran.

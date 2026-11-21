@@ -280,6 +280,36 @@ test("claims are fragments, write-ups are threads that quote them and the PI, an
   }
 });
 
+test("a shift stopped at its time limit, with no cost report, is counted at its cap and still settled", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
+    assert.match(read("state/tonight.md"), /stopped at \*\*03:00 UTC\*\* \(60 minutes\)/, "the briefing gives the deadline");
+    void prep;
+    writeFileSync(join(w.lab, "outbox/lab-2026-11-21-half-done.md"), "---\nkind: notebook\n---\n\n**Half done**\n\nWhat got written before the stop.\n");
+    const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:05:00Z", { SHIFT_EXIT: "124" });
+    assert.match(settled, /~\$1\.50 \(no cost report; counted at the cap\), published lab-2026-11-21-half-done/);
+    const spend = JSON.parse(read("state/spend.jsonl").trim().split("\n").at(-1));
+    assert.deepEqual([spend.usd, spend.estimated], [1.5, true]);
+    const morning = read("MORNING.md");
+    assert.match(morning, /hit its time limit and was stopped/);
+    assert.match(morning, /No journal entry was written tonight/);
+  } finally {
+    w.dispose();
+  }
+});
+
+test("timebox: stops a command past its limit with 124, passes an exit code through", () => {
+  const started = Date.now();
+  const slow = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "1", "sleep", "10"], { encoding: "utf8" });
+  assert.equal(slow.status, 124);
+  assert.ok(Date.now() - started < 6000, "stopped at the limit, not left to finish");
+  const quick = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "5", "sh", "-c", "exit 3"], { encoding: "utf8" });
+  assert.equal(quick.status, 3);
+});
+
 test("three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned", async () => {
   const w = makeWorld();
   const read = (p) => readFileSync(join(w.lab, p), "utf8");

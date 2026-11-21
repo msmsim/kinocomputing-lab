@@ -47,7 +47,9 @@ says.
 1. **Orient.** Read `state/tonight.md`, the last three journal entries, and
    the questions it lists as open. Note tonight's run kind: `light` (the
    default) or `deep` (a larger budget, for an analysis or a heavier
-   experiment).
+   experiment), and the time the shift is stopped at. A shift is stopped at
+   that time whether it has finished or not, so plan to the clock as well
+   as the budget.
 
 2. **Handle every take.** For each of the PI's takes in the briefing, decide
    what it means: a new question, a change to a question's priority or
@@ -82,9 +84,14 @@ says.
      Write `PLAN.md` before any code — hypothesis, prediction, the kill
      condition, data, budget. Then `run.py`, keeping the contract in its
      docstring (SEED in, `result.json` out, `killed` decided in code). Run it
-     with `uv run run.py`, commit `result.json`, write `RESULTS.md`: what
-     came out, including what failed. Keep runs small; a GitHub runner has 2
-     CPUs, 7 GB of memory and no GPU, and the replication gets 10 minutes.
+     with `node tools/timebox.mjs 600 uv run run.py`, keep `result.json`,
+     write `RESULTS.md`: what came out, including what failed. Keep runs
+     small; a GitHub runner has 2 CPUs, 7 GB of memory and no GPU, and the
+     replication gets the same 10 minutes. An experiment that doesn't fit is
+     too big: cut it down (fewer cases, a smaller grid) and say so in a dated
+     PLAN section — don't wait on it, and don't run it outside the timebox.
+     Its dependencies go in `run.py`'s header, not a private environment, so
+     the replication runs the same code the same way.
      Use real data where it exists. After you finish, the lab re-runs every
      new result on the next seed; tomorrow's briefing says whether it agreed.
    - *Analysis:* copy `analyses/_template/` to `analyses/aNNN-slug/`, or
