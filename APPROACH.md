@@ -4,7 +4,8 @@ The settled design of the Kinocomputing lab, for the PI's review: what it is,
 how you interact with it, what it produces, and what keeps it honest and
 cheap. `CHARTER.md` is the lab's standards, `AGENT.md` the researcher's shift,
 `README.md` the setup. `pilot/REPORT.md` is the first run of all of it, on
-the four seed questions.
+the four seed questions: eleven shifts, $2.12, fourteen notes, and the
+fixes they prompted, all already folded in below.
 
 ## What it is
 
@@ -21,7 +22,7 @@ tiny experiments to World Machines analysis.
 
 ```
 prepare    budget; your takes; stale write-ups; replications; new arXiv papers  (no tokens)
-shift      a researcher works one unit of work, under a hard dollar cap         (tokens)
+shift      a researcher works one unit of work, under a dollar cap and a clock  (tokens)
 restore    the lab's machinery put back as committed                            (no tokens)
 replicate  every new experiment result re-run on the next seed                  (no tokens)
 settle     spend; takes handled or re-offered; claims append-only; publish      (no tokens)
@@ -29,6 +30,13 @@ settle     spend; takes handled or re-offered; claims append-only; publish      
 
 Nightly on GitHub Actions at 02:00 UTC, or by hand on your machine
 (`tools/local-shift.sh`, sandboxed, billed to your login).
+
+A shift has two limits: money (`--max-budget-usd`) and time (60 minutes,
+then it is stopped, finished or not; the briefing gives the deadline).
+Experiments run in a 10-minute timebox, the same time the free replication
+gets; one that doesn't fit is cut down, not waited on. A shift that is
+stopped still settles: what it wrote is kept for the next one, and if it
+left no cost report it is counted at its cap.
 
 ## How you interact
 
@@ -49,6 +57,9 @@ Nightly on GitHub Actions at 02:00 UTC, or by hand on your machine
   `tools/local-shift.sh --focus q-003`.
 - **The lab asks you** only for credentials, a new repo, money, or a
   judgement that is genuinely yours, under "Needs you" in `MORNING.md`.
+  How to run an experiment, and its pre-registered thresholds, are the
+  researcher's calls; it says which reading of your words it used, and
+  you can answer in a take.
 
 ## What it produces
 
@@ -69,6 +80,10 @@ condition); `uv run run.py` takes a SEED and writes `result.json` with the
 kill condition decided in code; `RESULTS.md` says what came out, including
 what failed. Every new result is re-run on the next seed for nothing, and the
 next briefing says whether it agreed.
+
+**What's worth publishing**: a result (negative ones included), an
+analysis, a source worth knowing, a dead end others would walk into.
+Operational setbacks go in the journal, not on the blyg.
 
 **World Machines analyses** — `analyses/aNNN-slug/ANALYSIS.md`, situating
 computing paradigms, technologies and the lab's own results *within* the
@@ -122,4 +137,6 @@ bank. Pause with the repository variable `LAB_PAUSED=true`.
 
 ## Open, for you
 
-See the end of `pilot/REPORT.md`.
+At the end of `pilot/REPORT.md`: the stage ladder for literature studies,
+whether deep runs should spend more, q-001's reading of your write-up, your
+paradigms page, and the merge order.

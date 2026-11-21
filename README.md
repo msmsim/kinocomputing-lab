@@ -10,12 +10,16 @@ steers from its principal investigator (PI).
   their stages, replication, publishing, budget.
 - [`AGENT.md`](AGENT.md) — how the agent works a shift.
 - [`MORNING.md`](MORNING.md) — the last shift's report to the PI.
+- [`APPROACH.md`](APPROACH.md) — the design, for review.
+- [`pilot/REPORT.md`](pilot/REPORT.md) — the first eleven shifts, on the four seed questions.
 
 ## A night
 
 ```
 02:00 UTC  prepare   budget for tonight; the PI's takes; new reading; briefing (no tokens)
            shift     Claude Code works one unit of work, under a dollar cap   (tokens)
+                     and a 60-minute clock
+           restore   the lab's machinery put back as committed              (no tokens)
            replicate new experiment results re-run on another seed        (no tokens)
            settle    record spend; check takes and claims; publish outbox   (no tokens)
            commit    lab state → this repo; notes → kinocomputing
@@ -85,9 +89,10 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
    Action runs on the lab's pushes and registers its notes.)
 4. **Actions:** in this repo's Settings → Actions → General, allow read and
    write workflow permissions, so the shift can commit its state.
-5. **kinocomputing** must have the `blygger-hackathon-threads` branch merged
-   (it brings `-qol` and `-lab` with it): `generated` provenance, and the
-   fragments, threads and quotes the lab's claims and write-ups rely on.
+5. **kinocomputing** must have the `blygger-hackathon-pilot` branch merged
+   (it brings `-threads`, `-lab` and `-qol` with it): `generated`
+   provenance, the fragments, threads and quotes the lab relies on, and the
+   pilot's notes.
 6. **Exa (optional):** an Exa account (the free tier's $10 a month is
    plenty), an API key with its own budget limit set in Exa's dashboard,
    added to this repo as the secret `EXA_API_KEY`. Without it the lab
@@ -95,6 +100,17 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
 7. **First run:** Actions → Night shift → Run workflow. Read `MORNING.md`.
    The first run takes a baseline of kinocomputing: takes posted before it
    aren't steers. Post one after, and the next shift will see it.
+
+## A shift by hand
+
+```
+KINO_DIR=/path/to/a/scratch/kinocomputing KINO_BUILD=1 tools/local-shift.sh [--focus q-003] [--deep]
+```
+
+Runs one shift on your machine the way the workflow does, in Claude Code's
+sandbox (`config/local-sandbox.json`), billed to your Claude login and kept
+out of the lab's bank. Point `KINO_DIR` at a scratch copy of kinocomputing,
+never one you push from. The pilot ran this way.
 
 ## Layout
 
@@ -111,7 +127,7 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
 | `analyses/aNNN-slug/` | A World Machines analysis's working file |
 | `reference/world-machines.md` | The theory's vocabulary and proposed machines, as the lab uses them |
 | `outbox/` → `published/` | Notes the shift wrote → notes that went out (`outbox/rejected/` for refusals) |
-| `tools/` | prepare, settle, render, steers, search, replicate — deterministic, tested, no tokens |
+| `tools/` | prepare, settle, render, steers, search, replicate, timebox, restore-machinery, local-shift — deterministic, tested, no tokens |
 | `.claude/agents/reviewer.md` | The hostile reviewer, Sonnet, for claims above `conjecture` |
 
 `npm test` runs the lab's tests, including two whole nights end to end against
