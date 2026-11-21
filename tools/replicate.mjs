@@ -27,6 +27,24 @@ import { LAB, hash8, json, now, readJson } from "./lib.mjs";
 
 const PER_RUN_MS = Number(process.env.REPLICATE_TIMEOUT_MS ?? 10 * 60_000);
 const TOTAL_MS = Number(process.env.REPLICATE_TOTAL_MS ?? 30 * 60_000);
+const RESERVED = /^(PATH|HOME|SEED|RESULT_PATH|REPLICATION|LD_\w*|DYLD_\w*|PYTHON\w*|UV_\w*|NODE_\w*|\w*(KEY|TOKEN|SECRET|PASSWORD)\w*)$/i;
+
+/** An experiment's run.env: the settings its result was run with, beyond the seed. */
+export function runEnv(dir) {
+  const file = join(dir, "run.env");
+  if (!existsSync(file)) return {};
+  const settings = {};
+  for (const [i, raw] of readFileSync(file, "utf8").split("\n").entries()) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const m = line.match(/^([A-Z][A-Z0-9_]*)=(.*)$/);
+    if (!m) throw new Error(`run.env line ${i + 1} isn't KEY=VALUE`);
+    if (RESERVED.test(m[1])) throw new Error(`run.env sets ${m[1]}, which isn't an experiment setting`);
+    settings[m[1]] = m[2];
+  }
+  return settings;
+}
+
 const COMMAND = (process.env.REPLICATE_CMD ?? "uv run --quiet run.py").split(" ");
 
 /** The line of a failed run's stderr that says what went wrong, then its tail. */
@@ -60,11 +78,25 @@ export function replicateAll(lab = LAB, at = now()) {
       continue;
     }
     const seed = Number.isInteger(original.seed) ? original.seed + 1 : 2;
+    // The settings the result was run with, beyond the seed (run.env, KEY=VALUE
+    // per line). Only plain names, and never ones that would let a run reach
+    // past its own folder or the secrets: those are not settings.
+    let settings;
+    try {
+      settings = runEnv(exp);
+    } catch (error) {
+      // Recorded like any failed rerun, so it isn't tried again until the
+      // result changes.
+      const record = { of, seed, at, agrees: false, error: error.message };
+      writeFileSync(join(exp, "replication.json"), json(record));
+      done.push({ experiment: name, ...record });
+      continue;
+    }
     const scratch = mkdtempSync(join(tmpdir(), "replicate-"));
     const out = join(scratch, "result.json");
     const run = spawnSync(COMMAND[0], COMMAND.slice(1), {
       cwd: exp,
-      env: { PATH: process.env.PATH, HOME: process.env.HOME, SEED: String(seed), RESULT_PATH: out, REPLICATION: "1" },
+      env: { ...settings, PATH: process.env.PATH, HOME: process.env.HOME, SEED: String(seed), RESULT_PATH: out, REPLICATION: "1" },
       encoding: "utf8",
       timeout: PER_RUN_MS,
     });

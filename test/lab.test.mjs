@@ -120,11 +120,20 @@ test("replicate: a new result runs again on the next seed, once, with no secrets
     exp("e003-leaky", 'import json, os\njson.dump({"metric": "key", "value": os.environ.get("ANTHROPIC_API_KEY", ""), "seed": 2, "killed": False}, open(os.environ["RESULT_PATH"], "w"))\n', { metric: "key", value: "", seed: 1, killed: false });
     exp("e004-crashes", "raise SystemExit('boom')\n", { metric: "x", value: 1, seed: 1, killed: false });
     exp("e005-no-result-yet", EXPERIMENT(0.5), null);
+    // A result run with settings beyond the seed declares them in run.env, and
+    // the rerun gets them; one that would set a secret or the seed is refused.
+    exp("e006-settings", 'import json, os\njson.dump({"metric": "crop", "value": os.environ.get("CROP", "0"), "seed": 2, "killed": os.environ.get("CROP") != "256"}, open(os.environ["RESULT_PATH"], "w"))\n', { metric: "crop", value: "256", seed: 1, killed: false });
+    writeFileSync(join(lab, "experiments/e006-settings/run.env"), "# the patch the result used\nCROP=256\n");
+    exp("e007-sneaky", EXPERIMENT(-1), { metric: "draw", value: 0.1, seed: 1, killed: false });
+    writeFileSync(join(lab, "experiments/e007-sneaky/run.env"), "ANTHROPIC_API_KEY=x\n");
     mkdirSync(join(lab, "experiments", "_template"));
 
     const done = replicateAll(lab, "2026-11-21T03:00:00Z");
     const by = Object.fromEntries(done.map((d) => [d.experiment, d]));
-    assert.deepEqual(Object.keys(by).sort(), ["e001-holds", "e002-flips", "e003-leaky", "e004-crashes"]);
+    assert.deepEqual(Object.keys(by).sort(), ["e001-holds", "e002-flips", "e003-leaky", "e004-crashes", "e006-settings", "e007-sneaky"]);
+    assert.equal(by["e006-settings"].value, "256", "run.env's settings reach the rerun");
+    assert.equal(by["e006-settings"].agrees, true);
+    assert.match(by["e007-sneaky"].error, /run\.env sets ANTHROPIC_API_KEY/);
     assert.equal(by["e001-holds"].agrees, true);
     assert.equal(by["e001-holds"].seed, 2);
     assert.equal(by["e002-flips"].agrees, false, "killed on the second seed: disagrees");

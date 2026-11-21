@@ -11,7 +11,8 @@ import { LAB } from "../tools/lib.mjs";
 const MUTANTS = [
   ["the lab's own notes count as takes", "tools/steers.mjs", "if (doc.generated?.length) { marks.push(mark); continue; }", ""],
   ["the first look replays history", "tools/steers.mjs", "if (baseline || item.kind", "if (item.kind"],
-  ["experiments see the lab's secrets", "tools/replicate.mjs", "env: { PATH: process.env.PATH, HOME: process.env.HOME,", "env: { ...process.env,"],
+  ["experiments see the lab's secrets", "tools/replicate.mjs", "env: { ...settings, PATH: process.env.PATH, HOME: process.env.HOME,", "env: { ...process.env, ...settings,"],
+  ["run.env may set anything", "tools/replicate.mjs", "    if (RESERVED.test(m[1])) throw", "    if (false) throw"],
   ["replication ignores a changed result", "tools/replicate.mjs", "?.of === of) continue;", ") continue;"],
   ["Exa spend left out of the bank", "tools/settle.mjs", "if (exaUsd > 0) {", "if (false) {"],
   ["Exa's slice not taken from the model's", "tools/prepare.mjs", "(money.maxUsd - exaUsd)", "(money.maxUsd)"],

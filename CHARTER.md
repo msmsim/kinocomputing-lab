@@ -54,15 +54,31 @@ as well as its venue, so most of what the lab publishes is this.
 
 ## Claims
 
-Every finding the lab states is a claim in `state/claims.jsonl`, at a stage:
+Every finding the lab states is a claim in `state/claims.jsonl`, at a stage.
+There are two ladders, because an experiment and a study of the literature
+earn confidence differently. Both start at `conjecture` and end at
+`challenged`, and either can fall to `refuted`.
 
-| Stage | Means |
-|---|---|
-| `conjecture` | Argued, not tested |
-| `simulated` | Holds in the lab's own simulation |
-| `replicated` | Holds on a second dataset, seed or method, chosen to break it |
-| `real-data` | Holds on real data, not only synthetic |
-| `challenged` | Has survived a hostile review, or an outside response, aimed at it |
+Experiments:
+
+| Stage | Means | In plain words |
+|---|---|---|
+| `conjecture` | Argued, not tested | "an untested idea" |
+| `simulated` | Holds in the lab's own simulation | "in simulation only" |
+| `replicated` | Holds on a second dataset, seed or method, chosen to break it | "in simulation, and it held up on a second try" |
+| `real-data` | Holds on real data, not only synthetic | "on real data" |
+| `challenged` | Has survived a hostile review, or an outside response, aimed at it | "has survived a serious challenge" |
+
+Literature studies (counts, surveys, reviews of what has been published):
+
+| Stage | Means | In plain words |
+|---|---|---|
+| `conjecture` | Argued, not tested | "an untested idea" |
+| `counted` | A rule, fixed in advance, applied to a defined set of sources (abstracts, say) | "by an automatic count" |
+| `hand-checked` | A sample coded by hand, blind to the rule, and the claim worded to the hand check | "checked by hand on a sample" |
+| `full-text` | Holds when the full texts are read, not just abstracts or metadata | "checked against the full papers" |
+| `cross-checked` | Holds in a second index or source, or for a second coder | "and it held up in a second source" |
+| `challenged` | Has survived a hostile review, or an outside response, aimed at it | "has survived a serious challenge" |
 
 A claim moves up one stage at a time, only by passing that stage's test, and
 the ledger is append-only: a claim that fails is recorded as `refuted`, never
@@ -92,7 +108,8 @@ four others. Replication is the standard, not the exception.
   stage of a claim visibly does, until it is republished.
 - A note is updated, not duplicated, as its question moves: an edit is a new
   version with a change note saying what changed in the evidence.
-- A note is pinned when a claim in it reaches `replicated` or above, so the
+- A note is pinned when a claim in it reaches `replicated` (an experiment)
+  or `cross-checked` (a literature study) or above, so the
   result stays citable whatever comes later.
 - A finding that turns out wrong is corrected in a new version, or withdrawn,
   with a change note. Never silently.

@@ -14,7 +14,11 @@ experiment's PLAN.md, its code, RESULTS.md and raw output. Then ask:
 
 - Does the evidence show what the claim says, at the stage it claims? A
   `replicated` claim needs a second dataset, seed or method that could have
-  broken it. A `real-data` claim needs real data.
+  broken it. A `real-data` claim needs real data. A literature claim:
+  `counted` needs the rule fixed before the sources were fetched;
+  `hand-checked` needs a blind hand sample, and wording that follows it
+  rather than the rule; `full-text` needs the full papers read;
+  `cross-checked` needs a second index or a second coder.
 - Was the prediction and kill criterion written before the result? Did the
   result meet it, or was the bar moved?
 - What wrong explanation would produce the same result: a bug, leakage,

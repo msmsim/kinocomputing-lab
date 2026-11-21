@@ -88,6 +88,10 @@ says.
      condition, data, budget. Then `run.py`, keeping the contract in its
      docstring (SEED in, `result.json` out, `killed` decided in code). Run it
      with `node tools/timebox.mjs 600 uv run run.py`, keep `result.json`,
+     and if the run used any setting beyond SEED (`CROP=256`, say), put it
+     in the experiment's `run.env`, one `KEY=VALUE` a line: the rerun gets
+     nothing but SEED and `run.env`, and a result it can't reproduce from
+     the folder alone fails to replicate. Then
      write `RESULTS.md`: what came out, including what failed. Keep runs
      small; a GitHub runner has 2 CPUs, 7 GB of memory and no GPU, and the
      replication gets the same 10 minutes. An experiment that doesn't fit is
@@ -171,8 +175,11 @@ The question, why it matters, and a running log of what's been tried.
 {"id": "c-NNN", "question": "q-NNN", "stage": "simulated", "statement": "…", "evidence": "experiments/e004-…/RESULTS.md", "review": "held | weakened: … | refuted: …", "at": "2026-11-21T03:00:00Z"}
 ```
 
-Stages: `conjecture`, `simulated`, `replicated`, `real-data`, `challenged`,
-`refuted`.
+Stages, on two ladders (`CHARTER.md` says what each means and how to say it
+in plain words): experiments `conjecture`, `simulated`, `replicated`,
+`real-data`, `challenged`; literature studies `conjecture`, `counted`,
+`hand-checked`, `full-text`, `cross-checked`, `challenged`. Either can
+fall to `refuted`. Pin a claim's note at `replicated` or `cross-checked`.
 
 **A note to publish** — `outbox/<name>.md`, where `<name>` is
 `lab-YYYY-MM-DD-slug` for a new note or an existing name from `published/`:

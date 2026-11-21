@@ -3,7 +3,7 @@ id: q-001
 title: Replicate the chip-native nowcasting result on a public pysteps dataset, on a GitHub runner
 kind: experiment
 status: open
-priority: 1
+priority: 2
 ---
 
 The PI's NWP series found that a thermodynamic chip's noise is a like-for-like
@@ -21,6 +21,21 @@ a runner's 2 CPUs and 7 GB.
 
 Pre-register before running: what agreement with the published finding would
 count as replicating it, and what would count against it.
+
+**What "most of the gap" means (the PI left it to the operator, 2026-11-21).**
+In the write-up, "two fixes closed most of the remaining gap": the fixes were
+band-limiting the chip's noise to each scale and giving each scale its
+two-step memory, and the gap was between the chip-native nowcaster without
+them and STEPS. So the reading is: the structured, remembering sampler closes
+more than half of the CRPS gap between the same nowcaster with unstructured,
+memoryless noise (the naive ensemble) and STEPS. That is the f ≥ 0.5 already
+pre-registered, and it stands. It is a lenient bar: the write-up's headline
+is near-parity with STEPS (heavy-rain probability matched to an hour), so a
+replication that clears 0.5 but stays well short of parity should say so.
+The first run's 0.16 is under even the lenient bar. The open problem is the
+score, not the bar: pixelwise CRPS at one lead can't see the per-scale
+structure and memory the fixes added, so the next run needs a scale-aware
+score alongside it.
 
 ## Log
 

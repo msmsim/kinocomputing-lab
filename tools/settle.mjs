@@ -151,7 +151,8 @@ if (missed.length) {
 }
 
 // 3. Claims: append-only.
-const STAGES = new Set(["conjecture", "simulated", "replicated", "real-data", "challenged", "refuted"]);
+// Two ladders (CHARTER.md): experiments, and literature studies.
+const STAGES = new Set(["conjecture", "simulated", "replicated", "real-data", "counted", "hand-checked", "full-text", "cross-checked", "challenged", "refuted"]);
 const claimsPath = join(LAB, "state/claims.jsonl");
 let committed = [];
 try {

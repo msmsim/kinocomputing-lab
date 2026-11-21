@@ -10,6 +10,8 @@ The contract (tools/replicate.mjs relies on it):
 - Run with `uv run run.py`. Dependencies live in the header above, pinned
   when the result depends on a version.
 - Everything random draws from SEED (default 1).
+- Any other setting the result was run with (CROP=256, say) goes in run.env
+  beside this file, KEY=VALUE a line: the rerun gets SEED and run.env only.
 - The result goes to RESULT_PATH (default result.json) as JSON with at
   least: metric, value, seed, killed — `killed` decided by the kill
   condition in PLAN.md, in code, not by eye.

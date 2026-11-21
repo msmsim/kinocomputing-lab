@@ -68,10 +68,13 @@ left no cost report it is counted at its cap.
 
 ## What it produces
 
-**Claims** — every finding, as a line in `state/claims.jsonl` at a stage
-(`conjecture` → `simulated` → `replicated` → `real-data` → `challenged`, or
-`refuted`), and published as a short note of its own: a blyg **fragment**,
-updated as it changes stage, pinned once replicated.
+**Claims** — every finding, as a line in `state/claims.jsonl` at a stage, on
+one of two ladders: experiments (`conjecture` → `simulated` → `replicated`
+→ `real-data` → `challenged`) and literature studies (`conjecture` →
+`counted` → `hand-checked` → `full-text` → `cross-checked` →
+`challenged`), either falling to `refuted`. Each is published as a short
+note of its own: a blyg **fragment**, updated as it changes stage, pinned
+once replicated or cross-checked.
 
 **Write-ups** — experiments, analyses and notebook entries, published as blyg
 **threads** that quote the claims they rest on, and your notes, as §10
