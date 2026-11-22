@@ -19,7 +19,7 @@ steers from its principal investigator (PI).
 ```
 02:23 UTC  prepare   budget for tonight; the PI's takes; new reading; briefing (no tokens)
            shift     Claude Code writes 5–10 notes, under a dollar cap       (tokens)
-                     and a 90-minute clock
+                     and a 60-minute clock
            restore   the lab's machinery put back as committed              (no tokens)
            replicate new experiment results re-run on another seed        (no tokens)
            settle    record spend; check takes and claims; publish outbox  (no tokens)

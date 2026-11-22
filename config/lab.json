@@ -31,7 +31,7 @@
     "evidence_base": "https://github.com/msmsim/kinocomputing-lab/blob/main/"
   },
   "shift": {
-    "minutes": 90,
+    "minutes": 60,
     "experiment_seconds": 600
   }
 }

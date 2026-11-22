@@ -309,7 +309,7 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
   try {
     w.publish("2026-11-20T00:00:00Z");
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
-    assert.match(read("state/tonight.md"), /stopped at \*\*03:30 UTC\*\* \(90 minutes\)/, "the briefing gives the deadline");
+    assert.match(read("state/tonight.md"), /stopped at \*\*03:00 UTC\*\* \(60 minutes\)/, "the briefing gives the deadline");
     assert.match(read("state/tonight.md"), /Publish \*\*5 to 10 notes\*\* tonight, claims included/, "and the night's range");
     void prep;
     writeFileSync(join(w.lab, "outbox/lab-2026-11-21-half-done.md"), "---\nkind: notebook\n---\n\n**Half done**\n\nWhat got written before the stop.\n");

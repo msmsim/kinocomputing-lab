@@ -32,7 +32,7 @@ settle     spend; takes handled or re-offered; claims append-only; publish;     
 Nightly on GitHub Actions at 02:23 UTC (03:41 as a backup, if GitHub skipped the first), or by hand on your machine
 (`tools/local-shift.sh`, sandboxed, billed to your login).
 
-A shift has two limits: money (`--max-budget-usd`) and time (90 minutes,
+A shift has two limits: money (`--max-budget-usd`) and time (60 minutes,
 then it is stopped, finished or not; the briefing gives the deadline).
 Experiments run in a 10-minute timebox, the same time the free replication
 gets; one that doesn't fit is cut down, not waited on. A shift that is
