@@ -66,6 +66,21 @@ export function allowance(budget, spends, today, start) {
   return { bank, kind, maxUsd, skip: maxUsd < budget.min_run_usd };
 }
 
+/**
+ * Tonight's paradigms: enough a night to go round every paradigm in
+ * `cycleDays`, taking those looked at longest ago, never-looked-at first,
+ * ties in the tracker's own order.
+ */
+export function rotation(paradigms, cycleDays) {
+  if (!paradigms.length) return [];
+  const perNight = Math.ceil(paradigms.length / Math.max(1, cycleDays));
+  return paradigms
+    .map((p, i) => ({ p, i }))
+    .sort((a, b) => (a.p.last_checked ?? "").localeCompare(b.p.last_checked ?? "") || a.i - b.i)
+    .slice(0, perNight)
+    .map(({ p }) => p);
+}
+
 /** Plain text from a fragment of HTML, entities decoded enough to read. */
 export function textOf(html) {
   return html

@@ -198,7 +198,7 @@ function quoteResolver(name) {
   const page = readFileSync(join(KINO, "notes", `${slug}.html`), "utf8");
   const thread = entry ? (entry.kind ?? (entry.stub_of ? "thread" : "fragment")) === "thread"
     : /<meta name="blyg:kind" content="thread">/.test(page);
-  if (thread) throw new Error(`quotes ${name}, a write-up; only claims and the PI's notes can be quoted`);
+  if (thread) throw new Error(`quotes ${name}, a write-up; only claims, paradigm entries and the PI's notes can be quoted`);
   return { slug, html: page.match(/<main>([\s\S]*?)<\/main>/)?.[1] ?? "" };
 }
 const outbox = join(LAB, "outbox");
@@ -212,21 +212,36 @@ const reject = (file, why) => {
   renameSync(join(outbox, file), join(rejected, file));
   report.push(`- Not published: ${file.replace(/\.md$/, "")} ${why}.`);
 };
-// Claims publish before the threads that quote them (§7: the thread last).
-// Every note counts toward the night's limit, claims included; claims have
-// a smaller limit of their own as well.
+// Fragments (claims, paradigm entries) publish before the threads that quote
+// them (§7: the thread last). Every note counts toward the night's limit,
+// claims included; claims have a smaller limit of their own as well.
+const FRAGMENTS = new Set(["claim", "paradigm"]);
+const shape = (kind) => (FRAGMENTS.has(kind) ? kind : "write-up");
 const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...frontMatter(readFileSync(join(outbox, file), "utf8")) }));
-parsed.sort((a, b) => (b.data.kind === "claim") - (a.data.kind === "claim") || a.file.localeCompare(b.file));
+parsed.sort((a, b) => FRAGMENTS.has(b.data.kind) - FRAGMENTS.has(a.data.kind) || a.file.localeCompare(b.file));
 let claims = 0;
 const BRIEF = `lab-${run.date}-brief`;
 const out = [];
+const paradigmsPath = join(LAB, "state/paradigms.json");
+const tracker = readJson(paradigmsPath, { paradigms: [] });
+const looked = new Set();
 for (const { file, name, data, body } of parsed) {
   const claim = data.kind === "claim";
   if (!pattern.test(name) && !isPublished(name)) { reject(file, "— not a lab note name"); continue; }
   if (name === BRIEF) { reject(file, "— that name is the nightly brief's, which settle writes"); continue; }
   const update = isPublished(name);
-  if (update && (frontMatter(readFileSync(join(LAB, "published", file), "utf8")).data.kind === "claim") !== claim) {
-    reject(file, "— a note's kind can't change: a claim stays a claim, and a write-up a write-up");
+  if (update && shape(frontMatter(readFileSync(join(LAB, "published", file), "utf8")).data.kind) !== shape(data.kind)) {
+    reject(file, "— a note's kind can't change: a claim stays a claim, a paradigm entry an entry, and a write-up a write-up");
+    continue;
+  }
+  // Every new version says what changed: the change note is what a reader
+  // sees in the note's history, so an update without one isn't published.
+  if (update && !String(data.change_note ?? "").trim()) {
+    reject(file, "— an update needs a change note (`change_note:`) saying what changed");
+    continue;
+  }
+  if (data.kind === "paradigm" && !(tracker.paradigms ?? []).some((p) => p.id === data.paradigm)) {
+    reject(file, `— a paradigm entry names its paradigm, and "${data.paradigm ?? ""}" isn't one on the tracker's list`);
     continue;
   }
   if (count + claims >= config.publish.max_notes_per_night) {
@@ -251,7 +266,7 @@ for (const { file, name, data, body } of parsed) {
   try {
     page = await renderNote({
       markdown: body, name, voice, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
-      answers: !update && data.answers ? data.answers : null, kind: data.kind, maxClaim: config.publish.max_claim_chars,
+      answers: !update && data.answers ? data.answers : null, kind: data.kind, maxClaim: config.publish.max_claim_chars, maxParadigm: config.publish.max_paradigm_chars,
       quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {
@@ -264,8 +279,17 @@ for (const { file, name, data, body } of parsed) {
   if (claim) claims += 1;
   else count += 1;
   summary.push(`${update ? "updated" : "published"} ${name}`);
-  out.push({ name, title: titleOf(body) ?? name, update, claim });
+  out.push({ name, title: titleOf(body) ?? name, update, claim, paradigm: data.kind === "paradigm" });
+  if (data.kind === "paradigm") looked.add(data.paradigm);
 }
+// The rotation moves on only for a paradigm whose entry went out tonight: one
+// the shift didn't get to comes round again tomorrow.
+if (looked.size) {
+  for (const p of tracker.paradigms) if (looked.has(p.id)) p.last_checked = run.date;
+  writeFileSync(paradigmsPath, json(tracker));
+}
+const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
+if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);
 const held = parsed.length - out.length;
 if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for failing the publishing checks; [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md) says why.`);
 // The night's floor. Settle can't write notes, so a short night is said
@@ -286,7 +310,7 @@ const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\
 const briefOf = (said) => [
   `**Lab brief: ${dateWords}**`,
   said || "The researcher left no summary tonight.",
-  ...(out.length ? ["**Published tonight**", out.map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : ""}`).join("\n")] : []),
+  ...(out.length ? ["**Published tonight**", out.map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
   "**Also tonight**",
   [...told, `The shift cost $${spent.toFixed(2)}, on ${modelWords}.`].map((l) => `- ${l}`).join("\n"),
 ].join("\n\n");

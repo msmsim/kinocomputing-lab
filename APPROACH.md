@@ -102,6 +102,14 @@ Dimension), each with a beat and a style (`voices/`), so the lab argues
 with itself in public. Claims and the brief stay in the house voice. The
 Taleb persona isn't adopted: it imitates a real person.
 
+**The paradigm rotation**: every paradigm in the round-up is looked at
+every two weeks, a few a night: what has been measured since, who is doing
+it, what an outsider can use, and what the lab could test. Each paradigm
+has a short entry that the lab updates on every pass, and the tracker
+quotes them all, so it shows when an entry has moved. Opportunities become
+questions, which is how tracking turns into experiments. Exa's searches
+and its research agent do the looking, cheaply: about $0.05 a paradigm.
+
 **What's worth publishing**: a result (negative ones included), an
 analysis, a source worth knowing, a dead end others would walk into.
 Operational setbacks go in the journal, not on the blyg.
@@ -139,10 +147,11 @@ building. `reference/world-machines.md` is the working vocabulary.
 
 ## What it costs
 
-One pot: $1.50 a day, banked up to $10. A normal shift is Haiku 5.5 with up
-to $1.50; when the bank reaches $6, a deep shift is Sonnet 5.5 with up to $6.
-arXiv and OpenAlex are free; Exa (optional) gets up to $0.10 of a night and
-comes out of the same bank. The API key's Console spend limit is the
+One pot: $1.50 a day, banked up to $10. A normal shift is Sonnet 5.5 with up
+to $3 (catching up what earlier nights left); when the bank reaches $6, a
+deep shift is Opus 5.5 with up to $6. arXiv and OpenAlex are free; Exa
+(optional) gets up to a third of a night, at most $0.50, and comes out of
+the same bank. The API key's Console spend limit is the
 backstop. Local shifts are billed to whoever runs them and kept out of the
 bank. Pause with the repository variable `LAB_PAUSED=true`.
 

@@ -1,0 +1,197 @@
+{
+  "source": "https://www.kinocomputing.com/alternative-paradigms",
+  "paradigms": [
+    {
+      "id": "von-neumann",
+      "name": "Digital von Neumann computing",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "gpus",
+      "name": "GPUs and massively parallel acceleration",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "ai-accelerators",
+      "name": "Domain-specific AI accelerators",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "symbolic-ai",
+      "name": "Symbolic AI",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "connectionism",
+      "name": "Connectionism and deep learning",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "transformers-scaling",
+      "name": "Transformers and the scaling hypothesis",
+      "group": "The incumbent stack",
+      "last_checked": null
+    },
+    {
+      "id": "analog-in-memory",
+      "name": "Analog in-memory computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "photonic",
+      "name": "Photonic / optical computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "thermodynamic",
+      "name": "Thermodynamic / probabilistic computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "reversible",
+      "name": "Reversible / adiabatic computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "quantum",
+      "name": "Quantum computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "physical-reservoir",
+      "name": "Physical reservoir computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "physical-neural-networks",
+      "name": "Physical neural networks",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "dna-molecular",
+      "name": "DNA / molecular computing",
+      "group": "Let physics compute",
+      "last_checked": null
+    },
+    {
+      "id": "neuromorphic",
+      "name": "Neuromorphic / spiking computing",
+      "group": "Brain-inspired silicon",
+      "last_checked": null
+    },
+    {
+      "id": "hyperdimensional",
+      "name": "Hyperdimensional computing / vector-symbolic architectures",
+      "group": "Brain-inspired silicon",
+      "last_checked": null
+    },
+    {
+      "id": "wetware",
+      "name": "Synthetic biological intelligence (wetware)",
+      "group": "Living substrates",
+      "last_checked": null
+    },
+    {
+      "id": "organoids",
+      "name": "Organoid intelligence",
+      "group": "Living substrates",
+      "last_checked": null
+    },
+    {
+      "id": "basal-cognition",
+      "name": "Basal cognition / diverse intelligence",
+      "group": "Living substrates",
+      "last_checked": null
+    },
+    {
+      "id": "slime-mould-chemical",
+      "name": "Slime-mould and chemical computing",
+      "group": "Living substrates",
+      "last_checked": null
+    },
+    {
+      "id": "world-models",
+      "name": "World models / JEPA",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "active-inference",
+      "name": "Active inference / free-energy principle",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "liquid-networks",
+      "name": "Liquid / continuous-time networks",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "embodied-cognition",
+      "name": "Embodied cognition / morphological computation",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "mortal-computation",
+      "name": "Mortal computation",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "neural-cellular-automata",
+      "name": "Neural cellular automata / self-organising systems",
+      "group": "Paradigms of intelligence",
+      "last_checked": null
+    },
+    {
+      "id": "superconducting-logic",
+      "name": "Superconducting / cryogenic logic",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    },
+    {
+      "id": "spintronic-magnonic",
+      "name": "Spintronic and magnonic computing",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    },
+    {
+      "id": "memcomputing",
+      "name": "Memcomputing",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    },
+    {
+      "id": "whole-brain-emulation",
+      "name": "Whole-brain emulation",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    },
+    {
+      "id": "quantum-theories-of-mind",
+      "name": "Quantum theories of mind",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    },
+    {
+      "id": "physical-limits",
+      "name": "The physical limits of computation",
+      "group": "Speculative frontiers",
+      "last_checked": null
+    }
+  ]
+}

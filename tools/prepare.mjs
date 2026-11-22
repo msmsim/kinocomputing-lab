@@ -10,7 +10,7 @@
 
 import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
+import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, rotation } from "./lib.mjs";
 import { takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
 
@@ -40,7 +40,7 @@ const focus = process.env.LAB_FOCUS ?? null;
 // The night's money is one pot. Exa, when the lab has a key, gets a slice of
 // it; the model gets the rest.
 const exaOn = process.env.EXA_CONFIGURED === "true";
-const exaUsd = exaOn && !money.skip ? Math.min(config.search.exa_usd_per_night, Math.round(money.maxUsd * 0.25 * 100) / 100) : 0;
+const exaUsd = exaOn && !money.skip ? Math.min(config.search.exa_usd_per_night, Math.round(money.maxUsd * config.search.exa_share * 100) / 100) : 0;
 const modelUsd = Math.round((money.maxUsd - exaUsd) * 100) / 100;
 
 // The PI's takes. LAB_SURFACE_DIR reads kinocomputing's surface from a built
@@ -97,6 +97,12 @@ if (!offline && process.env.LAB_NO_READING !== "1") {
   }
 }
 
+// The paradigm rotation: every paradigm on the tracker is looked at once a
+// cycle. Tonight's are the ones looked at longest ago (never, first), enough
+// a night to go round in config.paradigms.cycle_days.
+const paradigmList = readJson(join(LAB, "state/paradigms.json"), { paradigms: [] }).paradigms ?? [];
+const tonightParadigms = rotation(paradigmList, config.paradigms.cycle_days);
+
 const published = existsSync(join(LAB, "published"))
   ? readdirSync(join(LAB, "published")).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")).sort()
   : [];
@@ -120,7 +126,14 @@ const run = {
   marks,
   baseline: seen.takes === undefined && !offline,
   reading: reading.flatMap((r) => r.results.map((x) => x.url)),
+  paradigms: tonightParadigms.map((p) => p.id),
 };
+// A paradigm's note, if the lab has published one: the published note whose
+// front matter names it.
+const paradigmNote = (id) => published.find((name) => {
+  const { data } = frontMatter(readFileSync(join(LAB, "published", `${name}.md`), "utf8"));
+  return data.kind === "paradigm" && data.paradigm === id;
+});
 writeFileSync(join(LAB, "state/run.json"), json(run));
 
 const quote = (text) => (text ? text.split("\n").map((l) => `> ${l}`).join("\n") : "> (no text)");
@@ -141,6 +154,17 @@ const lines = [
   "",
   `This shift is stopped at **${deadline} UTC** (${config.shift.minutes} minutes), finished or not. Check \`date -u\` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
   "",
+  "## Tonight's paradigms",
+  "",
+  ...(tonightParadigms.length ? [
+    `The rotation (AGENT.md, "The paradigm rotation") brings these round tonight, so that every paradigm on the tracker is looked at every ${config.paradigms.cycle_days} days:`,
+    "",
+    ...tonightParadigms.map((p) => {
+      const note = paradigmNote(p.id);
+      return `- **${p.name}** (\`${p.id}\`, ${p.group}): ${p.last_checked ? `last looked at ${p.last_checked}, so search from then` : "never looked at: a first pass, from the round-up's entry"}; ${note ? `its note is \`${note}\`, to update` : "no note yet, so this is its first"}.`;
+    }),
+    "",
+  ] : ["None: `state/paradigms.json` is empty.", ""]),
   "## The PI's takes",
   "",
   ...(steers.length ? steers.flatMap((s) => [

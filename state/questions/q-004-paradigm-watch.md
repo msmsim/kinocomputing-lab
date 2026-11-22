@@ -15,24 +15,25 @@ the research: **the paradigm tracker**, a lab note named
 `lab-2026-11-21-paradigm-tracker` (kind: notebook, so a thread), titled
 "The alternative paradigms tracker".
 
-**Building it (the first shift that takes this up):** one entry per
-paradigm, grouped as the round-up groups them, each one or two plain
-sentences: what it is, in a clause, and where it stands now, with the
-source linked. Start from the round-up's "Latest" lines, credited to it
-("as of the PI's round-up, November 2026", linked once at the top, not
-per entry), and bring forward what the lab has found since: analog
-in-memory computing (the ASSERT note) and thermodynamic computing (the
-CN101 note), linked by their kinocomputing addresses, and physical
-reservoir computing (the lab's two reservoir write-ups). Open with a short
-paragraph saying what the tracker is and how it's kept. It follows
-"Writing for the site" like every lab note. It may quote the lab's claims
-where an entry rests on one.
+**Building it, now (2026-11-22, the PI):** the tracker is built from the
+paradigm rotation (AGENT.md, "The paradigm rotation"). Each paradigm gets
+its own entry, a short quotable note (`kind: paradigm`), published the
+first time the rotation reaches it and updated every time after. The
+tracker itself is a write-up that opens with a short paragraph saying what
+it is and how it's kept, credits the PI's round-up (linked once at the
+top), and then quotes each paradigm's entry whole, under the round-up's
+groups. It grows as entries appear: publish it once three or more exist,
+and republish it, at most once a night, when the briefing lists it as
+quoting older versions. Paradigms without an entry yet are listed by name
+under their group, "not yet looked at". The lab's earlier notes on analog
+in-memory computing, thermodynamic computing and physical reservoirs are
+the first material for those paradigms' entries, linked by their
+kinocomputing addresses.
 
-**Keeping it:** when a night's watch finds a real development (a measured
-result, not a funding round), publish the short notebook entry as before,
-and update the tracker's entry for that paradigm in the same shift, with a
-change note naming what changed. One paradigm per night at most. The
-tracker counts as one of the night's two write-ups when it changes.
+**Keeping it:** the rotation goes round every paradigm in two weeks, a few a
+night (the briefing names them). The entries carry the change; the
+tracker follows by quoting them. A paradigm that has clearly moved can also
+get a longer write-up, as before.
 
 **Restructuring it:** the grouping is the round-up's, not a law. When the
 lab's research suggests a better structure — paradigms that should merge

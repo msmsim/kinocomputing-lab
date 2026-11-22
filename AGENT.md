@@ -27,9 +27,17 @@ workflow publishes after you finish.
   write units and the index, never the essays.
 - `published/` — every note the lab has published, as the markdown it was
   rendered from, under the kinocomputing file name it lives at.
+- `state/paradigms.json` — the paradigms on the tracker, in groups, with
+  when each was last looked at; `paradigms/<id>.md` — the lab's working
+  file on each (see "The paradigm rotation").
 - Search: `node tools/search.mjs arxiv|openalex "query"` (free; use first) and
   `node tools/search.mjs exa "query"` (paid, metered against tonight's
-  budget; for what the free indexes don't cover). Quote phrases
+  budget; for what the free indexes don't cover; `--category
+  news|publication|company` and `--since YYYY-MM-DD` narrow it). `node
+  tools/search.mjs exa-agent "question" --effort low --schema
+  paradigm-scan` asks Exa's research agent and returns structured JSON with
+  its sources ($0.025 at low effort; `medium`, $0.10, only when a paradigm
+  needs a deeper catch-up). Quote phrases
   (`'"reservoir computing"'`); `--recent` sorts arXiv by date, `--since 2024`
   filters OpenAlex.
 - Tools: read, write and edit files; run shell commands (Python 3 with `uv`,
@@ -81,6 +89,8 @@ says.
    - the highest-priority open question that fits tonight's run kind.
 
    Then fill the night to at least five with smaller pieces, finished:
+   - tonight's paradigms, from the briefing: one entry each ("The paradigm
+     rotation");
    - units from the 2025 archive (`sources/archive-2025/`, question q-007),
      split and rewritten for today's reader;
    - a short note on a paper from tonight's reading;
@@ -225,11 +235,12 @@ fall to `refuted`. Pin a claim's note at `replicated` or `cross-checked`.
 
 ```markdown
 ---
-kind: claim | experiment | analysis | notebook
+kind: claim | paradigm | experiment | analysis | notebook
 question: q-NNN
+paradigm: <id from state/paradigms.json> (paradigm entries only)
 pin: false
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
-change_note: what changed in the evidence (updates only; omit for a new note)
+change_note: what changed, in plain words (required on every update: an update without one is held back; omit for a new note)
 voice: bompa | concrete | santa-feist | post-liquid | absent-dimension (write-ups only; optional)
 ---
 
@@ -238,7 +249,8 @@ voice: bompa | concrete | santa-feist | post-liquid | absent-dimension (write-up
 The body.
 ```
 
-A note's kind is fixed: a claim stays a claim and a write-up a write-up.
+A note's kind is fixed: a claim stays a claim, a paradigm entry an entry, and a
+write-up a write-up.
 
 Link evidence, don't just name it: a file in this repository is
 `https://github.com/msmsim/kinocomputing-lab/blob/main/<path>` (the lab
@@ -248,10 +260,10 @@ unlinked.
 
 **A quote**, in a write-up only: a line holding just `![[name]]` quotes that
 note whole; `>` lines straight after it, with no blank line between, quote
-that part of it instead, word for word. `name` is a claim's lab name
-(`lab-2026-11-21-…`) or a note's address on kinocomputing (the last part
-of its URL, e.g. a take's). Only claims and the PI's notes can be quoted —
-not write-ups. A quote that doesn't resolve, or a selection that isn't in
+that part of it instead, word for word. `name` is a claim's or a paradigm
+entry's lab name (`lab-2026-11-21-…`) or a note's address on kinocomputing (the last part
+of its URL, e.g. a take's). Only claims, paradigm entries and the PI's
+notes can be quoted — not write-ups. A quote that doesn't resolve, or a selection that isn't in
 the note word for word, refuses the whole note, so copy selections exactly.
 
 ```markdown
@@ -326,6 +338,57 @@ archive is a natural place for one. Claims and the brief are never in a
 voice. Every voice still follows "Writing for the site": a voice changes
 how a thing is said, never what the evidence supports, and never claims to
 be human.
+
+## The paradigm rotation
+
+The lab tracks every paradigm in `state/paradigms.json` (seeded from the
+PI's round-up of alternative paradigms), and looks at each one every two
+weeks. The briefing names tonight's, the ones looked at longest ago. The
+point isn't news: it's to notice where a paradigm has moved, what an
+outsider could now get their hands on, and what the lab could test.
+
+For each of tonight's paradigms, cheaply:
+
+1. **Read your working file**, `paradigms/<id>.md` (start it if there's
+   none, from the round-up's entry): what the lab knew last time, the
+   organisations it follows, the leads it left.
+2. **Search from the date it was last looked at**: the free indexes first
+   (arXiv, OpenAlex), then, if Exa is on, a few narrow searches — `--category
+   news`, `--category publication`, each `--since` that date. On a
+   paradigm's first pass, one `--category company --n 25` search starts its
+   list of organisations; later passes add to it.
+3. **One research-agent call**, at `low` effort, with `--schema
+   paradigm-scan`: name the paradigm and the date, and ask what has been
+   measured since, who is doing it, what an outsider can use, and what a
+   one-person lab could test. Treat what it returns as leads to check
+   against their sources, never as findings.
+4. **Update the working file**: what changed, organisations added, the
+   scan's leads with what you checked.
+5. **Publish its entry** (`kind: paradigm`, `paradigm: <id>`): a fragment
+   of at most 1,500 characters, in the lab's own voice, for a stranger: what
+   it is in a clause; where it stands now, measured results first, each
+   with its source linked; what an outsider can use; and, when there is
+   one, what the lab could test. Its first version takes a new name
+   (`lab-YYYY-MM-DD-paradigm-<id>`); after that, update the same note
+   with a change note saying what moved, or "checked; no measured change
+   since <date>" when nothing did. Settle moves the rotation on only for a
+   paradigm whose entry goes out, so one you don't reach comes round
+   tomorrow.
+6. **Opportunities become questions.** A cheap experiment that would test
+   something live, or open access worth using, becomes a question in
+   `state/questions/` (kind `experiment` or `literature`, a priority, and
+   the paradigm named), not just a line in the entry.
+
+The tracker (question q-004) is a write-up that quotes each paradigm's
+entry whole, in groups. Because a quote is a snapshot, the briefing lists
+it under "Write-ups quoting an older version" once entries move: republish
+it then, at most once a night, with a change note naming what moved. You
+may restructure `state/paradigms.json` as q-004 allows (merge, split, add,
+regroup), keeping each `id` stable once an entry is published under it,
+and saying why in the journal.
+
+A night of rotation should cost a few cents of Exa: about $0.05 a
+paradigm. Medium effort is for a paradigm that has clearly moved a lot.
 
 ## What's worth publishing
 

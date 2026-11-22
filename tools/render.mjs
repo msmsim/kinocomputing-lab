@@ -4,9 +4,9 @@
 // notes/_note.html, filled, with each optional section kept only when there is
 // a value for it. Added for the lab: the §5.7 disclosure meta
 // (`blyg:generated`, naming the model), which kinocomputing's build turns into
-// provenance; and the item's kind (P21). A claim is a
-// fragment — short, quotable, a leaf. Everything else the lab writes is a
-// thread, and a thread can quote.
+// provenance; and the item's kind (P21). A claim, and a paradigm's entry on
+// the tracker, is a fragment — short, quotable, a leaf. Everything else the
+// lab writes is a thread, and a thread can quote.
 //
 // Quotes are written the way §10.1 writes them, with note names for ids: a
 // line holding only `![[name]]` quotes that note whole, and `>` lines straight
@@ -106,15 +106,19 @@ export function withByline(markdown, voice, origin) {
 }
 
 export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook", voice = null,
-  maxClaim = 1000, quote = null, model, at, kino, origin }) {
+  maxClaim = 1000, maxParadigm = 1500, quote = null, model, at, kino, origin }) {
   const refused = refusals(markdown);
   if (refused.length) throw new Error(`uses ${refused.join(" and ")}, which the blyg can't carry`);
   const extracted = extractQuotes(markdown.trim());
   const claim = kind === "claim";
-  if (voice && (claim || kind === "brief")) throw new Error(`is a ${kind} in a voice; claims and the brief are the lab's record, in its own voice`);
+  // A paradigm's entry on the tracker is a fragment too: short, quotable, a
+  // leaf, so the tracker can quote it and notice when it has moved on.
+  const fragment = claim || kind === "paradigm";
+  if (voice && (fragment || kind === "brief")) throw new Error(`is a ${kind} in a voice; claims, paradigm entries and the brief are the lab's record, in its own voice`);
   if (voice) extracted.markdown = withByline(extracted.markdown, voice, origin);
-  if (claim && extracted.quotes.length) throw new Error("is a claim, and a claim can't quote; quote it from a thread");
+  if (fragment && extracted.quotes.length) throw new Error(`is a ${kind}, and a ${kind} can't quote; quote it from a thread`);
   if (claim && markdown.trim().length > maxClaim) throw new Error(`is a claim of ${markdown.trim().length} characters; a claim is at most ${maxClaim}`);
+  if (kind === "paradigm" && markdown.trim().length > maxParadigm) throw new Error(`is a paradigm entry of ${markdown.trim().length} characters; an entry is at most ${maxParadigm}`);
   let html = marked.parse(extracted.markdown).trim();
   if (!html) throw new Error("is empty");
   const id = labIdIn(html);
@@ -165,6 +169,6 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   const page = template
     .replace(/<!-- if:(\w+) -->([\s\S]*?)<!-- \/if:\1 -->\n?/g, (whole, key, inner) => (Object.hasOwn(values, key) ? inner : ""))
     .replace(/\{\{(\w+)\}\}/g, (whole, key) => (Object.hasOwn(values, key) ? values[key] : ""))
-    .replace("</head>", `    <meta name="blyg:generated" content="${escapeAttr(model)}">\n${claim ? "" : '    <meta name="blyg:kind" content="thread">\n'}</head>`);
+    .replace("</head>", `    <meta name="blyg:generated" content="${escapeAttr(model)}">\n${fragment ? "" : '    <meta name="blyg:kind" content="thread">\n'}</head>`);
   return page;
 }

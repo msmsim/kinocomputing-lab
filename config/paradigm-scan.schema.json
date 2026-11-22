@@ -1,0 +1,66 @@
+{
+  "type": "object",
+  "properties": {
+    "state_of_play": {
+      "type": "string",
+      "description": "Two or three plain sentences: where this paradigm stands now, as measured results show it, not as press releases claim it."
+    },
+    "measured_results": {
+      "type": "array",
+      "description": "Results with numbers, since the date in the question: a benchmark, an energy figure, a demonstrated scale. Not funding rounds or announcements.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what": { "type": "string" },
+          "date": { "type": "string" },
+          "url": { "type": "string" }
+        },
+        "required": ["what", "url"]
+      }
+    },
+    "active_organisations": {
+      "type": "array",
+      "description": "Labs, companies and groups doing the work, with what each is known for.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "url": { "type": "string" }
+        },
+        "required": ["name", "role"]
+      }
+    },
+    "open_access": {
+      "type": "array",
+      "description": "Things an outsider can use today: open simulators, software libraries, datasets, dev kits, cloud or remote access to hardware, with any price.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what": { "type": "string" },
+          "cost": { "type": "string" },
+          "url": { "type": "string" }
+        },
+        "required": ["what", "url"]
+      }
+    },
+    "cheap_experiments": {
+      "type": "array",
+      "description": "Experiments a one-person lab could run on a laptop or a free CPU runner in under ten minutes, that would test a live question about this paradigm.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "idea": { "type": "string" },
+          "why_now": { "type": "string" }
+        },
+        "required": ["idea"]
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "description": "The questions the field itself says are unresolved.",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["state_of_play", "measured_results", "active_organisations", "open_access", "cheap_experiments"]
+}

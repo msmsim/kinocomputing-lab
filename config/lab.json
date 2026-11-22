@@ -16,14 +16,21 @@
     "min_notes_per_night": 5,
     "name_pattern": "^lab-\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$",
     "max_claims_per_night": 4,
-    "max_claim_chars": 1000
+    "max_claim_chars": 1000,
+    "max_paradigm_chars": 1500
   },
   "kinocomputing": {
     "origin": "https://www.kinocomputing.com/",
     "repo": "msmsim/kinocomputing"
   },
   "search": {
-    "exa_usd_per_night": 0.1,
+    "exa_usd_per_night": 0.5,
+    "exa_share": 0.33,
+    "agent_usd": {
+      "minimal": 0.012,
+      "low": 0.025,
+      "medium": 0.1
+    },
     "watch_per_question": 3
   },
   "lab": {
@@ -33,5 +40,8 @@
   "shift": {
     "minutes": 60,
     "experiment_seconds": 600
+  },
+  "paradigms": {
+    "cycle_days": 14
   }
 }

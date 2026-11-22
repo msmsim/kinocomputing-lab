@@ -9,10 +9,10 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { allowance, frontMatter, KINO, LAB } from "../tools/lib.mjs";
+import { allowance, frontMatter, KINO, LAB, rotation } from "../tools/lib.mjs";
 import { takeSteers } from "../tools/steers.mjs";
 import { renderNote } from "../tools/render.mjs";
-import { arxivQuery, exaLeft, parseArxiv, parseExa, parseOpenAlex, search, unInvert } from "../tools/search.mjs";
+import { arxivQuery, exaAgent, exaBody, exaLeft, parseArxiv, parseExa, parseOpenAlex, search, unInvert } from "../tools/search.mjs";
 import { replicateAll } from "../tools/replicate.mjs";
 
 const BUDGET = { daily_usd: 1.5, bank_cap_usd: 10, light_run_max_usd: 1.5, deep_run_threshold_usd: 6, deep_run_max_usd: 6, min_run_usd: 0.1 };
@@ -174,8 +174,8 @@ test("render: a voice signs a write-up under its title; claims and the brief sta
   const page = await renderNote({ ...ARGS, voice: "Bompa", markdown: "**The road not taken**\n\nThe analog computer was winning in 1955.\n" });
   assert.match(page, /<p><strong>The road not taken<\/strong><\/p>\n<p><em>By <a href="https:\/\/www\.kinocomputing\.com\/about">Bompa<\/a>, one of the lab(?:'|&#39;)s AI voices<\/em><\/p>\n<p>The analog computer/);
   assert.match(page, /<meta name="description" content="The analog computer was winning in 1955\.">/, "the byline isn't the description");
-  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "claim", markdown: "**C**\n\nA claim.\n" }), /claims and the brief are the lab.s record/);
-  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "brief", markdown: "**B**\n\nA brief.\n" }), /claims and the brief/);
+  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "claim", markdown: "**C**\n\nA claim.\n" }), /claims, paradigm entries and the brief are the lab.s record/);
+  await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "brief", markdown: "**B**\n\nA brief.\n" }), /claims, paradigm entries and the brief/);
 });
 
 test("render: refuses what the blyg can't carry, before it reaches the site", async () => {
@@ -191,6 +191,55 @@ test("render: refuses what the blyg can't carry, before it reaches the site", as
 });
 
 /** A throwaway lab and kinocomputing, side by side, the lab a git repo. */
+test("rotation: enough paradigms a night to go round in the cycle, longest-unlooked first, never-looked first of all", () => {
+  const list = Array.from({ length: 32 }, (_, i) => ({ id: `p${i}`, last_checked: null }));
+  assert.deepEqual(rotation(list, 14).map((p) => p.id), ["p0", "p1", "p2"], "32 paradigms in 14 days is 3 a night, in the tracker's order");
+  list[0].last_checked = "2026-11-22"; list[1].last_checked = "2026-11-10"; list[2].last_checked = "2026-11-10";
+  for (const p of list.slice(3)) p.last_checked = "2026-11-20";
+  assert.deepEqual(rotation(list, 14).map((p) => p.id), ["p1", "p2", "p3"], "oldest first, ties in order");
+  list[5].last_checked = null;
+  assert.equal(rotation(list, 14)[0].id, "p5", "never looked at comes first");
+  assert.deepEqual(rotation([], 14), []);
+  assert.equal(rotation(list.slice(0, 5), 14).length, 1);
+});
+
+test("exa: categories and a since-date narrow a search; a company list may run to 25 and takes no date", () => {
+  assert.deepEqual(exaBody("photonic chips", { n: 5, category: "news", since: "2026-11-08" }), {
+    query: "photonic chips", type: "auto", numResults: 5, category: "news", startPublishedDate: "2026-11-08T00:00:00.000Z", contents: { highlights: true },
+  });
+  const companies = exaBody("photonic computing companies", { n: 40, category: "company", since: "2026-11-08" });
+  assert.equal(companies.numResults, 25);
+  assert.ok(!("startPublishedDate" in companies), "Exa refuses a date filter on companies");
+  assert.equal(exaBody("x", { n: 40 }).numResults, 10, "otherwise within the base price's ten");
+  assert.throws(() => exaBody("x", { category: "blogs" }), /no category "blogs"/);
+  assert.throws(() => exaBody("x", { since: "2024" }), /YYYY-MM-DD/);
+});
+
+test("exa agent: runs, polls to the end, returns the structured answer with its sources and cost; refuses what tonight can't pay for", async () => {
+  const run = { date: "2026-11-21", exa_usd: 0.1 };
+  const prices = { minimal: 0.012, low: 0.025, medium: 0.1 };
+  const calls = [];
+  const replies = [
+    { id: "agent_run_1", status: "queued" },
+    { id: "agent_run_1", status: "running" },
+    { id: "agent_run_1", status: "completed", output: { structured: { state_of_play: "s" }, grounding: [{ field: "state_of_play", citations: [{ url: "https://a.example" }, { url: "https://a.example" }] }] }, costDollars: { total: 0.025 } },
+  ];
+  const fetch = async (url, init = {}) => { calls.push({ url, init }); return { ok: true, status: 200, json: async () => replies.shift() }; };
+  const done = await exaAgent("photonic computing since 2026-11-08", { effort: "low", schema: { type: "object" }, prices, run, log: [], fetch, key: "k", sleep: async () => {} });
+  assert.deepEqual(done, { output: { state_of_play: "s" }, sources: ["https://a.example"], usd: 0.025 });
+  assert.equal(calls[0].url, "https://api.exa.ai/agent/runs");
+  assert.equal(calls[0].init.headers.authorization, "Bearer k");
+  assert.deepEqual(JSON.parse(calls[0].init.body), { query: "photonic computing since 2026-11-08", effort: "low", outputSchema: { type: "object" }, budget: { maxCostDollars: 1 } });
+  assert.deepEqual(calls.slice(1).map((c) => c.url), ["https://api.exa.ai/agent/runs/agent_run_1", "https://api.exa.ai/agent/runs/agent_run_1"]);
+
+  await assert.rejects(exaAgent("q", { effort: "medium", prices, run, log: [{ date: "2026-11-21", usd: 0.02 }], fetch, key: "k" }), /\$0\.080 left, and a medium run costs \$0\.1/);
+  await assert.rejects(exaAgent("q", { effort: "high", prices, run, log: [], fetch, key: "k" }), /isn't one the lab pays for/);
+  const failing = async () => ({ ok: true, status: 200, json: async () => ({ id: "agent_run_2", status: "failed", error: { message: "boom" } }) });
+  const error = await exaAgent("q", { effort: "low", prices, run, log: [], fetch: failing, key: "k", sleep: async () => {} }).catch((e) => e);
+  assert.match(error.message, /failed: boom/);
+  assert.equal(error.usd, 0.025, "a failed run is still counted at its price");
+});
+
 function makeWorld() {
   const root = mkdtempSync(join(tmpdir(), "lab-world-"));
   const lab = join(root, "lab");
@@ -357,6 +406,63 @@ test("a full night: ten notes publish, claims included, the rest are held back, 
   }
 });
 
+test("paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  const write = (p, s) => writeFileSync(join(w.lab, p), s);
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    const ids = ["photonic", "thermodynamic", "reversible", "quantum", "dna-molecular"];
+    write("state/paradigms.json", JSON.stringify({ paradigms: ids.map((id, i) => ({ id, name: `Paradigm ${id}`, group: "Let physics compute", last_checked: i === 3 ? "2026-11-01" : i === 4 ? null : "2026-11-15" })) }));
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
+    const run = JSON.parse(read("state/run.json"));
+    assert.deepEqual(run.paradigms, ["dna-molecular"], "5 paradigms in 14 days is 1 a night: the never-looked-at one");
+    write("state/paradigms.json", JSON.stringify({ paradigms: ids.map((id) => ({ id, name: `Paradigm ${id}`, group: "Let physics compute", last_checked: null })) }));
+    write("state/run.json", JSON.stringify({ ...run, paradigms: ["photonic", "thermodynamic"] }));
+    assert.match(read("state/tonight.md"), /## Tonight's paradigms\n\n[\s\S]*\*\*Paradigm dna-molecular\*\* \(`dna-molecular`, Let physics compute\): never looked at/);
+
+    write("outbox/lab-2026-11-21-paradigm-photonic.md", "---\nkind: paradigm\nparadigm: photonic\n---\n\n**Photonic computing**\n\nLight does the linear algebra. Nothing measured has moved since the round-up.\n");
+    write("outbox/lab-2026-11-21-paradigm-nowhere.md", "---\nkind: paradigm\nparadigm: nowhere\n---\n\n**Nowhere**\n\nNot on the list.\n");
+    write("outbox/lab-2026-11-21-paradigm-long.md", `---\nkind: paradigm\nparadigm: reversible\n---\n\n**Long**\n\n${"word ".repeat(400)}\n`);
+    write("outbox/lab-2026-11-21-paradigm-voiced.md", "---\nkind: paradigm\nparadigm: quantum\nvoice: concrete\n---\n\n**Voiced**\n\nIn a voice.\n");
+    write("outbox/lab-2026-11-21-tracker.md", "---\nkind: notebook\n---\n\n**The tracker**\n\nWhat it is.\n\n![[lab-2026-11-21-paradigm-photonic]]\n");
+    write("MORNING.md", "Looked at photonics.\n");
+    write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.5, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z");
+
+    const entry = readFileSync(join(w.kino, "notes/lab-2026-11-21-paradigm-photonic.html"), "utf8");
+    assert.ok(!/blyg:kind" content="thread"/.test(entry), "an entry is a fragment");
+    const tracker = readFileSync(join(w.kino, "notes/lab-2026-11-21-tracker.html"), "utf8");
+    assert.match(tracker, /<blockquote class="kino-quote" data-note="lab-2026-11-21-paradigm-photonic">/, "the tracker quotes it the same night");
+    const morning = read("MORNING.md");
+    assert.match(morning, /Not published: lab-2026-11-21-paradigm-nowhere — a paradigm entry names its paradigm, and "nowhere" isn't one/);
+    assert.match(morning, /Not published: lab-2026-11-21-paradigm-long is a paradigm entry of \d+ characters/);
+    assert.match(morning, /Not published: lab-2026-11-21-paradigm-voiced is a paradigm in a voice/);
+    assert.match(morning, /Tonight's paradigms not looked at, so they come round again: thermodynamic\./);
+    const after = JSON.parse(read("state/paradigms.json")).paradigms;
+    assert.deepEqual(after.map((p) => p.last_checked), ["2026-11-21", null, null, null, null]);
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /Photonic computing<\/a>, a paradigm entry/);
+
+    // An entry stays an entry.
+    write("outbox/lab-2026-11-21-paradigm-photonic.md", "---\nkind: notebook\nchange_note: now a write-up\n---\n\n**Photonic computing**\n\nLonger now.\n");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T02:00:00Z");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-22T03:00:00Z");
+    assert.match(read("MORNING.md"), /a note's kind can't change/);
+
+    // Every update says what changed.
+    write("outbox/lab-2026-11-21-paradigm-photonic.md", "---\nkind: paradigm\nparadigm: photonic\n---\n\n**Photonic computing**\n\nA new measured result.\n");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-23T02:00:00Z");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-23T03:00:00Z");
+    assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-paradigm-photonic — an update needs a change note/);
+    write("outbox/lab-2026-11-21-paradigm-photonic.md", "---\nkind: paradigm\nparadigm: photonic\nchange_note: a new measured result\n---\n\n**Photonic computing**\n\nA new measured result.\n");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-24T02:00:00Z");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-24T03:00:00Z");
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-paradigm-photonic.html"), "utf8"), /<meta name="blyg:note" content="a new measured result">/);
+  } finally {
+    w.dispose();
+  }
+});
+
 test("timebox: stops a command past its limit with 124, passes an exit code through", () => {
   const started = Date.now();
   const slow = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "1", "sleep", "10"], { encoding: "utf8" });
@@ -377,7 +483,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
 
     // Night 1: the first look is a baseline. The shift runs an experiment and publishes a note.
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z", { EXA_CONFIGURED: "true" });
-    assert.match(prep, /light run, \$1\.40 on claude-sonnet-5-5 \+ \$0\.10 Exa, 0 take\(s\), 1 open question/);
+    assert.match(prep, /light run, \$1\.00 on claude-sonnet-5-5 \+ \$0\.50 Exa, 0 take\(s\), 1 open question/);
     const run = JSON.parse(read("state/run.json"));
     assert.equal(run.baseline, true);
     assert.equal(run.exa_usd + run.max_usd, 1.5, "one pot: Exa's slice comes out of the night's money");

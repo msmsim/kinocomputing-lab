@@ -72,11 +72,13 @@ by Claude Code's `--max-budget-usd`; the spend log is `state/spend.jsonl`. The
 hard backstop is the spend limit on the API key's Console workspace.
 
 Search is one pot with the model. arXiv and OpenAlex are free. Exa, if the
-lab has a key, gets up to $0.10 of each night's money (at most a quarter of
+lab has a key, gets up to $0.50 of each night's money (at most a third of
 it), metered by `tools/search.mjs` from the cost Exa reports per call;
-settle adds it to the spend log. $0.10 a night is about 14 searches, ~$3 a
-month — inside Exa's free $10 monthly credit, so the bank is charged for
-what is in practice free. The key's own limit in Exa's dashboard is the
+settle adds it to the spend log. The paradigm rotation uses about $0.05 a
+paradigm (a few searches at $0.007 and one low-effort research-agent call
+at $0.025), so a typical night spends $0.10–0.20 — about $3–6 a month,
+inside Exa's free $10 monthly credit, so the bank is charged for what is
+in practice free. The key's own limit in Exa's dashboard is the
 backstop.
 
 Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
@@ -124,6 +126,7 @@ never one you push from. The pilot ran this way.
 |---|---|
 | `state/questions/` | The agenda: one file per question |
 | `voices/` | The lab's five AI voices: who each is, its beat and style |
+| `state/paradigms.json`, `paradigms/` | The paradigms tracked, with when each was last looked at; the lab's working file on each |
 | `sources/archive-2025/` | Kinocomputing's 2025 essays, as source material: indexed, split into units, rolled forward selectively |
 | `state/claims.jsonl` | Every claim, append-only, with its stage |
 | `state/steers.jsonl` | What the lab did with each steer |
