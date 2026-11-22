@@ -13,7 +13,11 @@ name: Night shift
 
 on:
   schedule:
+    # GitHub can delay or drop a scheduled run when it's busy, worst on the
+    # hour. The second time is a backup: it works the shift only if the
+    # first hasn't settled tonight (the check job below).
     - cron: "23 2 * * *"
+    - cron: "41 3 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -24,7 +28,35 @@ permissions:
   contents: write
 
 jobs:
+  # One shift a night. A scheduled run stands down if a shift has already
+  # settled today (UTC); the concurrency group above makes a backup wait for
+  # a shift still running, so it sees that shift's settle. A run started by
+  # hand always goes ahead.
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.check.outputs.go }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: state/last-settle.json
+          sparse-checkout-cone-mode: false
+      - id: check
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          settled=$(jq -r .date state/last-settle.json 2>/dev/null || true)
+          if [ "$EVENT" = schedule ] && [ "$settled" = "$(date -u +%F)" ]; then
+            echo "a shift already settled today ($settled); standing down"
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
   shift:
+    needs: check
+    if: needs.check.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:

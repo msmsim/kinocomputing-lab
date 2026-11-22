@@ -29,7 +29,7 @@ settle     spend; takes handled or re-offered; claims append-only; publish;     
            the night's brief
 ```
 
-Nightly on GitHub Actions at 02:23 UTC, or by hand on your machine
+Nightly on GitHub Actions at 02:23 UTC (03:41 as a backup, if GitHub skipped the first), or by hand on your machine
 (`tools/local-shift.sh`, sandboxed, billed to your login).
 
 A shift has two limits: money (`--max-budget-usd`) and time (60 minutes,
