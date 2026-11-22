@@ -17,7 +17,7 @@ steers from its principal investigator (PI).
 ## A night
 
 ```
-02:00 UTC  prepare   budget for tonight; the PI's takes; new reading; briefing (no tokens)
+02:23 UTC  prepare   budget for tonight; the PI's takes; new reading; briefing (no tokens)
            shift     Claude Code works one unit of work, under a dollar cap   (tokens)
                      and a 60-minute clock
            restore   the lab's machinery put back as committed              (no tokens)
