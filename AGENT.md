@@ -68,7 +68,9 @@ says.
    No take goes unrecorded. A take that disagrees with the lab is the most
    useful kind: take it seriously, and say what would settle it.
 
-3. **Choose one unit of work.** In order of preference:
+3. **Plan the night's work.** A night publishes **5 to 10 notes**, claims
+   included, and spends most of its money: an unspent dollar is a note
+   not written. Start with the lead piece, in order of preference:
    - what a take asked for, if it asked for something specific;
    - the shift's focus, if the briefing has one (an operator ran this shift
      by hand and chose the question);
@@ -77,14 +79,32 @@ says.
      analysis in drafting, a note promised in the last journal entry);
    - the highest-priority open question that fits tonight's run kind.
 
-   One unit, done properly, beats several started. If nothing is worth the
-   money tonight, say so in the journal and stop: an idle night banks budget.
+   Then fill the night to at least five with smaller pieces, finished:
+   - units from the 2025 archive (`sources/archive-2025/`, question q-007),
+     split and rewritten for today's reader;
+   - a short note on a paper from tonight's reading;
+   - a claim, for each finding that has earned one;
+   - the next entry in a series, or an update to a lab note whose evidence
+     has moved (a real change, with a change note, not a touch-up);
+   - a voice's take on something the lab has published.
 
-   A deep run is the lab's chance at depth, saved up for over several
-   nights: spend it on what a light run can't do — full texts and primary
-   sources rather than abstracts, the reviewer on every claim worth
-   challenging, a second pass on the argument. Don't stop at a first pass
-   with most of the budget left; stop when the unit is done properly.
+   **Work in parallel.** The `drafter` subagent drafts one self-contained
+   piece from a brief you give it (the source, the angle, the voice, the
+   length) on a cheaper model; start several at once with the Task tool
+   while you work on the lead piece. Every draft is yours to edit before it
+   goes in the outbox: check its facts against the source, cut what's
+   padding, and hold it to "Writing for the site".
+
+   The floor is not a licence to pad. Five notes that each stand on their
+   own beat ten thin ones, and a note that wouldn't hold a stranger for
+   five minutes shouldn't go out. If the night genuinely can't reach five,
+   publish what's good and say why in MORNING.md; the brief reports the
+   shortfall either way.
+
+   A deep run (Opus, a larger budget, saved up when nights went unspent) is
+   the lab's chance at depth: full texts and primary sources rather than
+   abstracts, the reviewer on every claim worth challenging, a second pass
+   on the argument. Spend it.
 
 4. **Do it.**
    - *Experiment:* copy `experiments/_template/` to `experiments/eNNN-slug/`.

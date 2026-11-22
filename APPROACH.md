@@ -11,8 +11,8 @@ fixes they prompted, all already folded in below.
 
 A principal investigator and their researchers. You are the PI, checking in
 when you choose and steering asynchronously. The researchers are agents
-(Claude Code, headless), each working one shift: one unit of work, done
-properly, written up, published. The lab's notebook and its venue are the
+(Claude Code, headless), each working one nightly shift: a lead piece and
+smaller ones, five to ten notes, written up and published. The lab's notebook and its venue are the
 same thing: the kinocomputing blyg.
 
 Scope: alternative paradigms of computing and intelligence. Outputs run from
@@ -22,7 +22,7 @@ tiny experiments to World Machines analysis.
 
 ```
 prepare    budget; your takes; stale write-ups; replications; new arXiv papers  (no tokens)
-shift      a researcher works one unit of work, under a dollar cap and a clock  (tokens)
+shift      a researcher works 5–10 notes' worth, under a dollar cap and a clock (tokens)
 restore    the lab's machinery put back as committed                            (no tokens)
 replicate  every new experiment result re-run on the next seed                  (no tokens)
 settle     spend; takes handled or re-offered; claims append-only; publish;     (no tokens)
@@ -32,7 +32,7 @@ settle     spend; takes handled or re-offered; claims append-only; publish;     
 Nightly on GitHub Actions at 02:23 UTC (03:41 as a backup, if GitHub skipped the first), or by hand on your machine
 (`tools/local-shift.sh`, sandboxed, billed to your login).
 
-A shift has two limits: money (`--max-budget-usd`) and time (60 minutes,
+A shift has two limits: money (`--max-budget-usd`) and time (90 minutes,
 then it is stopped, finished or not; the briefing gives the deadline).
 Experiments run in a 10-minute timebox, the same time the free replication
 gets; one that doesn't fit is cut down, not waited on. A shift that is

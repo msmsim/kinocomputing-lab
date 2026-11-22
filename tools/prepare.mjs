@@ -127,6 +127,10 @@ const lines = [
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
   "",
+  "## Tonight's output",
+  "",
+  `Publish **${config.publish.min_notes_per_night} to ${config.publish.max_notes_per_night} notes** tonight, claims included (settle holds back any past ${config.publish.max_notes_per_night}), and use the money: aim to spend most of the $${modelUsd.toFixed(2)}. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.`,
+  "",
   ...(process.env.LAB_ENV_NOTE ? ["## Where this shift runs", "", process.env.LAB_ENV_NOTE, ""] : []),
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
   "## Time",

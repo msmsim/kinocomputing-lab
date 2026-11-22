@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { allowance, frontMatter, KINO, LAB } from "../tools/lib.mjs";
@@ -309,7 +309,8 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
   try {
     w.publish("2026-11-20T00:00:00Z");
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
-    assert.match(read("state/tonight.md"), /stopped at \*\*03:00 UTC\*\* \(60 minutes\)/, "the briefing gives the deadline");
+    assert.match(read("state/tonight.md"), /stopped at \*\*03:30 UTC\*\* \(90 minutes\)/, "the briefing gives the deadline");
+    assert.match(read("state/tonight.md"), /Publish \*\*5 to 10 notes\*\* tonight, claims included/, "and the night's range");
     void prep;
     writeFileSync(join(w.lab, "outbox/lab-2026-11-21-half-done.md"), "---\nkind: notebook\n---\n\n**Half done**\n\nWhat got written before the stop.\n");
     const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:05:00Z", { SHIFT_EXIT: "124" });
@@ -319,6 +320,32 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
     const morning = read("MORNING.md");
     assert.match(morning, /hit its time limit and was stopped/);
     assert.match(morning, /No journal entry was written tonight/);
+  } finally {
+    w.dispose();
+  }
+});
+
+test("a full night: ten notes publish, claims included, the rest are held back, and no shortfall is reported", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
+    for (let i = 1; i <= 11; i++) {
+      const n = String(i).padStart(2, "0");
+      writeFileSync(join(w.lab, `outbox/lab-2026-11-21-note-${n}.md`), `---\nkind: notebook\n---\n\n**Note ${n}**\n\nA short note, number ${n}.\n`);
+    }
+    for (const c of ["a", "b"]) writeFileSync(join(w.lab, `outbox/lab-2026-11-21-claim-${c}.md`), `---\nkind: claim\n---\n\n**Claim ${c}**\n\nAn untested idea, ${c}.\n`);
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 1.2, num_turns: 40, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:20:00Z");
+    const published = readdirSync(join(w.lab, "published")).filter((f) => /(?:note|claim)-/.test(f));
+    assert.equal(published.length, 10);
+    assert.ok(published.includes("lab-2026-11-21-claim-a.md") && published.includes("lab-2026-11-21-claim-b.md"), "claims go first");
+    const morning = read("MORNING.md");
+    for (const n of ["09", "10", "11"]) assert.match(morning, new RegExp(`Not published: lab-2026-11-21-note-${n} — over the 10-note nightly limit`));
+    assert.ok(!/under the nightly minimum/.test(morning));
+    const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+    assert.ok(!/short of the lab/.test(brief), "no shortfall on a full night");
   } finally {
     w.dispose();
   }
@@ -344,7 +371,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
 
     // Night 1: the first look is a baseline. The shift runs an experiment and publishes a note.
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z", { EXA_CONFIGURED: "true" });
-    assert.match(prep, /light run, \$1\.40 on claude-haiku-5-5 \+ \$0\.10 Exa, 0 take\(s\), 1 open question/);
+    assert.match(prep, /light run, \$1\.40 on claude-sonnet-5-5 \+ \$0\.10 Exa, 0 take\(s\), 1 open question/);
     const run = JSON.parse(read("state/run.json"));
     assert.equal(run.baseline, true);
     assert.equal(run.exa_usd + run.max_usd, 1.5, "one pot: Exa's slice comes out of the night's money");
@@ -380,10 +407,11 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
     assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);
     assert.match(brief, /4 notes were held back/);
+    assert.match(brief, /Only 1 note was published tonight, short of the lab(?:'|&#39;)s nightly 5\./, "a short night is said plainly");
     assert.ok(!brief.includes("All went perfectly"), "the brief is settle's to write");
     assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-brief — that name is the nightly brief/);
     assert.match(brief, /edited the lab('|&#39;)s own tools or rules/);
-    assert.match(brief, /The shift cost \$0\.43, on Claude Haiku 5\.5\./);
+    assert.match(brief, /The shift cost \$0\.43, on Claude Sonnet 5\.5\./);
     assert.match(brief, /<meta name="blyg:generated"/, "the brief is the lab's, so never a take");
     assert.ok(!/e001|c-001|q-001/.test(brief.replace(/<[^>]+>/g, " ")), "no lab ids in what a reader sees");
 
@@ -405,7 +433,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     const registry = () => JSON.parse(readFileSync(join(w.kino, "blyg/_registry.json"), "utf8")).items;
     const entry = registry()["lab-2026-11-21-first-look"];
     const doc = JSON.parse(readFileSync(join(w.kino, "dist/items", `${entry.id}.json`), "utf8"));
-    assert.deepEqual(doc.generated, [{ sources: [], model: "claude-haiku-5-5", at: "2026-11-21T03:30:00Z" }]);
+    assert.deepEqual(doc.generated, [{ sources: [], model: "claude-sonnet-5-5", at: "2026-11-21T03:30:00Z" }]);
 
     // The PI posts two takes. Night 2 sees them, and not the lab's own note; the shift handles one.
     await w.take("002-ash-owls", "**More theory**\n\nLess hardware, more World Machines.\n", "2026-11-21T12:00:00Z");

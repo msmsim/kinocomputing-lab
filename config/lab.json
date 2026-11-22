@@ -2,17 +2,18 @@
   "budget": {
     "daily_usd": 1.5,
     "bank_cap_usd": 10,
-    "light_run_max_usd": 1.5,
+    "light_run_max_usd": 3,
     "deep_run_threshold_usd": 6,
     "deep_run_max_usd": 6,
     "min_run_usd": 0.1
   },
   "models": {
-    "light": "claude-haiku-5-5",
-    "deep": "claude-sonnet-5-5"
+    "light": "claude-sonnet-5-5",
+    "deep": "claude-opus-5-5"
   },
   "publish": {
-    "max_notes_per_night": 2,
+    "max_notes_per_night": 10,
+    "min_notes_per_night": 5,
     "name_pattern": "^lab-\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$",
     "max_claims_per_night": 4,
     "max_claim_chars": 1000
@@ -30,7 +31,7 @@
     "evidence_base": "https://github.com/msmsim/kinocomputing-lab/blob/main/"
   },
   "shift": {
-    "minutes": 60,
+    "minutes": 90,
     "experiment_seconds": 600
   }
 }

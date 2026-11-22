@@ -212,8 +212,9 @@ const reject = (file, why) => {
   renameSync(join(outbox, file), join(rejected, file));
   report.push(`- Not published: ${file.replace(/\.md$/, "")} ${why}.`);
 };
-// Claims publish before the threads that quote them (§7: the thread last),
-// and don't count against the nightly limit on notes.
+// Claims publish before the threads that quote them (§7: the thread last).
+// Every note counts toward the night's limit, claims included; claims have
+// a smaller limit of their own as well.
 const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...frontMatter(readFileSync(join(outbox, file), "utf8")) }));
 parsed.sort((a, b) => (b.data.kind === "claim") - (a.data.kind === "claim") || a.file.localeCompare(b.file));
 let claims = 0;
@@ -228,8 +229,12 @@ for (const { file, name, data, body } of parsed) {
     reject(file, "— a note's kind can't change: a claim stays a claim, and a write-up a write-up");
     continue;
   }
-  if (claim ? claims >= config.publish.max_claims_per_night : count >= config.publish.max_notes_per_night) {
-    reject(file, claim ? `— over the ${config.publish.max_claims_per_night}-claim nightly limit` : `— over the ${config.publish.max_notes_per_night}-note nightly limit`);
+  if (count + claims >= config.publish.max_notes_per_night) {
+    reject(file, `— over the ${config.publish.max_notes_per_night}-note nightly limit`);
+    continue;
+  }
+  if (claim && claims >= config.publish.max_claims_per_night) {
+    reject(file, `— over the ${config.publish.max_claims_per_night}-claim nightly limit`);
     continue;
   }
   // A voice is one of voices/: its name is the file's heading.
@@ -263,6 +268,13 @@ for (const { file, name, data, body } of parsed) {
 }
 const held = parsed.length - out.length;
 if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for failing the publishing checks; [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md) says why.`);
+// The night's floor. Settle can't write notes, so a short night is said
+// plainly, here and in the brief, rather than made up.
+const floor = config.publish.min_notes_per_night ?? 0;
+if (out.length < floor) {
+  report.push(`- Published ${out.length} note(s), under the nightly minimum of ${floor}.`);
+  told.push(`${out.length === 0 ? "Nothing was" : `Only ${out.length} note${out.length === 1 ? " was" : "s were"}`} published tonight, short of the lab's nightly ${floor}.`);
+}
 
 // 5. Tonight's brief, on kinocomputing: the shift's own account, then what
 // settle saw. A second shift on the same day updates the day's brief.
