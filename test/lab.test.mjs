@@ -308,7 +308,9 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
   const read = (p) => readFileSync(join(w.lab, p), "utf8");
   try {
     w.publish("2026-11-20T00:00:00Z");
+    writeFileSync(join(w.lab, "MORNING.md"), "Last night's summary, already published.\n");
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
+    assert.match(read("state/last-morning.md"), /Last night's summary/, "last night's summary moves aside for the shift to read");
     assert.match(read("state/tonight.md"), /stopped at \*\*03:00 UTC\*\* \(60 minutes\)/, "the briefing gives the deadline");
     assert.match(read("state/tonight.md"), /Publish \*\*5 to 10 notes\*\* tonight, claims included/, "and the night's range");
     void prep;
@@ -320,6 +322,10 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
     const morning = read("MORNING.md");
     assert.match(morning, /hit its time limit and was stopped/);
     assert.match(morning, /No journal entry was written tonight/);
+    const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+    assert.match(brief, /The researcher left no summary tonight\./);
+    assert.ok(!brief.includes("Last night"), "a shift that wrote no summary doesn't republish last night's");
+    assert.match(brief, /Half done/, "what reached the outbox before the stop is published");
   } finally {
     w.dispose();
   }

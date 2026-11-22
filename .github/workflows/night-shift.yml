@@ -110,9 +110,15 @@ jobs:
           echo "SHIFT_EXIT=$code" >> "$GITHUB_ENV"
           [ "$code" = 0 ] || echo "the shift exited $code; settling what it left"
 
+      # From here on a failure mustn't cost the night: the restore runs
+      # whatever happened before it, and a rerun that fails or overruns is
+      # recorded but doesn't stop the settle. Settle itself still needs the
+      # restore to have succeeded: it must never run tools the agent changed.
+      #
       # The agent worked in this checkout. Before anything trusts the lab's
       # tools again, put them back as committed; settle reports what changed.
       - name: Restore the machinery
+        if: ${{ !cancelled() }}
         run: bash tools/restore-machinery.sh
 
       # Experiments with a new result run again on another seed. The agent's
@@ -121,6 +127,7 @@ jobs:
       - name: Replicate
         if: steps.prep.outputs.skip != 'true' && vars.LAB_PAUSED != 'true'
         timeout-minutes: 35
+        continue-on-error: true
         run: node tools/replicate.mjs
 
       - uses: actions/checkout@v4
@@ -149,7 +156,12 @@ jobs:
           git add -A -- . ':!kinocomputing' ':!settle.log'
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "night shift $DATE: $SUMMARY"
-          git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:main
+          # The PI may have pushed during the shift: rebase onto it, never lose it.
+          for attempt in 1 2 3; do
+            if git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:main; then exit 0; fi
+            git pull --rebase "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" main
+          done
+          echo "could not push the lab after 3 attempts"; exit 1
 
       - name: Publish to kinocomputing
         env:
@@ -167,3 +179,26 @@ jobs:
             git pull --rebase "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" main
           done
           echo "could not publish after 3 attempts"; exit 1
+
+      # A night that couldn't be committed (a step failed, the job timed out
+      # or was cancelled, a push was refused) is kept as a download on the
+      # run's page for 30 days, to be restored by hand. Uses the runner's own
+      # artifact token; nothing the agent's step could reach.
+      - name: Keep the night's work if it wasn't committed
+        if: ${{ failure() || cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsaved-night-${{ github.run_id }}
+          path: |
+            drafts/
+            outbox/
+            published/
+            journal/
+            MORNING.md
+            state/
+            experiments/
+            analyses/
+            sources/
+          retention-days: 30
+          if-no-files-found: ignore
+          include-hidden-files: false

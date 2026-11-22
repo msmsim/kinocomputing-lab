@@ -39,6 +39,7 @@ const MUTANTS = [
   ["no nightly limit on notes", "tools/settle.mjs", "if (count + claims >= config.publish.max_notes_per_night) {", "if (false) {"],
   ["claims don't count toward the nightly limit", "tools/settle.mjs", "if (count + claims >= config.publish.max_notes_per_night) {", "if (count >= config.publish.max_notes_per_night) {"],
   ["a short night unreported", "tools/settle.mjs", "if (out.length < floor) {", "if (false) {"],
+  ["last night's summary stays put", "tools/prepare.mjs", 'if (existsSync(join(LAB, "MORNING.md"))) renameSync(', 'if (false) renameSync('],
   ["the brief's name up for grabs", "tools/settle.mjs", "if (name === BRIEF) {", "if (false) {"],
   ["timebox never stops", "tools/timebox.mjs", "  child.kill(\"SIGTERM\");", "  return;"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],

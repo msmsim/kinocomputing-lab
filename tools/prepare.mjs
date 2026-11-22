@@ -8,7 +8,7 @@
 // workflow, search.mjs and settle.mjs need: whether to run, which model, the
 // dollar caps, and the steers delivered).
 
-import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
 import { takeSteers, staleThreads, fetchJson } from "./steers.mjs";
@@ -18,6 +18,10 @@ const config = readJson(join(LAB, "config/lab.json"));
 const at = now();
 const today = dayOf(at);
 const offline = process.env.LAB_OFFLINE === "1";
+
+// Last night's MORNING.md moves aside, so a shift that never writes its own
+// can't have last night's published as tonight's brief.
+if (existsSync(join(LAB, "MORNING.md"))) renameSync(join(LAB, "MORNING.md"), join(LAB, "state/last-morning.md"));
 
 const budgetState = readJson(join(LAB, "state/budget.json"), null) ?? { start: today };
 writeFileSync(join(LAB, "state/budget.json"), json(budgetState));
@@ -135,7 +139,7 @@ const lines = [
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
   "## Time",
   "",
-  `This shift is stopped at **${deadline} UTC** (${config.shift.minutes} minutes), finished or not. Check \`date -u\` as you go. Leave 15 minutes for the claims, the publishing, the journal and MORNING.md: a shift stopped before them loses them. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
+  `This shift is stopped at **${deadline} UTC** (${config.shift.minutes} minutes), finished or not. Check \`date -u\` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
   "",
   "## The PI's takes",
   "",

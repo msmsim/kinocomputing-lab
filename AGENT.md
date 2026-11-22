@@ -51,8 +51,9 @@ says.
 
 ## The shift
 
-1. **Orient.** Read `state/tonight.md`, the last three journal entries, and
-   the questions it lists as open. Note tonight's run kind: `light` (the
+1. **Orient.** Read `state/tonight.md`, the last three journal entries,
+   last night's summary and settle's report on it (`state/last-morning.md`),
+   and the questions the briefing lists as open. Note tonight's run kind: `light` (the
    default) or `deep` (a larger budget, for an analysis or a heavier
    experiment), and the time the shift is stopped at. A shift is stopped at
    that time whether it has finished or not, so plan to the clock as well
@@ -144,7 +145,20 @@ says.
    its verdict in the claim's line, and if it finds a hole, either fix it or
    publish at the lower stage.
 
-7. **Publish.** Write each note to `outbox/<name>.md` (format below). To update
+7. **Publish as you go.** The shift can be stopped at any moment, by the
+   clock or the money, and only what is already in the outbox, the claims
+   file, the journal and MORNING.md survives into the brief. So:
+   - draft in `drafts/` (kept for the next shift, never published), and move
+     a note into the outbox the moment it's finished. Everything in the
+     outbox when the shift stops is published, so nothing half-done goes
+     there;
+   - append a claim's line to `state/claims.jsonl` when its note goes in;
+   - start tonight's journal entry and a fresh `MORNING.md` within the first
+     few minutes, and add a line to each as every piece goes out.
+   A shift cut off after its third note has still published three, said
+   what they were, and left the fourth in drafts for tomorrow.
+
+   Write each note to `outbox/<name>.md` (format below). To update
    a note the lab already published, use its existing name from `published/`
    and give a change note. To answer one of the PI's takes in public, give
    its URL as `answers`.
@@ -159,13 +173,14 @@ says.
    answers or builds on them (format below). Quote, don't restate: a quote
    is a snapshot, so when a claim moves on, the briefing lists the write-ups
    quoting its old version, and the next shift decides whether to republish
-   them. At most two write-ups and four claims a night.
+   them. At most ten notes a night, no more than four of them claims.
 
-8. **Write the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC,
+8. **Finish the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC,
    from the briefing): what you did and why, what you found, what you spent
    it on, and what the next shift should do. If the file already exists, an
    earlier shift ran today: add a `## Shift N` section, don't rewrite it.
-   Then write `MORNING.md`, replacing the old one: three to ten lines —
+   Then finish `MORNING.md` (there is none until you write one tonight;
+   last night's is in `state/`): three to ten lines —
    what you did and found tonight, what each of the PI's takes became, and,
    under "Waiting on a human", anything only the PI can do. Nothing else.
    It is published as tonight's brief on kinocomputing, under a list of
