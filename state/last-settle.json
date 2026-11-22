@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "summary": [
-    "$0.21",
+    "$0.11",
     "1 claim(s)",
-    "published lab-2026-11-21-chip-native-spread-matched",
+    "published lab-2026-11-22-block-scale-claim",
     "published the brief"
   ],
   "report": [
-    "- Replication of e001-chip-native-nowcast failed to run: timed out"
+    "- Replication of e001-chip-native-nowcast on seed 2: agrees (f60_gap_closed 0.16374818296132854, was 0.162937158111855)."
   ]
 }

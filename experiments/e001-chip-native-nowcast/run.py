@@ -348,6 +348,18 @@ def forecast_origin(t0, rate, db, bp, c_sd, sigma, phi):
             "naive_vm": vm_members, "chip_rms_db": chip_rms}, obs
 
 
+AREAL_BLOCK = 32  # PLAN.md, amendment 2026-11-22 07:45 UTC: block side in pixels
+
+
+def block_fraction(rate):
+    """Share of each AREAL_BLOCK x AREAL_BLOCK block above EXCEED_MMH. Shape (..., H/B, W/B)."""
+    exc = (rate > EXCEED_MMH).astype(np.float32)
+    h, w = exc.shape[-2:]
+    b = AREAL_BLOCK
+    exc = exc.reshape(exc.shape[:-2] + (h // b, b, w // b, b))
+    return exc.mean(axis=(-3, -1))
+
+
 def score_origin(members, obs):
     """Per-lead CRPS on the 1 mm/h exceedance field, plus spread–skill at 60 min."""
     out = {}
@@ -364,6 +376,13 @@ def score_origin(members, obs):
         spread = math.sqrt(float(mem[:, i].var(axis=0).mean()))
         skill = math.sqrt(float(((mem[:, i].mean(axis=0) - obs[i]) ** 2).mean()))
         out["spread_skill_60"][name] = spread / skill if skill > 0 else None
+    # Areal CRPS at 60 min (PLAN.md, amendment 2026-11-22 07:45): ensemble CRPS
+    # of each block's exceedance fraction, averaged over blocks.
+    y_blk = block_fraction(obs[i][None])[0]
+    out["areal_crps_60"] = {}
+    for name, mem in members.items():
+        x_blk = block_fraction(mem[:, i])
+        out["areal_crps_60"][name] = float(crps_ensemble(x_blk, y_blk).mean())
     return out
 
 
@@ -441,7 +460,7 @@ def main():
     os.makedirs(parts_dir, exist_ok=True)
     per_origin = []
     for t0 in ORIGINS:
-        part = os.path.join(parts_dir, f"origin_{t0}_s{SEED}_n{N_MEMBERS}_crop{CROP}_vm.json")
+        part = os.path.join(parts_dir, f"origin_{t0}_s{SEED}_n{N_MEMBERS}_crop{CROP}_areal.json")
         if os.path.exists(part):
             with open(part) as fh:
                 per_origin.append(json.load(fh))
@@ -479,6 +498,13 @@ def main():
         "spread_skill_60": {n: mean_over("spread_skill_60", n) for n in ("STEPS", "chip", "naive", "naive_vm")},
         "f60_vm_reported": (crps60["naive_vm"] - crps60["chip"]) / (crps60["naive_vm"] - crps60["STEPS"])
             if crps60["naive_vm"] != crps60["STEPS"] else None,
+        "areal": {
+            "block_px": AREAL_BLOCK,
+            "crps_60": {n: round(mean_over("areal_crps_60", n), 5) for n in names},
+            # Reported, not gating (PLAN.md amendment 2026-11-22 07:45).
+            "f_areal_reported": (lambda g: (mean_over("areal_crps_60", "naive_vm") - mean_over("areal_crps_60", "chip")) / g
+                                 if g > 0 else None)(mean_over("areal_crps_60", "naive_vm") - mean_over("areal_crps_60", "STEPS")),
+        },
         "chip_rms_db_per_origin": [o["chip_rms_db"] for o in per_origin if "chip_rms_db" in o],
         "per_origin": per_origin,
     }

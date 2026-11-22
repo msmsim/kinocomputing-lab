@@ -229,3 +229,44 @@ earlier key was seed-blind: a seed-2 run loaded seed 1's parts and reported
 seed 1's numbers. Those parts are kept, renamed with `_s1`. Seed 2 was recomputed
 from scratch; the cache-hit file was removed, its log kept as
 `run_seed2_crop256_CACHE_BUG.log`.
+
+## Amendment 2026-11-22 07:45 UTC (structure-sensitive score, before any run of it)
+
+**Why.** The 2026-11-21 crop runs (seeds 1 and 2) killed the headline, and
+the variance-matched arm showed the chip's edge over plain naive is mostly its
+marginal spread. Pixelwise CRPS at one lead cannot see spatial structure or
+memory, so it cannot say whether the band-limited, remembering noise helps.
+The reviewer asked for a structure-sensitive check before another seed of the
+headline. This is that check.
+
+**The score: areal CRPS at 60 minutes.** The 256 × 256 crop is cut into 8 × 8
+blocks of 32 × 32 pixels (64 blocks). For each member and block, the forecast
+is the fraction of the block's pixels with rate above 1 mm/h; the observed value
+is the same fraction in the radar field. Each block's CRPS is the ensemble CRPS
+of those 20 fractions against the observed fraction (the same `crps_ensemble`
+form). The areal CRPS for an arm is the mean over the 64 blocks, then the mean
+over the three origins. Block averaging removes independent pixel noise and keeps
+correlated noise, so an i.i.d. ensemble with the chip's marginal spread
+(`naive_vm`) should lose more here than the chip if the chip's scale structure
+matters.
+
+**Reported gap closure, not gating.** `f_areal = (naive_vm − chip) / (naive_vm − STEPS)`,
+areal CRPS, 60 min, on each seed. `naive_vm` is the comparison arm, not
+`naive`, because the question is whether structure adds to matched marginal
+spread.
+
+- **Supports structure mattering at 32 px:** `f_areal ≥ 0.5` on both seeds (the
+  same 0.5 the headline uses).
+- **Counts against it at 32 px:** `f_areal < 0.5` on either seed, or `chip`
+  not below `naive_vm`.
+- **Not decidable:** if `naive_vm` areal CRPS is not above STEPS's, there is no
+  gap to close; the run says so and decides nothing.
+
+**What it does not change.** `killed`, `f`, the headline threshold and the
+claim's wording rules are unchanged. This is one block size (32 px, about 32 km),
+chosen in advance; a result at this size says nothing about other scales.
+Seeds share origins and observations, as before.
+
+**Cache.** Per-origin parts gain the suffix `_areal`, so the areal score is
+computed on every origin; the `_vm` parts are not reused for it. Results go to
+`result_seed{1,2}_crop256_areal.json`; `result.json` is not touched.

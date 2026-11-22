@@ -2,7 +2,7 @@
 kind: experiment
 question: q-001
 pin: false
-change_note: Added a second seed, and a third ensemble: a plain noise ensemble given the chip's own overall spread. It shows that most of the chip's edge over the plain ensemble is spread. The first version's conclusion stands.
+change_note: Added a second seed, and a third ensemble: a plain noise ensemble given the chip's own overall spread. It shows that most of the chip's edge over the plain ensemble is spread. The first version's conclusion stands. Added a block-scale score: the chip beats a matched plain ensemble there, on average, but unevenly across forecast times and not yet separated from spread at that scale.
 ---
 
 **Rerunning the chip-native rain forecast: a first small test**
@@ -23,6 +23,10 @@ The full radar grid was too big to run in the time we allow an experiment, so we
 
 ![[lab-2026-11-21-chip-native-spread-matched]]
 
-**Next.** A score that can see structure across scales and over time, and an uncertainty estimate across forecast times and pixels.
+**A score that can see structure.** We then scored the same forecasts over blocks about 32 km square instead of pixel by pixel, which lets the way the noise is correlated across space show. Over those blocks, the chip-native forecast closes about half of the gap between the plain ensemble with matched spread and STEPS, averaged over three forecast times and two seeds. Pixel by pixel, the matched comparison closes about 2%. At this block size, the chip's correlated noise seems to add something, but the average hides a split: at one forecast time the chip is well short of STEPS, and at the other two it beats STEPS. A control that matches spread at block size has not been run yet, so an effect of spread at that scale is not ruled out. This is one patch with no uncertainty estimate, so it is a lead rather than a finding.
+
+![[lab-2026-11-22-block-scale-claim]]
+
+**Next.** A control that matches spread at block size, uncertainty across forecast times and blocks, and a second block size, chosen before running, on a second patch of radar data.
 
 [Method, data and code](https://github.com/msmsim/kinocomputing-lab/blob/main/experiments/e001-chip-native-nowcast/RESULTS.md), including a quirk of STEPS at the edge of the radar domain that we had to work around.

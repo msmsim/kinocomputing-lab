@@ -211,3 +211,69 @@ is a post-hoc diagnostic, disclosed as one. The two seeds share origins and
 observations; they are not independent replicates. Pooled RMS was not checked at
 lead 60 alone, and there is no uncertainty estimate over origins or pixels. Not
 done tonight.
+
+## Run 2026-11-22, structure-sensitive check (areal CRPS, 32 px blocks)
+
+Pre-registered in PLAN.md, amendment 2026-11-22 07:45 UTC, before this run.
+Command: `SEED={1,2} CROP=256 RESULT_PATH=result_seed{1,2}_crop256_areal.json node ../../tools/timebox.mjs 600 uv run run.py`.
+Both runs finished well inside the timebox (about 45 s per seed on the runner;
+logs `run_seed{1,2}_crop256_areal.log`). `killed` and `f` are unchanged in code
+and reproduce the 2026-11-21 numbers: seed 1 f = 0.163, seed 2 f = 0.164, both killed.
+
+**What the score is.** The 256 × 256 crop is cut into 64 blocks of 32 × 32 pixels.
+Each block's value is the share of its pixels above 1 mm/h, per member; the
+observed value is the same share in the radar. Areal CRPS is the ensemble CRPS
+of those shares, averaged over the 64 blocks and the three origins, at 60 minutes.
+
+| arm (areal CRPS, 60 min) | seed 1 | seed 2 |
+|---|---|---|
+| STEPS | 0.17961 | 0.17482 |
+| naive (plain i.i.d.) | 0.20201 | 0.20185 |
+| naive_vm (i.i.d., chip's marginal spread) | 0.20227 | 0.20223 |
+| chip (band-limited, two-step memory) | 0.19054 | 0.18791 |
+| **f_areal = (naive_vm − chip) / (naive_vm − STEPS)** | **0.518** | **0.522** |
+
+For comparison, the pixelwise headline (same runs, 1 mm/h exceedance, pixel CRPS)
+closes 16% of its gap at 60 minutes and the variance-matched arm sits within
+0.001 of the chip there.
+
+**Reading against the pre-registered rule.** `f_areal ≥ 0.5` on both seeds, so
+the rule's "supports structure mattering at 32 px" side is met. The margin is
+small (0.518 and 0.522 against 0.5), and the chip's areal CRPS is still above
+STEPS's (0.19 against 0.18), so the chip does not reach STEPS at this scale.
+
+**What this does not show.** One block size, chosen before the run; 64 blocks
+per origin, and blocks are spatially correlated, so they are not 64 independent
+samples. Three origins and two seeds that share origins and observations; no
+uncertainty over origins or blocks. A block-level variance-matched arm (i.i.d.
+noise matched to the chip's spread at 32-px scale) was not run, so a spread
+effect at that scale is not yet separated from structure. The pixelwise result
+still says the chip's gain over plain naive is mostly marginal spread.
+
+Claim: c-008 in `state/claims.jsonl`, real-data, reviewer verdict weakened (wording narrowed accordingly).
+
+**Per forecast time (added after the reviewer's check, same runs).** The pooled
+f_areal above averages the three origins. The origins disagree:
+
+| origin (seed) | STEPS | naive_vm | chip | f_areal |
+|---|---|---|---|---|
+| 14 (1) | 0.1784 | 0.2338 | 0.2204 | 0.24 |
+| 20 (1) | 0.1912 | 0.1995 | 0.1881 | 1.37 |
+| 26 (1) | 0.1693 | 0.1735 | 0.1631 | 2.48 |
+| 14 (2) | 0.1746 | 0.2340 | 0.2150 | 0.32 |
+| 20 (2) | 0.1824 | 0.1998 | 0.1865 | 0.76 |
+| 26 (2) | 0.1675 | 0.1729 | 0.1622 | 1.99 |
+
+At origin 14 the chip is well short of STEPS, and f_areal is below 0.5 on both
+seeds. At origins 20 and 26 the chip scores below STEPS. The pooled 0.52 meets the
+pre-registered rule as written, but it is carried by the two origins where the
+chip beats STEPS. Pixel-level comparison with the matched arm, for reference:
+f_vm 0.015 (seed 1) and 0.024 (seed 2), so the pixel figure to set beside 52% is
+about 2%, not the 16% headline, which uses plain naive as its baseline.
+
+**Reviewer check** (adversarial reading, `weakened`). The numbers match the
+result files and the code implements the amended score. Weakened because: the
+pooled figure is a mean over three forecast times that disagree; the control arm
+matches pixel-level spread only, so a spread effect at block scale is not
+separated from structure; the seeds share origins; and there is no uncertainty
+estimate. Accepted wording is in the claim, `state/claims.jsonl` c-008.
