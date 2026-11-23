@@ -1,0 +1,38 @@
+{
+  "metric": "random_over_sorted_ratio_1GiB",
+  "value": 1.057,
+  "threshold": 3.0,
+  "ratio_32KiB": 1.035,
+  "per_size": {
+    "32KiB": {
+      "random_ns": 2.096,
+      "sorted_ns": 2.026,
+      "ratio": 1.035
+    },
+    "1MiB": {
+      "random_ns": 2.45,
+      "sorted_ns": 2.01,
+      "ratio": 1.219
+    },
+    "32MiB": {
+      "random_ns": 6.614,
+      "sorted_ns": 1.931,
+      "ratio": 3.424
+    },
+    "1GiB": {
+      "random_ns": 12.1,
+      "sorted_ns": 11.447,
+      "ratio": 1.057
+    }
+  },
+  "hardware": {
+    "machine": "x86_64",
+    "cpus": 4,
+    "Model name": "Intel(R) Xeon(R) 6975P-C",
+    "L1d cache": "96 KiB (2 instances)",
+    "L2 cache": "4 MiB (2 instances)",
+    "L3 cache": "480 MiB (1 instance)"
+  },
+  "seed": 1,
+  "killed": true
+}

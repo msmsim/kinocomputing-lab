@@ -1,12 +1,20 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-23",
   "summary": [
-    "$0.11",
-    "1 claim(s)",
-    "published lab-2026-11-22-block-scale-claim",
+    "$0.93",
+    "$0.07 Exa",
+    "published lab-2026-11-23-paradigm-ai-accelerators",
+    "published lab-2026-11-23-paradigm-gpus",
+    "published lab-2026-11-23-paradigm-von-neumann",
+    "published lab-2026-11-21-paradigm-tracker",
+    "published lab-2026-11-23-energy-embodiment-hypothesis",
+    "published lab-2026-11-23-flash-analog-cim-density",
+    "published lab-2026-11-23-goldleaf-copies-copy-mistakes",
+    "published lab-2026-11-23-memory-wall-test-failed",
     "published the brief"
   ],
   "report": [
-    "- Replication of e001-chip-native-nowcast on seed 2: agrees (f60_gap_closed 0.16374818296132854, was 0.162937158111855)."
+    "- Replication of e005-memory-wall-gather on seed 2: agrees (random_over_sorted_ratio_1GiB 1.058, was 1.057).",
+    "- Replication of e006-goldleaf-ledger-survival on seed 2: agrees (mu_star_ratio_s0_over_s0.5 31.623, was 31.623)."
   ]
 }

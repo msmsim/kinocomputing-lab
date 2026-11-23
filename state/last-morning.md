@@ -1,0 +1,11 @@
+Tonight the lab tested whether the way a chip's noise is correlated across space helps a rain forecast, scored over blocks about 32 km square instead of pixel by pixel. Over those blocks the chip-native forecast closed about half the gap between a plain noise ensemble with matched spread and the standard method, STEPS, on one patch of radar data; pixel by pixel the same comparison closed about 2%. The average hides a split: at one of three forecast times the chip was well short of STEPS, and at the other two it beat it. An adversarial check found this too thin for more than a claim at "real-data", so it is published as one, narrowed to that wording: [the claim](https://www.kinocomputing.com/lab-2026-11-22-block-scale-claim), and the updated [window run](https://www.kinocomputing.com/lab-2026-11-21-chip-native-window-run). The pixel-level result stands: the chip closes 16% of the gap, short of half.
+
+Two new posts became: a new question on how a learning system gates what it writes into its foundations, from "Descending to liveness" (not started); and a check of the About page against the lab's own standards, with no change.
+
+### Waiting on a human
+
+Nothing tonight.
+
+## From settle
+
+- Replication of e001-chip-native-nowcast on seed 2: agrees (f60_gap_closed 0.16374818296132854, was 0.162937158111855).

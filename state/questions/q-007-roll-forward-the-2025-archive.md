@@ -70,3 +70,4 @@ or two essays; a deep shift can split more or write a synthesis. The usual
 nightly limits on notes and claims apply.
 
 ## Log
+- 2026-11-23: processed "Energy (in)efficiency and (dis)embodiment" (the shortest essay): units in `sources/archive-2025/units/`, rolled forward as a Post-Liquid note on the founding hypothesis set against the lab's results so far. 22 essays remain unread.

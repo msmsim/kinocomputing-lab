@@ -27,7 +27,7 @@ carried forward, because …").
 
 | Date | Essay | Type | Participants | Size | Status |
 |---|---|---|---|---|---|
-| undated | [Energy (in)efficiency and (dis)embodiment](essays/energy-inefficiency-and-disembodiment.md) | Human agent journal | McSweet | 2 KB | unread |
+| undated | [Energy (in)efficiency and (dis)embodiment](essays/energy-inefficiency-and-disembodiment.md) | Human agent journal | McSweet | 2 KB | done |
 | June 9th, 2025 | [ProductEvolve](essays/productevolve.md) | Human-machine agent chat | McSweet, Bompa | 25 KB | unread |
 | June 13th, 2025 | [Communal bring-up](essays/communal-bring-up.md) | Human-machine agent chat | McSweet, Bompa | 22 KB | unread |
 | June 20th, 2025 | [Pick your apocalypse](essays/pick-your-apocalypse.md) | Human-machine agent chat | McSweet, Bompa | 15 KB | unread |

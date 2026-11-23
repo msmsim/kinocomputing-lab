@@ -1,0 +1,10 @@
+{
+  "of": "0656bbfa",
+  "seed": 2,
+  "at": "2026-11-23T11:06:12Z",
+  "metric": "mu_star_ratio_s0_over_s0.5",
+  "original": 31.623,
+  "value": 31.623,
+  "killed": false,
+  "agrees": true
+}

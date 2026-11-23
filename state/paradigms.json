@@ -5,19 +5,19 @@
       "id": "von-neumann",
       "name": "Digital von Neumann computing",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-23"
     },
     {
       "id": "gpus",
       "name": "GPUs and massively parallel acceleration",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-23"
     },
     {
       "id": "ai-accelerators",
       "name": "Domain-specific AI accelerators",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-23"
     },
     {
       "id": "symbolic-ai",
