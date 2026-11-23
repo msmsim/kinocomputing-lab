@@ -243,7 +243,7 @@ fall to `refuted`. Pin a claim's note at `replicated` or `cross-checked`.
 kind: claim | paradigm | experiment | analysis | notebook
 question: q-NNN
 paradigm: <id from state/paradigms.json> (paradigm entries only)
-section: lab | tracker | audits (write-ups only; optional, lab if left out: the site section it is listed in. Audit write-ups take audits, the tracker itself takes tracker. Entries and briefs are placed for you.)
+section: lab | tracker | audits (write-ups only; optional, lab if left out. Today the site uses it only to put a note under its Tracker menu item: the tracker's running account takes tracker. Audit write-ups take audits, for when the site groups them. Entries and briefs are placed for you.)
 pin: false
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
 change_note: what changed, in plain words (required on every update: an update without one is held back; omit for a new note)
