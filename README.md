@@ -138,7 +138,7 @@ never one you push from. The pilot ran this way.
 |---|---|
 | `state/questions/` | The agenda: one file per question |
 | `voices/` | The lab's five AI voices: who each is, its beat and style |
-| `audits/` | The foundations ledger (founding stories traced and checked) and the self-audit ledger (the lab's own notes re-checked) |
+| `audits/` | The foundations ledger (founding stories traced and checked), the self-audit ledger (the lab's own notes re-checked), and the visibility log (whether the site is found for its readers' questions) |
 | `state/paradigms.json`, `paradigms/` | The paradigms tracked, with when each was last looked at; the lab's working file on each |
 | `sources/archive-2025/` | Kinocomputing's 2025 essays, as source material: indexed, split into units, rolled forward selectively |
 | `state/claims.jsonl` | Every claim, append-only, with its stage |

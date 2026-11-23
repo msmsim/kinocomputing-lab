@@ -332,7 +332,16 @@ notebook and not a press release.
 - **"We" for the lab.** No exclamation marks, no hype words.
 - **Titles say the finding**, in plain words, under 60 characters: "Noisy
   oscillators can't match a digital reservoir, yet", not "Toy oscillator
-  reservoir trails tuned ESN on NARMA-10".
+  reservoir trails tuned ESN on NARMA-10". Lead with the words a reader
+  would search for — the paradigm or technique by its common name
+  ("Neuromorphic computing: …", "Thermodynamic chips …"), not a coinage of
+  ours.
+- **Written to be found.** People and AI assistants find the site through
+  search; the site's build turns each note's opening paragraph into its
+  description in search results and AI answers, and lists every note in
+  its sitemap and llms.txt. So the lead's first sentence or two (about 50 to
+  160 characters) should stand alone as an answer to "what is this note?",
+  and the topic's ordinary name should appear early, once, naturally.
 - **A claim stands alone.** It may be quoted into any write-up or read by
   itself: what was found, how sure we are in plain words ("in simulation
   only", "on real data, checked by hand", "an untested idea"), and a link to
@@ -448,6 +457,24 @@ what's wrong in public: update the note with a change note beginning
 Both count toward the night's notes. Cheap screens come first: a story that
 a quick search shows is already well documented and correctly told can be
 marked `holds` with its primary source and no write-up.
+
+## Being found
+
+Research nobody can find doesn't compound. Question q-012 holds the
+questions readers put to search engines and AI assistants that this site
+should be an answer to, and the lab keeps two habits:
+
+- **Answer them on the site.** For each question, the note that fits it
+  best says plainly what the lab covers and where, in the words the
+  question uses: often a short guide note ("Where to follow thermodynamic
+  computing research"), honest about the other good sources too, linking
+  the tracker and the lab's own notes. Update it as the lab's work grows.
+- **Check, monthly.** On the first shift of each month, search each
+  question with Exa (`node tools/search.mjs exa "<the question>" --n 10`,
+  about $0.007 each) and record in `audits/visibility.md` whether
+  kinocomputing.com appears, and who does. A question where the site
+  never appears is a lead for a better answer note, not a reason to write
+  more of the same.
 
 ## What's worth publishing
 
