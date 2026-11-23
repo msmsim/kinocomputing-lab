@@ -266,7 +266,7 @@ for (const { file, name, data, body } of parsed) {
   try {
     page = await renderNote({
       markdown: body, name, voice, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
-      answers: !update && data.answers ? data.answers : null, kind: data.kind, maxClaim: config.publish.max_claim_chars, maxParadigm: config.publish.max_paradigm_chars,
+      answers: !update && data.answers ? data.answers : null, kind: data.kind, section: data.section ?? null, maxClaim: config.publish.max_claim_chars, maxParadigm: config.publish.max_paradigm_chars,
       quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {
@@ -287,6 +287,22 @@ for (const { file, name, data, body } of parsed) {
 if (looked.size) {
   for (const p of tracker.paradigms) if (looked.has(p.id)) p.last_checked = run.date;
   writeFileSync(paradigmsPath, json(tracker));
+}
+// The site's tracker table reads the whole list, every night: each paradigm
+// in its group, when it was last looked at, and its entry if it has one.
+if ((tracker.paradigms ?? []).length) {
+  const entryOf = new Map();
+  for (const file of existsSync(join(LAB, "published")) ? readdirSync(join(LAB, "published")) : []) {
+    const { data } = frontMatter(readFileSync(join(LAB, "published", file), "utf8"));
+    if (data.kind === "paradigm" && data.paradigm) entryOf.set(data.paradigm, file.replace(/\.md$/, ""));
+  }
+  const groups = [];
+  for (const p of tracker.paradigms) {
+    let group = groups.find((g) => g.name === p.group);
+    if (!group) groups.push(group = { name: p.group, paradigms: [] });
+    group.paradigms.push({ id: p.id, name: p.name, last_checked: p.last_checked ?? null, entry: entryOf.get(p.id) ?? null });
+  }
+  writeFileSync(join(KINO, "notes", "_tracker.json"), json({ updated: run.date, source: tracker.source ?? null, groups }));
 }
 const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
 if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);

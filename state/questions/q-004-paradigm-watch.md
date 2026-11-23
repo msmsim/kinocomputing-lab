@@ -19,7 +19,7 @@ the research: **the paradigm tracker**, a lab note named
 paradigm rotation (AGENT.md, "The paradigm rotation"). Each paradigm gets
 its own entry, a short quotable note (`kind: paradigm`), published the
 first time the rotation reaches it and updated every time after. The
-tracker itself is a write-up that opens with a short paragraph saying what
+tracker itself is a write-up (`section: tracker`) that opens with a short paragraph saying what
 it is and how it's kept, credits the PI's round-up (linked once at the
 top), and then quotes each paradigm's entry whole, under the round-up's
 groups. It grows as entries appear: publish it once three or more exist,

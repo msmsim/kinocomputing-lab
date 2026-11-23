@@ -425,7 +425,8 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
     write("outbox/lab-2026-11-21-paradigm-nowhere.md", "---\nkind: paradigm\nparadigm: nowhere\n---\n\n**Nowhere**\n\nNot on the list.\n");
     write("outbox/lab-2026-11-21-paradigm-long.md", `---\nkind: paradigm\nparadigm: reversible\n---\n\n**Long**\n\n${"word ".repeat(400)}\n`);
     write("outbox/lab-2026-11-21-paradigm-voiced.md", "---\nkind: paradigm\nparadigm: quantum\nvoice: concrete\n---\n\n**Voiced**\n\nIn a voice.\n");
-    write("outbox/lab-2026-11-21-tracker.md", "---\nkind: notebook\n---\n\n**The tracker**\n\nWhat it is.\n\n![[lab-2026-11-21-paradigm-photonic]]\n");
+    write("outbox/lab-2026-11-21-shelfless.md", "---\nkind: notebook\nsection: gossip\n---\n\n**Shelfless**\n\nNo such section.\n");
+    write("outbox/lab-2026-11-21-tracker.md", "---\nkind: notebook\nsection: tracker\n---\n\n**The tracker**\n\nWhat it is.\n\n![[lab-2026-11-21-paradigm-photonic]]\n");
     write("MORNING.md", "Looked at photonics.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.5, num_turns: 9, is_error: false }));
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z");
@@ -434,10 +435,21 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
     assert.ok(!/blyg:kind" content="thread"/.test(entry), "an entry is a fragment");
     const tracker = readFileSync(join(w.kino, "notes/lab-2026-11-21-tracker.html"), "utf8");
     assert.match(tracker, /<blockquote class="kino-quote" data-note="lab-2026-11-21-paradigm-photonic">/, "the tracker quotes it the same night");
+    assert.match(entry, /<meta name="kino:section" content="tracker">/, "an entry is the tracker's");
+    assert.match(tracker, /<meta name="kino:section" content="tracker">/, "and so is the tracker, because it asked");
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /<meta name="kino:section" content="briefs">/);
+    const listed = JSON.parse(readFileSync(join(w.kino, "notes/_tracker.json"), "utf8"));
+    assert.equal(listed.updated, "2026-11-21");
+    assert.deepEqual(listed.groups.map((g) => g.name), ["Let physics compute"]);
+    assert.deepEqual(listed.groups[0].paradigms.slice(0, 2), [
+      { id: "photonic", name: "Paradigm photonic", last_checked: "2026-11-21", entry: "lab-2026-11-21-paradigm-photonic" },
+      { id: "thermodynamic", name: "Paradigm thermodynamic", last_checked: null, entry: null },
+    ], "every paradigm, with its entry when it has one");
     const morning = read("MORNING.md");
     assert.match(morning, /Not published: lab-2026-11-21-paradigm-nowhere — a paradigm entry names its paradigm, and "nowhere" isn't one/);
     assert.match(morning, /Not published: lab-2026-11-21-paradigm-long is a paradigm entry of \d+ characters/);
     assert.match(morning, /Not published: lab-2026-11-21-paradigm-voiced is a paradigm in a voice/);
+    assert.match(morning, /Not published: lab-2026-11-21-shelfless asks for the section "gossip", which the site doesn't have/);
     assert.match(morning, /Tonight's paradigms not looked at, so they come round again: thermodynamic\./);
     const after = JSON.parse(read("state/paradigms.json")).paradigms;
     assert.deepEqual(after.map((p) => p.last_checked), ["2026-11-21", null, null, null, null]);

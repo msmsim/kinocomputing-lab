@@ -243,6 +243,7 @@ fall to `refuted`. Pin a claim's note at `replicated` or `cross-checked`.
 kind: claim | paradigm | experiment | analysis | notebook
 question: q-NNN
 paradigm: <id from state/paradigms.json> (paradigm entries only)
+section: lab | tracker | audits (write-ups only; optional, lab if left out: the site section it is listed in. Audit write-ups take audits, the tracker itself takes tracker. Entries and briefs are placed for you.)
 pin: false
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
 change_note: what changed, in plain words (required on every update: an update without one is held back; omit for a new note)
@@ -440,7 +441,7 @@ overstretched, what was built on it is exposed. The ledger is
    source says). A verdict other than `holds` goes to the reviewer first,
    as an independent second check, and is published only if the reviewer
    agrees.
-4. **Publish** it as a write-up for a stranger ("Does the brain really run
+4. **Publish** it as a write-up (`section: audits`) for a stranger ("Does the brain really run
    on 20 watts?"): the story as told, the chain, what the source says, the
    verdict and how sure we are; with a claim at the literature stage it
    reached (usually `full-text`). A story that holds is worth publishing
@@ -452,7 +453,9 @@ audited (`audits/self.md` lists what has been) and check it from scratch:
 re-open every source, recompute every number, rerun the experiment if it's
 cheap. Record what you found in the ledger, "nothing wrong" included. Fix
 what's wrong in public: update the note with a change note beginning
-"Self-audit:", saying what was wrong and what changed.
+"Self-audit:", saying what was wrong and what changed. A self-audit that
+finds something worth telling readers about is also a short write-up of
+its own (`section: audits`).
 
 Both count toward the night's notes. Cheap screens come first: a story that
 a quick search shows is already well documented and correctly told can be

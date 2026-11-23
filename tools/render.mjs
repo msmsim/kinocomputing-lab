@@ -105,7 +105,11 @@ export function withByline(markdown, voice, origin) {
   return `${markdown.slice(0, at)}\n\n${line}${markdown.slice(at)}`;
 }
 
-export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook", voice = null,
+// The site's sections a note can ask for (kinocomputing's build lists them).
+// A paradigm entry is the tracker's and a brief the briefs', whatever it asks.
+export const SECTIONS = ["lab", "tracker", "audits"];
+
+export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook", voice = null, section = null,
   maxClaim = 1000, maxParadigm = 1500, quote = null, model, at, kino, origin }) {
   const refused = refusals(markdown);
   if (refused.length) throw new Error(`uses ${refused.join(" and ")}, which the blyg can't carry`);
@@ -118,6 +122,8 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   if (voice) extracted.markdown = withByline(extracted.markdown, voice, origin);
   if (fragment && extracted.quotes.length) throw new Error(`is a ${kind}, and a ${kind} can't quote; quote it from a thread`);
   if (claim && markdown.trim().length > maxClaim) throw new Error(`is a claim of ${markdown.trim().length} characters; a claim is at most ${maxClaim}`);
+  if (section && !SECTIONS.includes(section)) throw new Error(`asks for the section "${section}", which the site doesn't have; use ${SECTIONS.join(", ")}`);
+  const shelf = kind === "paradigm" ? "tracker" : kind === "brief" ? "briefs" : section ?? "lab";
   if (kind === "paradigm" && markdown.trim().length > maxParadigm) throw new Error(`is a paradigm entry of ${markdown.trim().length} characters; an entry is at most ${maxParadigm}`);
   let html = marked.parse(extracted.markdown).trim();
   if (!html) throw new Error("is empty");
@@ -169,6 +175,6 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   const page = template
     .replace(/<!-- if:(\w+) -->([\s\S]*?)<!-- \/if:\1 -->\n?/g, (whole, key, inner) => (Object.hasOwn(values, key) ? inner : ""))
     .replace(/\{\{(\w+)\}\}/g, (whole, key) => (Object.hasOwn(values, key) ? values[key] : ""))
-    .replace("</head>", `    <meta name="blyg:generated" content="${escapeAttr(model)}">\n${fragment ? "" : '    <meta name="blyg:kind" content="thread">\n'}</head>`);
+    .replace("</head>", `    <meta name="blyg:generated" content="${escapeAttr(model)}">\n${fragment ? "" : '    <meta name="blyg:kind" content="thread">\n'}    <meta name="kino:section" content="${shelf}">\n</head>`);
   return page;
 }
