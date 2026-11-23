@@ -498,7 +498,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     write("outbox/lab-2026-11-21-bad.md", "---\nkind: notebook\n---\n\n| a | b |\n|---|---|\n| 1 | 2 |\n");
     write("outbox/001-old-note.md", "---\nkind: notebook\n---\n\nAn attempt on the PI's own note.\n");
     write("outbox/lab-2026-11-21-brief.md", "---\nkind: notebook\n---\n\n**My own brief**\n\nAll went perfectly.\n");
-    write("MORNING.md", "# 2026-11-21\n\nPublished a first look.\n");
+    write("MORNING.md", "# 2026-11-21\n\nPublished a first look.\n\n### Waiting on a human\n\nNothing tonight.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.42, num_turns: 9, is_error: false }));
     // The shift tampers with the rules that judge it; the restore puts them back.
     const settleSource = read("tools/settle.mjs");
@@ -516,6 +516,8 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
     assert.match(brief, /<strong>Lab brief: 21 November 2026<\/strong>/);
     assert.match(brief, /Published a first look\./);
+    assert.match(brief, /<p><strong>Waiting on a human<\/strong><\/p>/, "the shift's headings read like the brief's own");
+    assert.ok(!/<h[1-6]>Waiting/.test(brief));
     assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
     assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);
     assert.match(brief, /4 notes were held back/);

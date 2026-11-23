@@ -104,7 +104,19 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
    plenty), an API key with its own budget limit set in Exa's dashboard,
    added to this repo as the secret `EXA_API_KEY`. Without it the lab
    searches arXiv and OpenAlex only.
-7. **First run:** Actions → Night shift → Run workflow. Read the brief it
+7. **An on-time trigger (recommended):** GitHub's scheduler is best-effort
+   and can start a run hours late. A free cron service starts it on time
+   instead, with GitHub's own two times kept as backups:
+   - a fine-grained GitHub token with *Actions: read and write* on this
+     repo only (nothing else), kept in the cron service, not here;
+   - a job at 02:23 UTC daily: `POST
+     https://api.github.com/repos/msmsim/kinocomputing-lab/actions/workflows/night-shift.yml/dispatches`,
+     headers `Authorization: Bearer <token>`, `Accept:
+     application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, body
+     `{"ref":"main","inputs":{"nightly":true}}`. GitHub answers 204.
+   `nightly: true` makes the run stand down if tonight's shift has already
+   settled, so whichever trigger comes second does nothing.
+8. **First run:** Actions → Night shift → Run workflow. Read the brief it
    publishes on kinocomputing, "Lab brief: <date>".
    The first run takes a baseline of kinocomputing: takes posted before it
    aren't steers. Post one after, and the next shift will see it.
@@ -126,6 +138,7 @@ never one you push from. The pilot ran this way.
 |---|---|
 | `state/questions/` | The agenda: one file per question |
 | `voices/` | The lab's five AI voices: who each is, its beat and style |
+| `audits/` | The foundations ledger (founding stories traced and checked) and the self-audit ledger (the lab's own notes re-checked) |
 | `state/paradigms.json`, `paradigms/` | The paradigms tracked, with when each was last looked at; the lab's working file on each |
 | `sources/archive-2025/` | Kinocomputing's 2025 essays, as source material: indexed, split into units, rolled forward selectively |
 | `state/claims.jsonl` | Every claim, append-only, with its stage |

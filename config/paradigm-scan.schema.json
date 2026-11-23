@@ -11,11 +11,20 @@
       "items": {
         "type": "object",
         "properties": {
-          "what": { "type": "string" },
-          "date": { "type": "string" },
-          "url": { "type": "string" }
+          "what": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
         },
-        "required": ["what", "url"]
+        "required": [
+          "what",
+          "url"
+        ]
       }
     },
     "active_organisations": {
@@ -24,11 +33,20 @@
       "items": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "role": { "type": "string" },
-          "url": { "type": "string" }
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
         },
-        "required": ["name", "role"]
+        "required": [
+          "name",
+          "role"
+        ]
       }
     },
     "open_access": {
@@ -37,11 +55,20 @@
       "items": {
         "type": "object",
         "properties": {
-          "what": { "type": "string" },
-          "cost": { "type": "string" },
-          "url": { "type": "string" }
+          "what": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
         },
-        "required": ["what", "url"]
+        "required": [
+          "what",
+          "url"
+        ]
       }
     },
     "cheap_experiments": {
@@ -50,17 +77,52 @@
       "items": {
         "type": "object",
         "properties": {
-          "idea": { "type": "string" },
-          "why_now": { "type": "string" }
+          "idea": {
+            "type": "string"
+          },
+          "why_now": {
+            "type": "string"
+          }
         },
-        "required": ["idea"]
+        "required": [
+          "idea"
+        ]
       }
     },
     "open_questions": {
       "type": "array",
       "description": "The questions the field itself says are unresolved.",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
+    },
+    "founding_claims": {
+      "type": "array",
+      "description": "Anecdotes, quotations, statistics or single studies that the paradigm's case is often rested on (e.g. a much-quoted energy figure or a famous demonstration), as usually told, with where they are commonly cited and the original source if known.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "story": {
+            "type": "string"
+          },
+          "where_cited": {
+            "type": "string"
+          },
+          "original_source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "story"
+        ]
+      }
     }
   },
-  "required": ["state_of_play", "measured_results", "active_organisations", "open_access", "cheap_experiments"]
+  "required": [
+    "state_of_play",
+    "measured_results",
+    "active_organisations",
+    "open_access",
+    "cheap_experiments"
+  ]
 }

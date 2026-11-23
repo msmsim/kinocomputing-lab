@@ -18,7 +18,16 @@ on:
     # first hasn't settled tonight (the check job below).
     - cron: "23 2 * * *"
     - cron: "41 3 * * *"
+  # By hand, or nightly from an outside scheduler (cron-job.org, at 02:23
+  # UTC), which starts on time where GitHub's own can run hours late. The
+  # outside one sends `nightly: true`, so it stands down like a schedule
+  # would; GitHub's two times stay as backups.
   workflow_dispatch:
+    inputs:
+      nightly:
+        description: "Started by the nightly scheduler: stand down if tonight's shift has settled"
+        type: boolean
+        default: false
 
 concurrency:
   group: night-shift
@@ -29,7 +38,8 @@ permissions:
 
 jobs:
   # One shift a night. A scheduled run stands down if a shift has already
-  # settled today (UTC); the concurrency group above makes a backup wait for
+  # settled today (UTC) — and so does the nightly scheduler's dispatch; the
+  # concurrency group above makes a backup wait for
   # a shift still running, so it sees that shift's settle. A run started by
   # hand always goes ahead.
   check:
@@ -45,9 +55,10 @@ jobs:
       - id: check
         env:
           EVENT: ${{ github.event_name }}
+          NIGHTLY: ${{ inputs.nightly }}
         run: |
           settled=$(jq -r .date state/last-settle.json 2>/dev/null || true)
-          if [ "$EVENT" = schedule ] && [ "$settled" = "$(date -u +%F)" ]; then
+          if { [ "$EVENT" = schedule ] || [ "$NIGHTLY" = true ]; } && [ "$settled" = "$(date -u +%F)" ]; then
             echo "a shift already settled today ($settled); standing down"
             echo "go=false" >> "$GITHUB_OUTPUT"
           else

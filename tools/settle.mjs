@@ -303,8 +303,10 @@ if (out.length < floor) {
 // 5. Tonight's brief, on kinocomputing: the shift's own account, then what
 // settle saw. A second shift on the same day updates the day's brief.
 const morningPath = join(LAB, "MORNING.md");
+// Its headings become bold lines, the brief's own style ("Published
+// tonight"), so the page reads as one piece in one type.
 const shiftSaid = existsSync(morningPath)
-  ? readFileSync(morningPath, "utf8").replace(/^#[^\n]*\n/, "").trim() : "";
+  ? readFileSync(morningPath, "utf8").replace(/^#[^\n]*\n/, "").replace(/^#{1,6}[ \t]+(.+?)[ \t#]*$/gm, "**$1**").trim() : "";
 const dateWords = new Date(`${run.date}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/ (\w)/g, (m, c) => ` ${c.toUpperCase()}`);
 const briefOf = (said) => [

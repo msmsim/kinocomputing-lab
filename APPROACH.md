@@ -110,6 +110,15 @@ quotes them all, so it shows when an entry has moved. Opportunities become
 questions, which is how tracking turns into experiments. Exa's searches
 and its research agent do the looking, cheaply: about $0.05 a paradigm.
 
+**The foundations audit**: two standing debts, paid down nightly when
+there's room. *Apocryphal vulnerabilities* (after the PI's note): the
+founding anecdotes, quotations and statistics a field rests on, traced to
+their primary sources and judged holds, overstretched or apocryphal, with
+an independent second check before any verdict but "holds". *Self-audit*
+(after Casey Handmer's physics audit, which its author also turned on their
+own work): the lab's oldest notes re-checked from scratch, fixed in public
+with a "Self-audit:" change note.
+
 **What's worth publishing**: a result (negative ones included), an
 analysis, a source worth knowing, a dead end others would walk into.
 Operational setbacks go in the journal, not on the blyg.

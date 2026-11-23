@@ -30,6 +30,9 @@ workflow publishes after you finish.
 - `state/paradigms.json` — the paradigms on the tracker, in groups, with
   when each was last looked at; `paradigms/<id>.md` — the lab's working
   file on each (see "The paradigm rotation").
+- `audits/foundations.md` and `audits/self.md` — the ledgers of the
+  foundations audit: founding stories checked, and the lab's own notes
+  re-checked (see "The foundations audit").
 - Search: `node tools/search.mjs arxiv|openalex "query"` (free; use first) and
   `node tools/search.mjs exa "query"` (paid, metered against tonight's
   budget; for what the free indexes don't cover; `--category
@@ -97,7 +100,9 @@ says.
    - a claim, for each finding that has earned one;
    - the next entry in a series, or an update to a lab note whose evidence
      has moved (a real change, with a change note, not a touch-up);
-   - a voice's take on something the lab has published.
+   - a voice's take on something the lab has published;
+   - an entry from the foundations ledger, or a self-audit of an old note
+     ("The foundations audit").
 
    **Work in parallel.** The `drafter` subagent drafts one self-contained
    piece from a brief you give it (the source, the angle, the voice, the
@@ -303,9 +308,18 @@ notebook and not a press release.
   in the world's terms: "we fixed in advance what result would count as a
   failure, and it failed"; "an adversarial check narrowed the claim". To
   point at another note, quote it or link its kinocomputing address.
-- **Lead with what was found and why anyone should care.** The first
-  paragraph should make sense on its own, in the stream or a feed reader.
-  Then how we know, then what it doesn't show.
+- **The first paragraph is a lead, and it earns the click.** It is what
+  most readers see, in the stream or a feed reader, and it decides whether
+  they read on. It does at least one of two jobs, ideally both: it
+  *intrigues* (a surprising number, a puzzle, a tension, a stake the
+  reader didn't know they had) and it *summarises* (what was found, and
+  why it matters, in two or three sentences that stand on their own). Not
+  throat-clearing ("This note looks at…"), not background, not method.
+  "Thirteen times the memory bandwidth bought five times the speed" is a
+  lead; "We examined recent measurements of GPU memory" isn't. Then how
+  we know, then what it doesn't show. Applies to every note, claims and
+  paradigm entries included: their first line after the title is their
+  lead.
 - **Define terms on first use, briefly and concretely.** A reservoir
   computer, NARMA-10, CRPS, a Duffing oscillator, Dusk in World Machines
   theory: one clause each, in plain words, the first time they appear.
@@ -389,6 +403,51 @@ and saying why in the journal.
 
 A night of rotation should cost a few cents of Exa: about $0.05 a
 paradigm. Medium effort is for a paradigm that has clearly moved a lot.
+
+Each pass also asks what **founding stories** the paradigm leans on (the
+scan's `founding_claims`): add any new ones to the foundations ledger
+("The foundations audit").
+
+## The foundations audit
+
+Two standing debts, paid down a little every night there's room, the way a
+good engineering team pays down technical debt. Neither is ever finished.
+
+**Apocryphal vulnerabilities** (question q-010). A field's authority often
+rests partly on a founding anecdote, quotation, statistic or single study
+that everyone cites and nobody re-checks: "the brain runs on 20 watts", "a
+slime mould redesigned the Tokyo rail network". If it is false or
+overstretched, what was built on it is exposed. The ledger is
+`audits/foundations.md`. To work an entry:
+
+1. **Trace it** to its primary source: the original paper, talk or
+   dataset, not the review that cites the review. Follow the citation chain
+   and record each hop.
+2. **Read what the source actually says**, in full text where you can get
+   it, and compare it with how the story is told. Recompute a number when
+   the inputs are there.
+3. **Give it a status**: `holds`, `overstretched` (true, but cited for more
+   than it shows) or `apocryphal` (false, misattributed, or not what the
+   source says). A verdict other than `holds` goes to the reviewer first,
+   as an independent second check, and is published only if the reviewer
+   agrees.
+4. **Publish** it as a write-up for a stranger ("Does the brain really run
+   on 20 watts?"): the story as told, the chain, what the source says, the
+   verdict and how sure we are; with a claim at the literature stage it
+   reached (usually `full-text`). A story that holds is worth publishing
+   too: it's the check nobody had written down.
+
+**Self-audit** (question q-011). An audit that only points outward is a hit
+piece. At least once a cycle (two weeks), take the oldest lab note not yet
+audited (`audits/self.md` lists what has been) and check it from scratch:
+re-open every source, recompute every number, rerun the experiment if it's
+cheap. Record what you found in the ledger, "nothing wrong" included. Fix
+what's wrong in public: update the note with a change note beginning
+"Self-audit:", saying what was wrong and what changed.
+
+Both count toward the night's notes. Cheap screens come first: a story that
+a quick search shows is already well documented and correctly told can be
+marked `holds` with its primary source and no write-up.
 
 ## What's worth publishing
 
