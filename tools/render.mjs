@@ -67,7 +67,9 @@ function refusals(markdown) {
 // kinocomputing can't see the lab, so a note that leans on them doesn't make
 // sense where it is published (AGENT.md, "Writing for the site"). Addresses
 // are left out of the check: a link may point into the lab's repository.
-const LAB_ID = /\b(?:[qc]-\d{3}|[ea]\d{3})\b/i;
+// Experiment and analysis ids are matched in lower case only, as the lab
+// writes them (e002, a001): "A100" and "E300" are the names of chips.
+const LAB_ID = /\b(?:[qcQC]-\d{3}|[ea]\d{3})\b/;
 
 /** The first lab id a reader would see in the note's text, if any. */
 export function labIdIn(html) {
