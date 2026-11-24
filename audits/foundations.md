@@ -21,3 +21,11 @@ Entry format:
 ## Entries
 
 (None yet.)
+
+## Added 2026-11-24 (from tonight's paradigm passes; untraced)
+- Physical symbol system hypothesis (Newell & Simon 1976): "necessary and sufficient means for general intelligent action" — Nilsson 2007 (pssh.pdf, read) quotes it as "...for intelligent action" without "general" and says Newell and Simon themselves allowed it "could indeed be false"; the 1976 CACM text itself (doi 10.1145/360018.360022) was not reachable tonight (ACM 403, Rutgers mirror 404). Status: partial, primary not read.
+- Logic Theorist found a "shorter proof" of a Principia theorem — queued.
+- MYCIN performed comparably to experts — queued.
+- AlexNet 2012 as the decisive deep-learning breakthrough; backprop credit (1986) — queued.
+- AI training energy "doubling every 4–6 months" — queued.
+- Kaplan 2020 smooth power laws; Chinchilla 2022 compute-optimal — queued.

@@ -13,3 +13,5 @@
 {"date":"2026-11-22","usd":0.10936605500000002,"source":"model","model":"claude-haiku-5-5","kind":"light","turns":27,"error":false}
 {"date":"2026-11-23","usd":0.9313300600000003,"source":"model","model":"claude-sonnet-5-5","kind":"light","turns":51,"error":false}
 {"date":"2026-11-23","usd":0.075,"source":"exa"}
+{"date":"2026-11-24","usd":0.54427515,"source":"model","model":"claude-sonnet-5-5","kind":"light","turns":4,"error":false}
+{"date":"2026-11-24","usd":0.075,"source":"exa"}

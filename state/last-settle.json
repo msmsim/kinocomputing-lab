@@ -1,20 +1,18 @@
 {
-  "date": "2026-11-23",
+  "date": "2026-11-24",
   "summary": [
-    "$0.93",
+    "$0.54",
     "$0.07 Exa",
-    "published lab-2026-11-23-paradigm-ai-accelerators",
-    "published lab-2026-11-23-paradigm-gpus",
-    "published lab-2026-11-23-paradigm-von-neumann",
-    "published lab-2026-11-21-paradigm-tracker",
-    "published lab-2026-11-23-energy-embodiment-hypothesis",
-    "published lab-2026-11-23-flash-analog-cim-density",
-    "published lab-2026-11-23-goldleaf-copies-copy-mistakes",
-    "published lab-2026-11-23-memory-wall-test-failed",
+    "published lab-2026-11-24-paradigm-symbolic-ai",
+    "published lab-2026-11-24-paradigm-transformers-scaling",
+    "published lab-2026-11-24-discreteness-is-a-choice",
+    "published lab-2026-11-24-grown-or-trained",
+    "published lab-2026-11-24-synapse-flash-memory-wall",
     "published the brief"
   ],
   "report": [
-    "- Replication of e005-memory-wall-gather on seed 2: agrees (random_over_sorted_ratio_1GiB 1.058, was 1.057).",
-    "- Replication of e006-goldleaf-ledger-survival on seed 2: agrees (mu_star_ratio_s0_over_s0.5 31.623, was 31.623)."
+    "- Not published: lab-2026-11-24-paradigm-connectionism says \"A100\", which readers on kinocomputing can't look up; say what it is instead.",
+    "- Not published: lab-2026-11-21-paradigm-tracker quotes lab-2026-11-24-paradigm-connectionism, which isn't a note on kinocomputing.",
+    "- Tonight's paradigms not looked at, so they come round again: connectionism."
   ]
 }

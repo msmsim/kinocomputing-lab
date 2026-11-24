@@ -23,7 +23,7 @@
       "id": "symbolic-ai",
       "name": "Symbolic AI",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-24"
     },
     {
       "id": "connectionism",
@@ -35,7 +35,7 @@
       "id": "transformers-scaling",
       "name": "Transformers and the scaling hypothesis",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-24"
     },
     {
       "id": "analog-in-memory",

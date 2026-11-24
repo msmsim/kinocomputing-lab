@@ -37,3 +37,4 @@ override are analogies until something carries them over)? Say which, per claim.
 ## Log
 
 - 2026-11-22 (shift 9): opened from the PI's take. Not started; no claim.
+- 2026-11-24: the PI's note 'Grown, not imagined' (descent by encounter, a meander as a record) is material here: a meander is a gated descent with no designer. Answered in public; open: what counts as the 'encounter' in a trained network?

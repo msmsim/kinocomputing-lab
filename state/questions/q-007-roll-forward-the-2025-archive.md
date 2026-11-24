@@ -71,3 +71,4 @@ nightly limits on notes and claims apply.
 
 ## Log
 - 2026-11-23: processed "Energy (in)efficiency and (dis)embodiment" (the shortest essay): units in `sources/archive-2025/units/`, rolled forward as a Post-Liquid note on the founding hypothesis set against the lab's results so far. 22 essays remain unread.
+- 2026-11-24: processed 'The discrete option': units in units/the-discrete-option.md, rolled forward as a Post-Liquid note. 21 essays remain.
