@@ -363,18 +363,18 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
     assert.match(read("state/last-morning.md"), /Last night's summary/, "last night's summary moves aside for the shift to read");
     assert.match(read("state/tonight.md"), /stopped at \*\*03:00 UTC\*\* \(60 minutes\)/, "the briefing gives the deadline");
-    assert.match(read("state/tonight.md"), /Publish \*\*5 to 10 notes\*\* tonight, claims included/, "and the night's range");
+    assert.match(read("state/tonight.md"), /The day publishes \*\*5 to 15 notes\*\* across its shifts, claims included/, "and the day's range");
     void prep;
     writeFileSync(join(w.lab, "outbox/lab-2026-11-21-half-done.md"), "---\nkind: notebook\n---\n\n**Half done**\n\nWhat got written before the stop.\n");
     const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:05:00Z", { SHIFT_EXIT: "124" });
-    assert.match(settled, /~\$1\.50 \(no cost report; counted at the cap\), published lab-2026-11-21-half-done/);
+    assert.match(settled, /~\$0\.60 \(no cost report; counted at the cap\), published lab-2026-11-21-half-done/);
     const spend = JSON.parse(read("state/spend.jsonl").trim().split("\n").at(-1));
-    assert.deepEqual([spend.usd, spend.estimated], [1.5, true]);
+    assert.deepEqual([spend.usd, spend.estimated], [0.6, true]);
     const morning = read("MORNING.md");
     assert.match(morning, /hit its time limit and was stopped/);
     assert.match(morning, /No journal entry was written tonight/);
     const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
-    assert.match(brief, /The researcher left no summary tonight\./);
+    assert.match(brief, /The researcher left no summary\./);
     assert.ok(!brief.includes("Last night"), "a shift that wrote no summary doesn't republish last night's");
     assert.match(brief, /Half done/, "what reached the outbox before the stop is published");
   } finally {
@@ -382,27 +382,66 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
   }
 });
 
-test("a full night: ten notes publish, claims included, the rest are held back, and no shortfall is reported", async () => {
+test("a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both", async () => {
   const w = makeWorld();
   const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  const note = (name, kind = "notebook") => writeFileSync(join(w.lab, `outbox/lab-2026-11-21-${name}.md`), `---\nkind: ${kind}\n---\n\n**${name}**\n\nA short note called ${name}.\n`);
   try {
     w.publish("2026-11-20T00:00:00Z");
-    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
-    for (let i = 1; i <= 11; i++) {
-      const n = String(i).padStart(2, "0");
-      writeFileSync(join(w.lab, `outbox/lab-2026-11-21-note-${n}.md`), `---\nkind: notebook\n---\n\n**Note ${n}**\n\nA short note, number ${n}.\n`);
-    }
-    for (const c of ["a", "b"]) writeFileSync(join(w.lab, `outbox/lab-2026-11-21-claim-${c}.md`), `---\nkind: claim\n---\n\n**Claim ${c}**\n\nAn untested idea, ${c}.\n`);
-    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 1.2, num_turns: 40, is_error: false }));
+    writeFileSync(join(w.lab, "state/paradigms.json"), JSON.stringify({ paradigms: [{ id: "photonic", name: "Photonic", group: "G", last_checked: null }] }));
+    // Shift 1: breadth.
+    assert.match(w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:23:00Z"), /shift 1, light run, \$0\.60/);
+    assert.deepEqual(JSON.parse(read("state/run.json")).paradigms, ["photonic"]);
+    for (let i = 1; i <= 10; i++) note(`first-${String(i).padStart(2, "0")}`);
+    for (const c of ["a", "b"]) note(`claim-${c}`, "claim");
+    writeFileSync(join(w.lab, "MORNING.md"), "The first shift went wide.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.5, num_turns: 30, is_error: false }));
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:20:00Z");
-    const published = readdirSync(join(w.lab, "published")).filter((f) => /(?:note|claim)-/.test(f));
-    assert.equal(published.length, 10);
-    assert.ok(published.includes("lab-2026-11-21-claim-a.md") && published.includes("lab-2026-11-21-claim-b.md"), "claims go first");
+    assert.deepEqual(JSON.parse(read("state/last-settle.json")).shifts, [1]);
+
+    // Shift 2: depth, with what's left of the day and no rotation.
+    const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:07:00Z", { LAB_SHIFT: "2" });
+    assert.match(prep, /shift 2, light run, \$1\.00/, "the rest of the day's money");
+    assert.deepEqual(JSON.parse(read("state/run.json")).paradigms, [], "the rotation is the first shift's");
+    assert.match(read("state/tonight.md"), /## Shift 2 of 2: depth[\s\S]*12 went out in today's earlier shift/);
+    assert.match(read("state/last-morning.md"), /The first shift went wide/, "the second shift reads what the first said");
+    for (const c of ["c", "d"]) note(`claim-${c}`, "claim");
+    for (let i = 1; i <= 3; i++) note(`second-${i}`);
+    writeFileSync(join(w.lab, "MORNING.md"), "The second shift went deep.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.8, num_turns: 40, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T06:00:00Z", { LAB_SHIFT: "2" });
+
+    const published = readdirSync(join(w.lab, "published")).filter((f) => /(?:first|second|claim)-/.test(f));
+    assert.equal(published.length, 15, "fifteen a day, claims included");
     const morning = read("MORNING.md");
-    for (const n of ["09", "10", "11"]) assert.match(morning, new RegExp(`Not published: lab-2026-11-21-note-${n} — over the 10-note nightly limit`));
-    assert.ok(!/under the nightly minimum/.test(morning));
-    const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
-    assert.ok(!/short of the lab/.test(brief), "no shortfall on a full night");
+    for (const n of [2, 3]) assert.match(morning, new RegExp(`Not published: lab-2026-11-21-second-${n} — over the 15-note daily limit`));
+    assert.deepEqual(JSON.parse(read("state/last-settle.json")).shifts, [1, 2]);
+
+    const briefMd = read("published/lab-2026-11-21-brief.md");
+    assert.match(briefMd, /\*\*First shift\*\*\n\nThe first shift went wide\.\n\n\*\*Second shift\*\*\n\nThe second shift went deep\./, "both shifts' own words, in order");
+    assert.match(briefMd, /\[first-01\][\s\S]*\[claim-d\][\s\S]*\[second-1\]/, "everything the day published");
+    assert.match(briefMd, /The day's 2 shifts cost \$1\.30, on Claude Sonnet 5\.5\./);
+    assert.ok(!/short of the lab/.test(briefMd), "fifteen is no shortfall");
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /<meta name="blyg:note" content="Updated with the day's second shift/);
+  } finally {
+    w.dispose();
+  }
+});
+
+test("a short day is reported by its last shift, counting both", async () => {
+  const w = makeWorld();
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:23:00Z");
+    writeFileSync(join(w.lab, "outbox/lab-2026-11-21-one.md"), "---\nkind: notebook\n---\n\n**One**\n\nThe first shift's only note.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.3, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z");
+    assert.ok(!/short of the lab/.test(readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8")), "not yet: a shift is still to come");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:07:00Z", { LAB_SHIFT: "2" });
+    writeFileSync(join(w.lab, "outbox/lab-2026-11-21-two.md"), "---\nkind: notebook\n---\n\n**Two**\n\nThe second shift's only note.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.3, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T06:00:00Z", { LAB_SHIFT: "2" });
+    assert.match(readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8"), /Only 2 notes were published today, short of the lab's daily 5\./);
   } finally {
     w.dispose();
   }
@@ -477,6 +516,32 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
   }
 });
 
+test("check-shift: which shift a run is, and whether it should work it", () => {
+  const dir = mkdtempSync(join(tmpdir(), "check-"));
+  const file = join(dir, "last-settle.json");
+  const check = (env, settled) => {
+    if (settled === null) rmSync(file, { force: true });
+    else writeFileSync(file, JSON.stringify(settled));
+    const r = spawnSync("bash", [join(LAB, "tools/check-shift.sh"), file, "2026-11-24"], { encoding: "utf8", env: { PATH: process.env.PATH, ...env } });
+    return r.stdout.trim().replace(/\n/g, " ");
+  };
+  const today = (shifts) => ({ date: "2026-11-24", ...(shifts ? { shifts } : {}) });
+  try {
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "23 2 * * *" }, null), "shift=1 go=true");
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "41 3 * * *" }, today([1])), "shift=1 go=false", "the backup stands down");
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "41 3 * * *" }, { date: "2026-11-23", shifts: [1, 2] }), "shift=1 go=true", "yesterday's doesn't count");
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "41 3 * * *" }, today(null)), "shift=1 go=false", "a settle from before shifts were counted was a first shift");
+    assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "2" }, today([1])), "shift=2 go=true");
+    assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "2" }, today([1, 2])), "shift=2 go=false");
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "7 5 * * *" }, null), "shift=2 go=false", "the second waits for the first");
+    assert.equal(check({ EVENT: "schedule", SCHEDULE: "29 6 * * *" }, today([1])), "shift=2 go=true");
+    assert.equal(check({ EVENT: "workflow_dispatch", ASKED: "2" }, today([1, 2])), "shift=2 go=true", "by hand always goes ahead");
+    assert.equal(check({ EVENT: "workflow_dispatch", ASKED: "7" }, null), "shift=1 go=true", "anything else is a first shift");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("timebox: stops a command past its limit with 124, passes an exit code through", () => {
   const started = Date.now();
   const slow = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "1", "sleep", "10"], { encoding: "utf8" });
@@ -497,10 +562,10 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
 
     // Night 1: the first look is a baseline. The shift runs an experiment and publishes a note.
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z", { EXA_CONFIGURED: "true" });
-    assert.match(prep, /light run, \$1\.00 on claude-sonnet-5-5 \+ \$0\.50 Exa, 0 take\(s\), 1 open question/);
+    assert.match(prep, /shift 1, light run, \$0\.40 on claude-sonnet-5-5 \+ \$0\.20 Exa, 0 take\(s\), 1 open question/, "the first shift takes its 40% of the day");
     const run = JSON.parse(read("state/run.json"));
     assert.equal(run.baseline, true);
-    assert.equal(run.exa_usd + run.max_usd, 1.5, "one pot: Exa's slice comes out of the night's money");
+    assert.equal(Math.round((run.exa_usd + run.max_usd) * 100) / 100, 0.6, "one pot: Exa's slice comes out of the shift's money");
 
     mkdirSync(join(w.lab, "experiments/e001-draw"));
     write("experiments/e001-draw/run.py", EXPERIMENT(-1));
@@ -535,7 +600,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
     assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);
     assert.match(brief, /4 notes were held back/);
-    assert.match(brief, /Only 1 note was published tonight, short of the lab(?:'|&#39;)s nightly 5\./, "a short night is said plainly");
+    assert.ok(!/short of the lab/.test(brief), "the floor is the day's, judged by its last shift");
     assert.ok(!brief.includes("All went perfectly"), "the brief is settle's to write");
     assert.match(read("MORNING.md"), /Not published: lab-2026-11-21-brief — that name is the nightly brief/);
     assert.match(brief, /edited the lab('|&#39;)s own tools or rules/);
@@ -584,7 +649,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     // A summary that leans on lab ids is kept out of the brief; settle's part still goes.
     assert.match(read("MORNING.md"), /MORNING\.md couldn.t go in the brief: it says "c-001"/);
     const brief2 = readFileSync(join(w.kino, "notes/lab-2026-11-22-brief.html"), "utf8");
-    assert.match(brief2, /didn.t pass the publishing checks tonight/);
+    assert.match(brief2, /didn.t pass the publishing checks; it/);
     assert.match(brief2, /offered again tomorrow: <a href="https:\/\/www\.kinocomputing\.com\/read-this">/);
     assert.match(brief2, /record was restored/);
     assert.match(read("MORNING.md"), /1 committed claim line\(s\) were edited or removed; restored/);

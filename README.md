@@ -17,14 +17,18 @@ steers from its principal investigator (PI).
 ## A night
 
 ```
-02:23 UTC  prepare   budget for tonight; the PI's takes; new reading; briefing (no tokens)
-           shift     Claude Code writes 5–10 notes, under a dollar cap       (tokens)
-                     and a 60-minute clock
+02:23 UTC  prepare   shift 1 of 2: its share of the day's budget; the PI's    (no tokens)
+                     takes; new reading; tonight's paradigms; briefing
+           shift     breadth: the rotation, the archive, the day's floor    (tokens)
+                     of five notes, under a dollar cap and a 60-minute clock
            restore   the lab's machinery put back as committed              (no tokens)
            replicate new experiment results re-run on another seed        (no tokens)
            settle    record spend; check takes and claims; publish outbox  (no tokens)
-                     and the night's brief
+                     and the day's brief
            commit    lab state → this repo; notes → kinocomputing
+05:07 UTC  the same again, shift 2 of 2: depth — full texts, experiments, audits,
+           from what shift 1 asked; the rest of the day's money; no rotation.
+           Settle updates the day's brief with both shifts. 5–15 notes a day.
            ↓
 kinocomputing's own Action registers the notes as blyg items; Cloudflare deploys.
 ```
@@ -114,8 +118,12 @@ Pause: set the repository variable `LAB_PAUSED` to `true`. Unset it to resume.
      headers `Authorization: Bearer <token>`, `Accept:
      application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, body
      `{"ref":"main","inputs":{"nightly":true}}`. GitHub answers 204.
-   `nightly: true` makes the run stand down if tonight's shift has already
-   settled, so whichever trigger comes second does nothing.
+   - a second at 05:07 UTC, the same but with body
+     `{"ref":"main","inputs":{"nightly":true,"shift":"2"}}`.
+   `nightly: true` makes a run stand down if its shift has already settled
+   today, so whichever trigger comes second does nothing; the second shift
+   also waits until the first has settled. GitHub's own schedules (02:23 and
+   03:41 for shift 1, 05:07 and 06:29 for shift 2) stay as backups.
 8. **First run:** Actions → Night shift → Run workflow. Read the brief it
    publishes on kinocomputing, "Lab brief: <date>".
    The first run takes a baseline of kinocomputing: takes posted before it

@@ -11,8 +11,10 @@ fixes they prompted, all already folded in below.
 
 A principal investigator and their researchers. You are the PI, checking in
 when you choose and steering asynchronously. The researchers are agents
-(Claude Code, headless), each working one nightly shift: a lead piece and
-smaller ones, five to ten notes, written up and published. The lab's notebook and its venue are the
+(Claude Code, headless), working two shifts a day: one for breadth (the
+paradigm rotation, the archive, the day's floor), one for depth (full
+texts, experiments, audits), five to fifteen notes between them, written up
+and published, with one brief for the day. The lab's notebook and its venue are the
 same thing: the kinocomputing blyg.
 
 Scope: alternative paradigms of computing and intelligence. Outputs run from
@@ -22,7 +24,7 @@ tiny experiments to World Machines analysis.
 
 ```
 prepare    budget; your takes; stale write-ups; replications; new arXiv papers  (no tokens)
-shift      a researcher works 5–10 notes' worth, under a dollar cap and a clock (tokens)
+shift      a researcher works a shift (breadth, or depth), under a dollar cap and a clock (tokens)
 restore    the lab's machinery put back as committed                            (no tokens)
 replicate  every new experiment result re-run on the next seed                  (no tokens)
 settle     spend; takes handled or re-offered; claims append-only; publish;     (no tokens)

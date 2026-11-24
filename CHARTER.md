@@ -120,9 +120,9 @@ four others. Replication is the standard, not the exception.
 ## Budget
 
 The lab runs on a token budget, set in `config/lab.json`: a daily allowance,
-meant to be spent. A night publishes five to ten notes and uses most of its
-money; what a night leaves unspent banks, up to a cap, and the next nights
-catch up. Sonnet does a night's work, cheaper drafters help in parallel, and
+meant to be spent. A day has two shifts, one for breadth and one for depth,
+publishes five to fifteen notes between them, and uses most of its money;
+what a day leaves unspent banks, up to a cap, and the next days catch up. Sonnet does a night's work, cheaper drafters help in parallel, and
 a bank saved up from skipped nights buys an Opus night. Paid search (Exa)
 comes out of the same budget; arXiv and OpenAlex are free and come first.
 

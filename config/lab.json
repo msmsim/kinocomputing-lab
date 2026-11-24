@@ -12,8 +12,8 @@
     "deep": "claude-opus-5-5"
   },
   "publish": {
-    "max_notes_per_night": 10,
-    "min_notes_per_night": 5,
+    "max_notes_per_day": 15,
+    "min_notes_per_day": 5,
     "name_pattern": "^lab-\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$",
     "max_claims_per_night": 4,
     "max_claim_chars": 1000,
@@ -43,5 +43,9 @@
   },
   "paradigms": {
     "cycle_days": 14
+  },
+  "shifts": {
+    "per_day": 2,
+    "first_share": 0.4
   }
 }

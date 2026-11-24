@@ -37,6 +37,16 @@ if (process.env.LAB_RUN_KIND === "deep" || process.env.LAB_RUN_KIND === "light")
 // as the operator's, so the journal can say why the shift chose it.
 const focus = process.env.LAB_FOCUS ?? null;
 
+// Which of the day's shifts this is (README, "A night"). The first is for
+// breadth — the rotation, the archive, the day's floor — and takes a share
+// of the day's money; the second is for depth, and has what's left. A shift
+// started by hand is a first shift unless it says otherwise.
+const SHIFT = Math.max(1, Math.min(config.shifts.per_day, Number(process.env.LAB_SHIFT) || 1));
+if (SHIFT === 1 && config.shifts.per_day > 1 && !process.env.LAB_RUN_KIND) {
+  money.maxUsd = Math.round(money.maxUsd * config.shifts.first_share * 100) / 100;
+  money.skip = money.maxUsd < config.budget.min_run_usd;
+}
+
 // The night's money is one pot. Exa, when the lab has a key, gets a slice of
 // it; the model gets the rest.
 const exaOn = process.env.EXA_CONFIGURED === "true";
@@ -101,7 +111,9 @@ if (!offline && process.env.LAB_NO_READING !== "1") {
 // cycle. Tonight's are the ones looked at longest ago (never, first), enough
 // a night to go round in config.paradigms.cycle_days.
 const paradigmList = readJson(join(LAB, "state/paradigms.json"), { paradigms: [] }).paradigms ?? [];
-const tonightParadigms = rotation(paradigmList, config.paradigms.cycle_days);
+// The rotation is the first shift's; the second goes deeper on what the
+// first found.
+const tonightParadigms = SHIFT === 1 ? rotation(paradigmList, config.paradigms.cycle_days) : [];
 
 const published = existsSync(join(LAB, "published"))
   ? readdirSync(join(LAB, "published")).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")).sort()
@@ -115,6 +127,7 @@ const deadline = new Date(new Date(at).getTime() + config.shift.minutes * 60_000
 const run = {
   date: today,
   at,
+  shift: SHIFT,
   skip: money.skip,
   kind: money.kind,
   model,
@@ -136,6 +149,8 @@ const paradigmNote = (id) => published.find((name) => {
 });
 writeFileSync(join(LAB, "state/run.json"), json(run));
 
+const dayBefore = readJson(join(LAB, "state/brief-day.json"), null);
+const earlierToday = dayBefore?.date === today ? (dayBefore.shifts ?? []).filter((s) => s.shift !== SHIFT).reduce((n, s) => n + (s.out ?? []).length, 0) : 0;
 const quote = (text) => (text ? text.split("\n").map((l) => `> ${l}`).join("\n") : "> (no text)");
 const lines = [
   `# Tonight: ${today}`,
@@ -144,9 +159,15 @@ const lines = [
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
   "",
+  `## Shift ${SHIFT} of ${config.shifts.per_day}: ${SHIFT === 1 ? "breadth" : "depth"}`,
+  "",
+  SHIFT === 1
+    ? `The day's first shift: tonight's paradigms, units from the archive, takes, and the day's floor of notes. ${config.shifts.per_day > 1 ? "A second, deeper shift follows; end your journal entry with what it should take up (AGENT.md, \"Two shifts a day\")." : ""}`
+    : "The day's second shift, for depth (AGENT.md, \"Two shifts a day\"): start from what the first shift asked of you at the end of today's journal and in `state/last-morning.md`. No rotation tonight.",
+  "",
   "## Tonight's output",
   "",
-  `Publish **${config.publish.min_notes_per_night} to ${config.publish.max_notes_per_night} notes** tonight, claims included (settle holds back any past ${config.publish.max_notes_per_night}), and use the money: aim to spend most of the $${modelUsd.toFixed(2)}. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.`,
+  `The day publishes **${config.publish.min_notes_per_day} to ${config.publish.max_notes_per_day} notes** across its shifts, claims included (settle holds back any past ${config.publish.max_notes_per_day}). ${SHIFT === 1 ? `Reach the ${config.publish.min_notes_per_day} yourself.` : `${earlierToday} went out in today's earlier shift; add what depth earns, not to make up numbers.`} Use the money: aim to spend most of the $${modelUsd.toFixed(2)}. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.`,
   "",
   ...(process.env.LAB_ENV_NOTE ? ["## Where this shift runs", "", process.env.LAB_ENV_NOTE, ""] : []),
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
@@ -205,4 +226,4 @@ writeFileSync(join(LAB, "state/tonight.md"), lines.join("\n"));
 
 console.log(money.skip
   ? `prepare: skipping tonight, bank $${money.bank.toFixed(2)} is under the minimum run`
-  : `prepare: ${money.kind} run, $${modelUsd.toFixed(2)} on ${model}${exaUsd ? ` + $${exaUsd.toFixed(2)} Exa` : ""}, ${steers.length} take(s), ${open.length} open question(s)`);
+  : `prepare: shift ${SHIFT}, ${money.kind} run, $${modelUsd.toFixed(2)} on ${model}${exaUsd ? ` + $${exaUsd.toFixed(2)} Exa` : ""}, ${steers.length} take(s), ${open.length} open question(s)`);

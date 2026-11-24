@@ -221,6 +221,14 @@ const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...
 parsed.sort((a, b) => FRAGMENTS.has(b.data.kind) - FRAGMENTS.has(a.data.kind) || a.file.localeCompare(b.file));
 let claims = 0;
 const BRIEF = `lab-${run.date}-brief`;
+// The day so far: what earlier shifts today published and said, kept for the
+// brief and for the day's limits on notes. A day can have two shifts
+// (README, "A night"); the brief is the day's, not the shift's.
+const SHIFT = Number(run.shift ?? 1);
+const dayPath = join(LAB, "state/brief-day.json");
+const dayBefore = readJson(dayPath, null);
+const earlierShifts = dayBefore?.date === run.date ? (dayBefore.shifts ?? []).filter((s) => s.shift !== SHIFT) : [];
+const earlierToday = earlierShifts.reduce((n, s) => n + (s.out ?? []).length, 0);
 const out = [];
 const paradigmsPath = join(LAB, "state/paradigms.json");
 const tracker = readJson(paradigmsPath, { paradigms: [] });
@@ -244,8 +252,8 @@ for (const { file, name, data, body } of parsed) {
     reject(file, `— a paradigm entry names its paradigm, and "${data.paradigm ?? ""}" isn't one on the tracker's list`);
     continue;
   }
-  if (count + claims >= config.publish.max_notes_per_night) {
-    reject(file, `— over the ${config.publish.max_notes_per_night}-note nightly limit`);
+  if (earlierToday + count + claims >= config.publish.max_notes_per_day) {
+    reject(file, `— over the ${config.publish.max_notes_per_day}-note daily limit`);
     continue;
   }
   if (claim && claims >= config.publish.max_claims_per_night) {
@@ -308,16 +316,18 @@ const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
 if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);
 const held = parsed.length - out.length;
 if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for failing the publishing checks; [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md) says why.`);
-// The night's floor. Settle can't write notes, so a short night is said
-// plainly, here and in the brief, rather than made up.
-const floor = config.publish.min_notes_per_night ?? 0;
-if (out.length < floor) {
-  report.push(`- Published ${out.length} note(s), under the nightly minimum of ${floor}.`);
-  told.push(`${out.length === 0 ? "Nothing was" : `Only ${out.length} note${out.length === 1 ? " was" : "s were"}`} published tonight, short of the lab's nightly ${floor}.`);
+// The day's floor, judged by the day's last shift on everything the day
+// published. Settle can't write notes, so a short day is said plainly, here
+// and in the brief, rather than made up.
+const floor = config.publish.min_notes_per_day ?? 0;
+const dayTotal = earlierToday + out.length;
+if (SHIFT >= (config.shifts?.per_day ?? 1) && dayTotal < floor) {
+  report.push(`- Published ${dayTotal} note(s) today, under the daily minimum of ${floor}.`);
+  told.push(`${dayTotal === 0 ? "Nothing was" : `Only ${dayTotal} note${dayTotal === 1 ? " was" : "s were"}`} published today, short of the lab's daily ${floor}.`);
 }
 
-// 5. Tonight's brief, on kinocomputing: the shift's own account, then what
-// settle saw. A second shift on the same day updates the day's brief.
+// 5. The day's brief, on kinocomputing: each shift's own account, then what
+// went out and what settle saw, across the day. The second shift updates it.
 const morningPath = join(LAB, "MORNING.md");
 // Its headings become bold lines, the brief's own style ("Published
 // tonight"), so the page reads as one piece in one type.
@@ -325,18 +335,34 @@ const shiftSaid = existsSync(morningPath)
   ? readFileSync(morningPath, "utf8").replace(/^#[^\n]*\n/, "").replace(/^#{1,6}[ \t]+(.+?)[ \t#]*$/gm, "**$1**").trim() : "";
 const dateWords = new Date(`${run.date}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/ (\w)/g, (m, c) => ` ${c.toUpperCase()}`);
-const briefOf = (said) => [
-  `**Lab brief: ${dateWords}**`,
-  said || "The researcher left no summary tonight.",
-  ...(out.length ? ["**Published tonight**", out.map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
-  "**Also tonight**",
-  [...told, `The shift cost $${spent.toFixed(2)}, on ${modelWords}.`].map((l) => `- ${l}`).join("\n"),
-].join("\n\n");
+const SHIFT_NAMES = { 1: "First shift", 2: "Second shift" };
+const shiftsWith = (said) => [...earlierShifts, { shift: SHIFT, said, out, told, spent, model: modelWords }]
+  .sort((a, b) => a.shift - b.shift);
+const briefOf = (said) => {
+  const shifts = shiftsWith(said);
+  const several = shifts.length > 1;
+  // Everything the day published, once each, in the order it went out.
+  const published = new Map();
+  for (const s of shifts) for (const n of s.out ?? []) if (!published.has(n.name)) published.set(n.name, n);
+  const total = shifts.reduce((sum, s) => sum + (s.spent ?? 0), 0);
+  const models = [...new Set(shifts.map((s) => s.model).filter(Boolean))].join(" and ");
+  return [
+    `**Lab brief: ${dateWords}**`,
+    ...shifts.flatMap((s) => [
+      ...(several ? [`**${SHIFT_NAMES[s.shift] ?? `Shift ${s.shift}`}**`] : []),
+      s.said || "The researcher left no summary.",
+    ]),
+    ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
+    "**Also today**",
+    [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
+  ].join("\n\n");
+};
 const briefUpdate = isPublished(BRIEF);
+let saidUsed = shiftSaid;
 let briefMd = briefOf(shiftSaid);
 let briefPage = null;
 const renderBrief = (markdown) => renderNote({
-  markdown, name: BRIEF, kind: "brief", changeNote: briefUpdate ? "Another shift ran today; this is its brief." : null,
+  markdown, name: BRIEF, kind: "brief", changeNote: briefUpdate ? "Updated with the day's second shift: its summary, what it published and what it cost." : null,
   quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
 });
 try {
@@ -344,7 +370,8 @@ try {
 } catch (error) {
   // The shift's own words didn't pass; settle's alone always should.
   report.push(`- The shift's MORNING.md couldn't go in the brief: it ${error.message}.`);
-  briefMd = briefOf(`The researcher's summary didn't pass the publishing checks tonight; it's in [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md).`);
+  saidUsed = `The researcher's summary didn't pass the publishing checks; it's in [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md).`;
+  briefMd = briefOf(saidUsed);
   try {
     briefPage = await renderBrief(briefMd);
   } catch (again) {
@@ -357,6 +384,7 @@ if (briefPage) {
   writeFileSync(join(LAB, "published", `${BRIEF}.md`), `---\nkind: brief\npin: false\n---\n\n${briefMd}\n`);
   summary.push(`${briefUpdate ? "updated" : "published"} the brief`);
 }
+writeFileSync(dayPath, json({ date: run.date, shifts: shiftsWith(saidUsed) }));
 
 // 6. The morning report gets what the shift couldn't see.
 if (report.length) {
@@ -364,5 +392,9 @@ if (report.length) {
   const prior = existsSync(morning) ? readFileSync(morning, "utf8").trimEnd() : `# ${run.date}`;
   writeFileSync(morning, `${prior}\n\n## From settle\n\n${report.join("\n")}\n`);
 }
-writeFileSync(join(LAB, "state/last-settle.json"), json({ date: run.date, summary, report }));
+// Which shifts have settled today: what the workflow's check reads, so a
+// shift that has already run today doesn't run again.
+const settledBefore = readJson(join(LAB, "state/last-settle.json"), {});
+const shiftsSettled = [...new Set([...(settledBefore.date === run.date ? settledBefore.shifts ?? [] : []), SHIFT])].sort();
+writeFileSync(join(LAB, "state/last-settle.json"), json({ date: run.date, shift: SHIFT, shifts: shiftsSettled, summary, report }));
 console.log(`settle: ${summary.join(", ") || "nothing published"}`);

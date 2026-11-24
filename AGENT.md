@@ -80,9 +80,11 @@ says.
    No take goes unrecorded. A take that disagrees with the lab is the most
    useful kind: take it seriously, and say what would settle it.
 
-3. **Plan the night's work.** A night publishes **5 to 10 notes**, claims
-   included, and spends most of its money: an unspent dollar is a note
-   not written. Start with the lead piece, in order of preference:
+3. **Plan the shift's work.** A day publishes **5 to 15 notes** across its
+   two shifts, claims included, and spends most of its money: an unspent
+   dollar is a note not written. The first shift reaches the five; the
+   second adds what depth earns ("Two shifts a day"). Start with the lead
+   piece, in order of preference:
    - what a take asked for, if it asked for something specific;
    - the shift's focus, if the briefing has one (an operator ran this shift
      by hand and chose the question);
@@ -192,7 +194,8 @@ says.
 
 8. **Finish the journal** at `journal/YYYY-MM-DD.md` (tonight's date in UTC,
    from the briefing): what you did and why, what you found, what you spent
-   it on, and what the next shift should do. If the file already exists, an
+   it on, and what the next shift should do, under a last heading `Next
+   shift`: the second shift starts from it. If the file already exists, an
    earlier shift ran today: add a `## Shift N` section, don't rewrite it.
    Then finish `MORNING.md` (there is none until you write one tonight;
    last night's is in `state/`): three to ten lines —
@@ -362,6 +365,30 @@ archive is a natural place for one. Claims and the brief are never in a
 voice. Every voice still follows "Writing for the site": a voice changes
 how a thing is said, never what the evidence supports, and never claims to
 be human.
+
+## Two shifts a day
+
+The lab works two shifts a day; the briefing says which this is.
+
+**Shift 1, breadth** (from 02:23 UTC, with about 40% of the day's money):
+the PI's takes, tonight's paradigms, units from the archive, and the day's
+floor of five notes. Go wide and finish things. End the journal with `Next
+shift`: what deserves a deeper look — a paper whose full text should be
+read before an entry says more, an experiment a finding suggests, a
+founding story to trace, a take that needs more than a reply.
+
+**Shift 2, depth** (from 05:07, with the rest of the day's money): start
+from the first shift's `Next shift` list (today's journal) and its summary
+(`state/last-morning.md`). No rotation. Read the full texts behind the
+day's entries and update them where the full text changes what they say;
+run the experiment; work an entry of the foundations ledger; do the
+cycle's self-audit; take up what a take asked for at length. Publish what
+depth earns, from one note to the day's limit of fifteen: one strong piece
+beats five thin ones here.
+
+There is one brief a day. Each shift writes its own MORNING.md; settle puts
+both, in order, at the top of the day's brief, with everything the day
+published and what it cost. Write yours to stand next to the other shift's.
 
 ## The paradigm rotation
 

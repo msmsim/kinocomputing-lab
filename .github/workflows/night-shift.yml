@@ -13,21 +13,30 @@ name: Night shift
 
 on:
   schedule:
-    # GitHub can delay or drop a scheduled run when it's busy, worst on the
-    # hour. The second time is a backup: it works the shift only if the
-    # first hasn't settled tonight (the check job below).
-    - cron: "23 2 * * *"
-    - cron: "41 3 * * *"
-  # By hand, or nightly from an outside scheduler (cron-job.org, at 02:23
-  # UTC), which starts on time where GitHub's own can run hours late. The
-  # outside one sends `nightly: true`, so it stands down like a schedule
-  # would; GitHub's two times stay as backups.
+    # Two shifts a day (README, "A night"): breadth, then depth. GitHub can
+    # delay or drop a scheduled run when it's busy, worst on the hour, and
+    # the on-time trigger is the outside scheduler below; these are backups,
+    # each working its shift only if that shift hasn't settled today (the
+    # check job below). The times say which shift a schedule is for.
+    - cron: "23 2 * * *"   # shift 1
+    - cron: "41 3 * * *"   # shift 1, backup
+    - cron: "7 5 * * *"    # shift 2
+    - cron: "29 6 * * *"   # shift 2, backup
+  # By hand, or nightly from an outside scheduler (cron-job.org: shift 1 at
+  # 02:23 UTC, shift 2 at 05:07), which starts on time where GitHub's own can
+  # run hours late. The outside one sends `nightly: true`, so it stands down
+  # like a schedule would.
   workflow_dispatch:
     inputs:
       nightly:
-        description: "Started by the nightly scheduler: stand down if tonight's shift has settled"
+        description: "Started by the nightly scheduler: stand down if this shift has settled today"
         type: boolean
         default: false
+      shift:
+        description: "Which of the day's shifts: 1 (breadth) or 2 (depth)"
+        type: choice
+        options: ["1", "2"]
+        default: "1"
 
 concurrency:
   group: night-shift
@@ -37,33 +46,32 @@ permissions:
   contents: write
 
 jobs:
-  # One shift a night. A scheduled run stands down if a shift has already
-  # settled today (UTC) — and so does the nightly scheduler's dispatch; the
-  # concurrency group above makes a backup wait for
-  # a shift still running, so it sees that shift's settle. A run started by
-  # hand always goes ahead.
+  # Each shift once a day. A scheduled run, or the nightly scheduler's
+  # dispatch, stands down if its shift has already settled today (UTC); the
+  # second shift also waits for the first, since it starts from what the
+  # first found. The concurrency group above makes a backup wait for a shift
+  # still running, so it sees that shift's settle. A run started by hand
+  # always goes ahead.
   check:
     runs-on: ubuntu-latest
     outputs:
       go: ${{ steps.check.outputs.go }}
+      shift: ${{ steps.check.outputs.shift }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          sparse-checkout: state/last-settle.json
+          sparse-checkout: |
+            state/last-settle.json
+            tools/check-shift.sh
           sparse-checkout-cone-mode: false
       - id: check
         env:
           EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
           NIGHTLY: ${{ inputs.nightly }}
-        run: |
-          settled=$(jq -r .date state/last-settle.json 2>/dev/null || true)
-          if { [ "$EVENT" = schedule ] || [ "$NIGHTLY" = true ]; } && [ "$settled" = "$(date -u +%F)" ]; then
-            echo "a shift already settled today ($settled); standing down"
-            echo "go=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "go=true" >> "$GITHUB_OUTPUT"
-          fi
+          ASKED: ${{ inputs.shift }}
+        run: bash tools/check-shift.sh state/last-settle.json "$(date -u +%F)" >> "$GITHUB_OUTPUT"
 
   shift:
     needs: check
@@ -92,6 +100,7 @@ jobs:
           # Whether the lab has an Exa key: prepare gives Exa a slice of the
           # night's budget only then. The key itself isn't in this step.
           EXA_CONFIGURED: ${{ secrets.EXA_API_KEY != '' }}
+          LAB_SHIFT: ${{ needs.check.outputs.shift }}
         run: |
           node tools/prepare.mjs
           echo "skip=$(jq -r .skip state/run.json)" >> "$GITHUB_OUTPUT"
@@ -160,13 +169,14 @@ jobs:
         env:
           TOKEN: ${{ github.token }}
           DATE: ${{ steps.prep.outputs.date }}
+          SHIFT: ${{ needs.check.outputs.shift }}
           SUMMARY: ${{ steps.settle.outputs.summary }}
         run: |
           git config user.name "kinocomputing-lab[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A -- . ':!kinocomputing' ':!settle.log'
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "night shift $DATE: $SUMMARY"
+          git commit -m "night shift $DATE (shift $SHIFT): $SUMMARY"
           # The PI may have pushed during the shift: rebase onto it, never lose it.
           for attempt in 1 2 3; do
             if git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:main; then exit 0; fi
