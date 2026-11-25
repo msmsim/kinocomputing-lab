@@ -543,6 +543,84 @@ test("check-shift: which shift a run is, and whether it should work it", () => {
   }
 });
 
+test("shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    mkdirSync(join(w.lab, "reading"));
+    cpSync(join(LAB, "reading/_note.html"), join(w.lab, "reading/_note.html"));
+    // As the receiver writes one: the PI's note, two excerpts, and the link.
+    writeFileSync(join(w.lab, "reading/500-amber-owls.html"), [
+      "<!DOCTYPE html>", "<html><head><title>500-amber-owls</title></head><body>", "<main>",
+      "<p>Worth checking against the tracker.</p>",
+      "<blockquote><p>The chip ran at 10 fJ per operation.</p></blockquote>",
+      "<blockquote><p>Measured on silicon, not simulated.</p></blockquote>",
+      "<p>A second thought of mine.</p>",
+      '<p class="source"><a href="https://example.org/chip?a=1&amp;b=2">A new photonic chip ↗</a></p>',
+      "</main>", "</body></html>", "",
+    ].join("\n"));
+    w.commit();
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
+    const tonight = read("state/tonight.md");
+    assert.match(tonight, /## The PI's takes and shares[\s\S]*### share:500-amber-owls\n\nA share from Subset/);
+    assert.match(tonight, /> Shared: A new photonic chip\n> Worth checking against the tracker\.\n> Excerpt: “The chip ran at 10 fJ per operation\.”/);
+    assert.match(tonight, /Links:\n- https:\/\/example\.org\/chip\?a=1&b=2/);
+    assert.match(tonight, /https:\/\/github\.com\/msmsim\/kinocomputing-lab\/blob\/main\/reading\/500-amber-owls\.html/);
+
+    // The shift edits a share and doesn't record it: the share is put back, and offered again.
+    writeFileSync(join(w.lab, "reading/500-amber-owls.html"), "tampered");
+    execFileSync("bash", ["tools/restore-machinery.sh"], { cwd: w.lab, encoding: "utf8" });
+    assert.match(read("reading/500-amber-owls.html"), /Worth checking against the tracker/, "kept as sent");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z");
+    assert.match(read("MORNING.md"), /Takes not handled, offered again tomorrow: share:500-amber-owls/);
+    w.commit();
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T02:00:00Z");
+    assert.match(read("state/tonight.md"), /### share:500-amber-owls/, "offered again");
+
+    // Recorded, but neither in the hopper nor disregarded with a reason: offered again.
+    writeFileSync(join(w.lab, "state/steers.jsonl"), `${JSON.stringify({ steer: "share:500-amber-owls", action: "read it" })}\n`);
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-22T03:00:00Z");
+    assert.match(read("MORNING.md"), /share:500-amber-owls was recorded but is neither in the hopper nor disregarded with a reason/);
+    assert.equal(JSON.parse(read("state/seen.json")).takes["share:500-amber-owls"], undefined);
+    w.commit();
+
+    // Handled: in the hopper, with the lab's line on it; marked seen, not offered again.
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T05:07:00Z", { LAB_SHIFT: "2" });
+    writeFileSync(join(w.lab, "state/paradigms.json"), JSON.stringify({ paradigms: [{ id: "photonic", name: "Photonic", group: "G", last_checked: null }] }));
+    writeFileSync(join(w.lab, "state/hopper.jsonl"), [
+      { url: "https://example.org/chip?a=1&b=2", title: "A new photonic chip", why: "A measured 10 fJ per operation, on silicon.", paradigms: ["photonic", "made-up"], share: "500-amber-owls" },
+      { url: "https://arxiv.org/abs/2611.00001", title: "A reservoir paper", why: "Found while checking the reservoir entry.", from: "lab" },
+      { url: "https://example.org/bad", title: "Bad", why: "As e002 showed." },
+    ].map((l) => JSON.stringify(l)).join("\n") + "\n");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-22T06:00:00Z", { LAB_SHIFT: "2" });
+    assert.equal(JSON.parse(read("state/seen.json")).takes["share:500-amber-owls"], 1);
+    assert.match(read("MORNING.md"), /A hopper line says "e002", which readers can't look up/);
+    const shown = JSON.parse(readFileSync(join(w.kino, "notes/_hopper.json"), "utf8"));
+    assert.deepEqual(shown.items.map((i) => [i.id, i.from, i.site, i.paradigms.join(",")]), [
+      ["500-amber-owls", "pi", "example.org", "photonic"],
+      [shown.items[1].id, "lab", "arxiv.org", ""],
+    ], "a share keeps its receiver's name, which is the address Subset was told; unknown paradigms dropped; the bad line left out");
+    assert.match(shown.items[1].id, /^r-[0-9a-f]{10}$/);
+    assert.ok(!JSON.stringify(shown).includes("Worth checking"), "the lab's line only, never the PI's own words");
+    const brief = read("published/lab-2026-11-22-brief.md");
+    assert.match(brief, /\*\*New in Reading\*\*\n\n- \[A new photonic chip\]\(https:\/\/example\.org\/chip\?a=1&b=2\): A measured 10 fJ/);
+    assert.match(brief, /All of it: \[Reading\]\(https:\/\/www\.kinocomputing\.com\/reading\)/);
+
+    // Left out only with a reason.
+    writeFileSync(join(w.lab, "reading/501-ash-bees.html"), '<main>\n<p class="source"><a href="https://example.org/spam">Off topic ↗</a></p>\n</main>\n');
+    w.commit();
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-23T02:00:00Z");
+    writeFileSync(join(w.lab, "state/steers.jsonl"), `${read("state/steers.jsonl")}${JSON.stringify({ steer: "share:501-ash-bees", action: "left out", disregarded: "A product page, nothing to read." })}\n`);
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-23T03:00:00Z");
+    assert.equal(JSON.parse(read("state/seen.json")).takes["share:501-ash-bees"], 1, "disregarded, with a reason, counts as handled");
+    w.commit();
+    assert.ok(!read("state/tonight.md").includes("share:500-amber-owls"), "handled once, gone");
+  } finally {
+    w.dispose();
+  }
+});
+
 test("timebox: stops a command past its limit with 124, passes an exit code through", () => {
   const started = Date.now();
   const slow = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "1", "sleep", "10"], { encoding: "utf8" });

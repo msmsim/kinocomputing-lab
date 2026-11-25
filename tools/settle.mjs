@@ -20,10 +20,11 @@
 // Prints a one-line summary for the commit message.
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { KINO, LAB, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
-import { renderNote } from "./render.mjs";
+import { labIdIn, renderNote } from "./render.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -133,7 +134,41 @@ if (machinery.length) {
 }
 
 // 2. Steers: delivered only once handled.
-const handled = new Set(readJsonl(join(LAB, "state/steers.jsonl")).map((line) => line.steer));
+//
+// The hopper first (AGENT.md, "The hopper"): the lab's reading list, every
+// link the PI shared and every one the lab found worth keeping, a line each
+// in state/hopper.jsonl. Lines for the same link merge, the first fixing when
+// it was added, later ones adding or correcting. A line that fails the checks
+// is left out of what the site shows, and said.
+const hopperLines = readJsonl(join(LAB, "state/hopper.jsonl"));
+const knownParadigms = new Set((readJson(join(LAB, "state/paradigms.json"), { paradigms: [] }).paradigms ?? []).map((p) => p.id));
+const hopper = new Map();
+for (const line of hopperLines) {
+  const problem = !/^https?:\/\//.test(String(line.url ?? "")) ? "has no http(s) link"
+    : !String(line.title ?? "").trim() && !hopper.has(line.url) ? "has no title"
+    : String(line.why ?? "").length > 240 ? "has a line over 240 characters"
+    : labIdIn(`<p>${line.title ?? ""} ${line.why ?? ""}</p>`) ? `says "${labIdIn(`<p>${line.title ?? ""} ${line.why ?? ""}</p>`)}", which readers can't look up`
+    : null;
+  if (problem) { report.push(`- A hopper line ${problem}, so it isn't shown: ${JSON.stringify(line).slice(0, 120)}`); continue; }
+  const before = hopper.get(line.url) ?? { added: line.added ?? run.date, used_in: [], paradigms: [] };
+  hopper.set(line.url, {
+    ...before,
+    ...Object.fromEntries(Object.entries(line).filter(([k, v]) => v != null && v !== "" && !["used_in", "paradigms", "added"].includes(k))),
+    paradigms: [...new Set([...before.paradigms, ...(line.paradigms ?? [])])].filter((id) => knownParadigms.has(id)),
+    used_in: [...new Set([...before.used_in, ...(line.used_in ?? [])])],
+  });
+}
+// A share is handled when the shift has said what it did with it, and either
+// put it in the hopper or said why not (`disregarded`): the bar for leaving
+// out what the PI chose to send is high, so leaving one out takes a reason.
+const steerLines = readJsonl(join(LAB, "state/steers.jsonl"));
+const shareInHopper = (slug) => [...hopper.values()].some((h) => h.share === slug);
+const handled = new Set(steerLines.filter((line) => {
+  if (!String(line.steer ?? "").startsWith("share:")) return true;
+  if (String(line.disregarded ?? "").trim() || shareInHopper(line.steer.slice(6))) return true;
+  report.push(`- ${line.steer} was recorded but is neither in the hopper nor disregarded with a reason; offered again.`);
+  return false;
+}).map((line) => line.steer));
 const seen = readJson(join(LAB, "state/seen.json"), {});
 if (run.baseline) seen.takes ??= {};
 const mark = ({ key, value }) => { (seen.takes ??= {})[key] = value; };
@@ -146,8 +181,10 @@ for (const steer of run.steers) {
 writeFileSync(join(LAB, "state/seen.json"), json(seen));
 if (missed.length) {
   report.push(`- Takes not handled, offered again tomorrow: ${missed.join(", ")}`);
-  const urls = run.steers.filter((st) => missed.includes(st.id)).map((st) => st.url);
-  told.push(`Not answered tonight, and offered again tomorrow: ${urls.map((u) => (u ? `[${u.replace(/^https?:\/\//, "")}](${u})` : "one of the PI's posts")).join(", ")}.`);
+  const urls = run.steers.filter((st) => missed.includes(st.id) && !st.share).map((st) => st.url);
+  const shares = run.steers.filter((st) => missed.includes(st.id) && st.share).length;
+  if (urls.length) told.push(`Not answered tonight, and offered again tomorrow: ${urls.map((u) => (u ? `[${u.replace(/^https?:\/\//, "")}](${u})` : "one of the PI's posts")).join(", ")}.`);
+  if (shares) told.push(`${shares} shared link${shares === 1 ? " wasn't" : "s weren't"} weighed tonight, and will be next time.`);
 }
 
 // 3. Claims: append-only.
@@ -312,6 +349,25 @@ if ((tracker.paradigms ?? []).length) {
   }
   writeFileSync(join(KINO, "notes", "_tracker.json"), json({ updated: run.date, source: tracker.source ?? null, groups }));
 }
+// The hopper, for the site's Reading page: every link, newest first, with the
+// lab's line on it and the notes that used it. Each has an anchor: a share's
+// is the file Subset's receiver gave it, which is the address it told
+// Subset; anything else's comes from its link.
+const hopperItems = [...hopper.values()].map((h) => ({
+  id: h.share ?? `r-${createHash("sha256").update(h.url).digest("hex").slice(0, 10)}`,
+  url: h.url,
+  title: String(h.title ?? "").trim() || h.url,
+  site: (() => { try { return new URL(h.url).hostname.replace(/^www\./, ""); } catch { return ""; } })(),
+  added: h.added,
+  from: h.share ? "pi" : h.from === "pi" ? "pi" : "lab",
+  paradigms: h.paradigms,
+  why: String(h.why ?? "").trim(),
+  used_in: h.used_in.filter((name) => isPublished(name)),
+})).sort((a, b) => b.added.localeCompare(a.added) || a.title.localeCompare(b.title));
+if (hopperItems.length || existsSync(join(KINO, "notes", "_hopper.json"))) {
+  writeFileSync(join(KINO, "notes", "_hopper.json"), json({ updated: run.date, items: hopperItems }));
+}
+const addedToday = hopperItems.filter((h) => h.added === run.date);
 const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
 if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);
 const held = parsed.length - out.length;
@@ -373,6 +429,12 @@ const briefOf = (said) => {
     "**Waiting on a human**",
     waiting.length ? waiting.join("\n\n") : "Nothing today.",
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
+    ...(addedToday.length ? [
+      "**New in Reading**",
+      [...addedToday.slice(0, 12).map((h) => `- [${h.title}](${h.url})${h.why ? `: ${h.why}` : ""}`),
+        ...(addedToday.length > 12 ? [`- And ${addedToday.length - 12} more.`] : []),
+        `- All of it: [Reading](${ORIGIN}reading).`].join("\n"),
+    ] : []),
     "**Also today**",
     [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
   ].join("\n\n");

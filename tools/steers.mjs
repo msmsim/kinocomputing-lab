@@ -9,6 +9,8 @@
 // applies that only once the shift has recorded what it did with the steer,
 // so one the agent misses comes back.
 
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { normalizeOrigin, textOf } from "./lib.mjs";
 
 const MAX_TEXT = 4000;
@@ -95,4 +97,39 @@ export async function fetchJson(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000), headers: { accept: "application/json" } });
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);
   return response.json();
+}
+
+/**
+ * Shares the PI sent the lab from Subset: each a page in `reading/`, written
+ * there by the lab's Subset receiver (README, "Shares from Subset") — a link,
+ * the PI's notes on it and the excerpts they chose. Not published anywhere;
+ * the shift weighs each one and decides what, if anything, it becomes. A
+ * share is a steer like a take, keyed `share:<file>`, and like a take it is
+ * marked seen only once the shift has recorded what it did with it.
+ */
+export function readingShares(dir, seen = {}, repoBase = "") {
+  if (!existsSync(dir)) return [];
+  const steers = [];
+  for (const file of readdirSync(dir).filter((f) => f.endsWith(".html") && !f.startsWith("_")).sort()) {
+    const key = `share:${file.replace(/\.html$/, "")}`;
+    if (seen[key]) continue;
+    const html = readFileSync(join(dir, file), "utf8");
+    const main = html.match(/<main>([\s\S]*?)<\/main>/)?.[1] ?? "";
+    const source = main.match(/<p class="source"><a href="([^"]+)">([\s\S]*?)<\/a><\/p>/);
+    const link = source ? source[1].replace(/&amp;/g, "&") : null;
+    const title = source ? textOf(source[2]).replace(/\s*↗\s*$/, "") : "";
+    // Excerpts are the blockquotes; everything else in the body is the PI's.
+    const body = main.replace(/<p class="source">[\s\S]*?<\/p>/, "")
+      .replace(/<blockquote>([\s\S]*?)<\/blockquote>/g, (whole, inner) => `<p>Excerpt: “${textOf(inner)}”</p>`);
+    steers.push({
+      id: key,
+      share: true,
+      url: `${repoBase}reading/${file}`,
+      title,
+      text: [title && `Shared: ${title}`, textOf(body)].filter(Boolean).join("\n").slice(0, MAX_TEXT),
+      links: link ? [link] : [],
+      seen: { key, value: 1 },
+    });
+  }
+  return steers;
 }

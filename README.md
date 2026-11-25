@@ -55,7 +55,7 @@ stale, and the next briefing lists them. At most two write-ups and four claims a
 ## Steering, for the PI
 
 Process-light by design: a PI and researchers, the PI checking in when they
-choose. There is no inbox. Post your takes to kinocomputing itself, through
+choose. Two ways in. Post your takes to kinocomputing itself, through
 motes, like any note — a reaction, a link, a direction, "less of X, more of
 Y". Anything on kinocomputing the lab didn't write is yours, and the next
 shift reads each new take, or new version of one, as a steer. To answer one
@@ -66,6 +66,41 @@ Every take gets a line in `state/steers.jsonl` saying what the lab did with
 it, and a mention in the night's brief on kinocomputing. One it misses
 comes back the next night.
 For anything heavier, edit `state/questions/` or `CHARTER.md` directly.
+
+### Shares from Subset
+
+Or send the lab a link from Subset, with notes and excerpts, as often as you
+like. It lands in `reading/` here (not on kinocomputing), and the next shift
+reads it like a take: the source itself, your notes, your excerpts, and
+decides what it is worth — evidence for a paradigm entry, a founding story to
+audit, a question, a note of its own. Every share goes into the **hopper**,
+the lab's reading list (`state/hopper.jsonl`), with one line from the lab on
+it; only the clearly irrelevant is left out, with a reason. The hopper is
+public on kinocomputing as **Reading**, with the lab's line only, never your
+notes, and each day's brief lists what was added. Each share gets a line in
+`state/steers.jsonl`; one the shift misses comes back. The lab repository is
+public, so the shares themselves are readable on GitHub; send nothing you'd
+keep private.
+
+The receiver is the reference one from Subset (a Cloudflare Worker that
+commits each share to a repo), deployed as its own Worker with:
+
+```
+GITHUB_OWNER = "msmsim"
+GITHUB_REPO = "kinocomputing-lab"
+GITHUB_BRANCH = "main"
+SITE_BASE = "https://www.kinocomputing.com"
+NOTES_FOLDER = "reading"
+RECEIVER_NAME = "Kinocomputing lab"
+SITE_TIMEZONE = "Europe/London"
+```
+
+and two secrets: its own `SUBSET_TOKEN`, and `GITHUB_TOKEN`, a fine-grained
+token with Contents read and write on this repository only. It fills
+`reading/_note.html`. `SITE_BASE` and `NOTES_FOLDER` make the address it gives
+Subset for each share `https://www.kinocomputing.com/reading/<share>`, which
+the site redirects to that share's place on the Reading page. The restore step
+after each shift keeps `reading/` exactly as sent.
 
 ## Money
 

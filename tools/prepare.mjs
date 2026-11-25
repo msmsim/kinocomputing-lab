@@ -11,7 +11,7 @@
 import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, rotation } from "./lib.mjs";
-import { takeSteers, staleThreads, fetchJson } from "./steers.mjs";
+import { readingShares, takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
 
 const config = readJson(join(LAB, "config/lab.json"));
@@ -69,6 +69,8 @@ if (!offline) {
     console.warn(`steers: kinocomputing unreadable tonight: ${error.message}`);
   }
 }
+// And what the PI shared to the lab from Subset, waiting in reading/.
+steers.push(...readingShares(join(LAB, "reading"), seen.takes ?? {}, config.lab.evidence_base));
 
 // Write-ups quoting a claim that has since moved.
 let stale = [];
@@ -186,11 +188,12 @@ const lines = [
     }),
     "",
   ] : ["None: `state/paradigms.json` is empty.", ""]),
-  "## The PI's takes",
+  "## The PI's takes and shares",
   "",
   ...(steers.length ? steers.flatMap((s) => [
     `### ${s.id}`,
     "",
+    ...(s.share ? ["A share from Subset: a link the PI sent the lab, with their notes and excerpts. Not published; yours to weigh (AGENT.md, step 2).", ""] : []),
     `${s.url}${s.version > 1 ? ` (version ${s.version}: an edit to an earlier take)` : ""}${s.answers ? `, answering the lab's ${s.answers}` : ""}.`,
     "",
     quote(s.text),

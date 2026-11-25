@@ -80,12 +80,29 @@ says.
    No take goes unrecorded. A take that disagrees with the lab is the most
    useful kind: take it seriously, and say what would settle it.
 
+   **Shares** (`share:` ids) are links the PI sent the lab from Subset, with
+   their notes and the excerpts they chose, waiting in `reading/`. They are
+   not published, and not a request to publish: they are the PI pointing at
+   something, and high signal: they chose to send it. Read the source
+   itself, not just the excerpts, and decide what it is worth to the lab —
+   evidence for a paradigm entry, a founding story for the foundations
+   ledger, a question or an experiment, a note in its own right (in a
+   voice, if one fits), material for a piece already in hand. Every share
+   goes in the hopper ("The hopper"), whatever else it becomes. Leaving
+   one out is for the clearly irrelevant only — spam, a dead link, a
+   duplicate — and takes a reason: record it with `"disregarded": "<why>"`
+   in its steers line. A note that comes of one links the source and says
+   plainly what it adds; quote the source briefly, never the PI's notes or
+   reasons, which stay theirs. Shares are kept as sent: don't edit or move
+   anything in `reading/`.
+
 3. **Plan the shift's work.** A day publishes **5 to 15 notes** across its
    two shifts, claims included, and spends most of its money: an unspent
    dollar is a note not written. The first shift reaches the five; the
    second adds what depth earns ("Two shifts a day"). Start with the lead
    piece, in order of preference:
    - what a take asked for, if it asked for something specific;
+   - a share whose source deserves a piece of its own;
    - the shift's focus, if the briefing has one (an operator ran this shift
      by hand and chose the question);
    - a replication that disagreed (in the briefing): find out why first;
@@ -365,6 +382,35 @@ archive is a natural place for one. Claims and the brief are never in a
 voice. Every voice still follows "Writing for the site": a voice changes
 how a thing is said, never what the evidence supports, and never claims to
 be human.
+
+## The hopper
+
+The lab's reading list, public on kinocomputing as **Reading**: every link
+the PI shares, and every source the lab itself finds worth keeping (from
+Exa, arXiv, OpenAlex, a paper's references) — not every search result, but
+anything you read and would point a curious reader to. It grows every
+night and is what readers, and the lab itself, can sort and search later.
+
+One line per link in `state/hopper.jsonl`:
+
+```json
+{"url": "https://…", "title": "The source's own title", "why": "One line, in the lab's words, on what it is and why it matters, under 240 characters.", "paradigms": ["photonic"], "share": "<the share's file, for a share>", "from": "lab", "used_in": ["lab-YYYY-MM-DD-name"]}
+```
+
+- `why` is the lab's line, for a stranger: what the source is and what it
+  shows or claims, measured or not. Never the PI's notes or excerpts.
+- `paradigms` are ids from `state/paradigms.json`, for filtering; leave it
+  empty when none fits.
+- `share` names the share it came from (its file in `reading/`, without
+  `.html`); `from: "lab"` marks one you found yourself.
+- `used_in` lists the lab notes that cite it. When a later note uses a
+  link already in the hopper, append a line with just its `url` and the
+  new `used_in`: lines for the same link merge, and the first fixes when it
+  was added.
+
+Settle checks the lines (a link, a title, no lab ids, a short `why`) and
+publishes the list to the site's Reading page; the brief lists the day's
+additions.
 
 ## Two shifts a day
 

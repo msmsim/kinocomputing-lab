@@ -9,7 +9,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MACHINERY=(tools config test .github .claude AGENT.md CHARTER.md README.md APPROACH.md package.json package-lock.json .nvmrc .python-version .gitignore experiments/_template analyses/_template reference voices sources/archive-2025/essays sources/archive-2025/personas sources/archive-2025/about-2025.md)
+MACHINERY=(tools config test .github .claude AGENT.md CHARTER.md README.md APPROACH.md package.json package-lock.json .nvmrc .python-version .gitignore experiments/_template analyses/_template reference voices sources/archive-2025/essays sources/archive-2025/personas sources/archive-2025/about-2025.md reading)
 
 {
   git diff --name-only HEAD -- "${MACHINERY[@]}"
