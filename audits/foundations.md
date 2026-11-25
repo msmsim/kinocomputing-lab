@@ -29,3 +29,9 @@ Entry format:
 - AlexNet 2012 as the decisive deep-learning breakthrough; backprop credit (1986) — queued.
 - AI training energy "doubling every 4–6 months" — queued.
 - Kaplan 2020 smooth power laws; Chinchilla 2022 compute-optimal — queued.
+
+## Added 2026-11-25 (untraced)
+- Crossbar "computation where the weights sit avoids von Neumann data movement" (IBM explainer) — queued.
+- Ambrogio 2018 Nature: software-equivalent PCM training, 28,065 GOPS/W calculated — queued.
+- Shen 2017 nanophotonic NN: "orders of magnitude" energy, ~100x speed; 56 MZI vowel task ~3/4 accuracy on 180 examples — queued.
+- Sub-attojoule / sub-photon per op optical lower bound is optical power only, not system — queued.

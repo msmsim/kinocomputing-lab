@@ -29,7 +29,7 @@
       "id": "connectionism",
       "name": "Connectionism and deep learning",
       "group": "The incumbent stack",
-      "last_checked": null
+      "last_checked": "2026-11-25"
     },
     {
       "id": "transformers-scaling",
@@ -41,13 +41,13 @@
       "id": "analog-in-memory",
       "name": "Analog in-memory computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-25"
     },
     {
       "id": "photonic",
       "name": "Photonic / optical computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-25"
     },
     {
       "id": "thermodynamic",

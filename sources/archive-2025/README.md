@@ -30,9 +30,9 @@ carried forward, because …").
 | undated | [Energy (in)efficiency and (dis)embodiment](essays/energy-inefficiency-and-disembodiment.md) | Human agent journal | McSweet | 2 KB | done |
 | June 9th, 2025 | [ProductEvolve](essays/productevolve.md) | Human-machine agent chat | McSweet, Bompa | 25 KB | unread |
 | June 13th, 2025 | [Communal bring-up](essays/communal-bring-up.md) | Human-machine agent chat | McSweet, Bompa | 22 KB | unread |
-| June 20th, 2025 | [Pick your apocalypse](essays/pick-your-apocalypse.md) | Human-machine agent chat | McSweet, Bompa | 15 KB | unread |
+| June 20th, 2025 | [Pick your apocalypse](essays/pick-your-apocalypse.md) | Human-machine agent chat | McSweet, Bompa | 15 KB | split |
 | June 23rd, 2025 | [Non-John computing](essays/non-john-computing.md) | Human-machine agent chat | McSweet, Bompa | 76 KB | unread |
-| June 26th, 2025 | [Consensus machines](essays/consensus-machines.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | unread |
+| June 26th, 2025 | [Consensus machines](essays/consensus-machines.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | split |
 | July 1st, 2025 | [Negative attributes of AGI](essays/negative-attributes-of-agi.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | unread |
 | July 3rd, 2025 | [The discrete option](essays/the-discrete-option.md) | Human-machine agent chat | McSweet, Bompa | 37 KB | unread |
 | July 4th, 2025 | [A kinetic case study of computation](essays/a-kinetic-case-study-of-computation.md) | Human-machine agent chat | McSweet, Bompa | 41 KB | unread |
