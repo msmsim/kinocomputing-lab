@@ -1,0 +1,10 @@
+{
+  "of": "7d215c79",
+  "seed": 2,
+  "at": "2026-11-25T15:36:37Z",
+  "metric": "min share of energy in converters+calibration, mid setting, 64-32-10",
+  "original": 0.9661,
+  "value": 0.9661,
+  "killed": false,
+  "agrees": true
+}

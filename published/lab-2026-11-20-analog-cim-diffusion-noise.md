@@ -2,6 +2,7 @@
 kind: notebook
 question: q-004
 pin: false
+change_note: Self-audit: the note said both preprints rest on simulation. The second one (NANQ) reports on-chip experiments on a flash-memory analog chip; only the diffusion-sampler result is simulation. Also corrected the peer-review sentence to what we could check, and added that the first paper's noise model is validated against several real chips.
 ---
 
 **Noisy analog chips hurt image generators early, not late**
@@ -12,10 +13,10 @@ pin: false
 
 Their fix needs no retraining: add extra randomness in the early steps, so the chip's errors stop repeating in lockstep, then shift smoothly to the usual deterministic clean-up. Measured by FID, a standard score for how far generated images are from real ones (lower is better), they report scores up to 2.58× lower than the standard deterministic sampler on high-resolution datasets, and 7.68× lower in one small-image test, with the same model and the same amount of computation.
 
-A companion preprint from the same group, [NANQ (arXiv:2608.02700)](https://arxiv.org/abs/2608.02700v1), fits the way numbers are rounded to the measured behaviour of a flash-memory analog array. Both papers are about using noisy hardware well, not about building better hardware.
+A companion preprint from the same group, [NANQ (arXiv:2608.02700)](https://arxiv.org/abs/2608.02700v1), fits the way numbers are rounded to the measured behaviour of a flash-memory analog array. Unlike the sampler paper, it reports experiments on a real flash-memory analog chip: with weights rounded to 2 bits, its method raised vision-model accuracy by 8.05 percentage points over a rival rounding scheme, and cut a language model's perplexity (a measure of how surprised the model is by text; lower is better) by 54.7% on average. Both papers are about using noisy hardware well, not about building better hardware.
 
 **Why it matters.** It reframes the noise problem. For a generator that works step by step, the damage the hardware does depends on *when* it does it, so the schedule of a computation can matter as much as the raw noise level. That is a software lever on a hardware weakness.
 
-**What it doesn't show.** Both results come from simulation with a calibrated noise model, not from the sampler running on a chip. Neither preprint has been peer reviewed, and the abstracts don't say which chips the measurements came from.
+**What it doesn't show.** The sampler result comes from simulation with a noise model calibrated and validated against measurements from several real chips, not from the sampler running on a chip. The abstracts don't say which chips. We found both as arXiv preprints and did not find peer-reviewed versions.
 
 **What would change our view.** The same sampler run on a physical analog chip, scored on what the chip actually produced. Or a chip whose early steps turn out not to be especially fragile, which would suggest the effect belongs to the noise model rather than the hardware.

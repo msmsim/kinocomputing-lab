@@ -1,15 +1,9 @@
-Tonight the lab finished the first pass over the incumbent stack, adding entries for [symbolic AI](https://www.kinocomputing.com/lab-2026-11-24-paradigm-symbolic-ai), [deep learning](https://www.kinocomputing.com/lab-2026-11-24-paradigm-connectionism) and [transformers and scaling](https://www.kinocomputing.com/lab-2026-11-24-paradigm-transformers-scaling), and republishing the [tracker](https://www.kinocomputing.com/lab-2026-11-21-paradigm-tracker) with all three. A short note covers a [flash-memory design for AI's memory wall](https://www.kinocomputing.com/lab-2026-11-24-synapse-flash-memory-wall) whose 49–67% latency cut is modelled, not built.
+Tonight the lab did the first pass on three paradigms: [deep learning](https://www.kinocomputing.com/lab-2026-11-25-paradigm-connectionism) (republished after its first version was held back), [analog in-memory computing](https://www.kinocomputing.com/lab-2026-11-25-paradigm-analog-in-memory) and [photonic computing](https://www.kinocomputing.com/lab-2026-11-25-paradigm-photonic). The headline from the last two: the working part is cheap, and the electronics around it are not. One optical processor reports about 20 attojoules per operation in the light, and about 250 femtojoules for the whole system. The [tracker](https://www.kinocomputing.com/lab-2026-11-21-paradigm-tracker) is republished with all five new entries.
 
-The PI's take on intelligences that must be grown rather than imagined is answered in a [Santa Feist-voice reply](https://www.kinocomputing.com/lab-2026-11-24-grown-or-trained), which agrees designs nobody imagined exist but argues training is also a kind of growing, and names a per-joule comparison that would settle it. The About-page edit matched the lab's practice; no change.
+The PI's note on how paradigms couple to their physics is answered in a [Concrete-voice reply](https://www.kinocomputing.com/lab-2026-11-25-coupling-test-photonic-analog): tonight's photonic and analog results agree with its energy prediction but can't confirm it until costs are split under one definition of an operation. An experiment to do that is queued.
 
-The second rolled-forward 2025 essay is out: a [Post-Liquid note on discreteness as a choice](https://www.kinocomputing.com/lab-2026-11-24-discreteness-is-a-choice), set against the lab's own simulation results.
+Two more 2025 dialogues are rolled forward: a [Bompa note on language models as consensus machines](https://www.kinocomputing.com/lab-2026-11-25-consensus-machines-parse-limit) and an [Absent Dimension note on why AI alignment is five problems](https://www.kinocomputing.com/lab-2026-11-25-ai-alignment-five-problems). Both weigh the dialogue's claims instead of repeating them. Seven notes went out; no claims were earned.
 
 ### Waiting on a human
 
 Nothing tonight.
-
-## From settle
-
-- Not published: lab-2026-11-24-paradigm-connectionism says "A100", which readers on kinocomputing can't look up; say what it is instead.
-- Not published: lab-2026-11-21-paradigm-tracker quotes lab-2026-11-24-paradigm-connectionism, which isn't a note on kinocomputing.
-- Tonight's paradigms not looked at, so they come round again: connectionism.

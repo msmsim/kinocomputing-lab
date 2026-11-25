@@ -1,20 +1,21 @@
 {
   "date": "2026-11-25",
-  "shift": 1,
+  "shift": 2,
   "shifts": [
-    1
+    1,
+    2
   ],
   "summary": [
-    "$0.58",
+    "$0.90",
     "$0.05 Exa",
-    "published lab-2026-11-25-paradigm-analog-in-memory",
-    "published lab-2026-11-25-paradigm-connectionism",
-    "published lab-2026-11-25-paradigm-photonic",
-    "updated lab-2026-11-21-paradigm-tracker",
-    "published lab-2026-11-25-ai-alignment-five-problems",
-    "published lab-2026-11-25-consensus-machines-parse-limit",
-    "published lab-2026-11-25-coupling-test-photonic-analog",
-    "published the brief"
+    "1 claim(s)",
+    "published lab-2026-11-25-converter-share-claim",
+    "updated lab-2026-11-20-analog-cim-diffusion-noise",
+    "published lab-2026-11-25-converters-dominate-small-arrays",
+    "published lab-2026-11-25-optical-neural-net-energy-claim-audit",
+    "updated the brief"
   ],
-  "report": []
+  "report": [
+    "- Replication of e007-conversion-calibration-energy-split on seed 2: agrees (min share of energy in converters+calibration, mid setting, 64-32-10 0.9661, was 0.9661)."
+  ]
 }

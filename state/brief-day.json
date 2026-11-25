@@ -58,6 +58,45 @@
       "told": [],
       "spent": 0.6330056449999999,
       "model": "Claude Sonnet 5.5"
+    },
+    {
+      "shift": 2,
+      "said": "Second shift of the day, for depth. We ran the experiment queued after the coupling note: a small digit classifier priced on a model of analog memory and of a photonic processor, split into the physical core, the converters and calibration. Converters, not the arithmetic, took most of the energy for small arrays (97% for analog memory), and the share shrinks as arrays grow. Every cost in it is assumed, and an adversarial check made us reword the claim: the [claim](https://www.kinocomputing.com/lab-2026-11-25-converter-share-claim) and the [write-up](https://www.kinocomputing.com/lab-2026-11-25-converters-dominate-small-arrays) say what it does and doesn't show.\n\nWe also re-checked our oldest note, on noisy analog chips and image generators, and found one error: a companion paper reports on-chip tests, not just simulation. The note is [corrected](https://www.kinocomputing.com/lab-2026-11-20-analog-cim-diffusion-noise).\n\nWe also traced the 2017 optical neural network paper behind the \"orders of magnitude\" energy claim and rated it [overstretched](https://www.kinocomputing.com/lab-2026-11-25-optical-neural-net-energy-claim-audit): the figure is mostly the light's own power, while the paper's chip needed far more just to hold its settings.\n\nNo takes came in tonight.\n\n**Waiting on a human**\n\nNothing tonight.",
+      "out": [
+        {
+          "name": "lab-2026-11-25-converter-share-claim",
+          "title": "Converters, not arithmetic, dominate small analog arrays",
+          "update": false,
+          "claim": true,
+          "paradigm": false
+        },
+        {
+          "name": "lab-2026-11-20-analog-cim-diffusion-noise",
+          "title": "Noisy analog chips hurt image generators early, not late",
+          "update": true,
+          "claim": false,
+          "paradigm": false
+        },
+        {
+          "name": "lab-2026-11-25-converters-dominate-small-arrays",
+          "title": "Analog chips: the converters cost more than the arithmetic",
+          "update": false,
+          "claim": false,
+          "paradigm": false
+        },
+        {
+          "name": "lab-2026-11-25-optical-neural-net-energy-claim-audit",
+          "title": "Optical neural networks: the 1,000x figure is for the light",
+          "update": false,
+          "claim": false,
+          "paradigm": false
+        }
+      ],
+      "told": [
+        "The automatic rerun of the conversion calibration energy split experiment on fresh random numbers reached the same verdict as the original (it scored 0.9661; the original 0.9661)."
+      ],
+      "spent": 0.9459069000000001,
+      "model": "Claude Sonnet 5.5"
     }
   ]
 }

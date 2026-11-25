@@ -33,5 +33,5 @@ Entry format:
 ## Added 2026-11-25 (untraced)
 - Crossbar "computation where the weights sit avoids von Neumann data movement" (IBM explainer) — queued.
 - Ambrogio 2018 Nature: software-equivalent PCM training, 28,065 GOPS/W calculated — queued.
-- Shen 2017 nanophotonic NN: "orders of magnitude" energy, ~100x speed; 56 MZI vowel task ~3/4 accuracy on 180 examples — queued.
+- Shen 2017 nanophotonic NN: "orders of magnitude" energy, ~100x speed; 56 MZI vowel task ~3/4 accuracy on 180 examples — **overstretched** (2026-11-25, full text minus supplement; reviewer agreed). Energy bound is nonlinearity trigger light only; demo chip held ~10 mW/modulator; nonlinearity was electronic in the demo; 76.7% is best of 3 runs. Evidence: audits/evidence/shen-2017-arxiv-1610.02365.txt. Published: lab-2026-11-25-optical-neural-net-energy-claim-audit.
 - Sub-attojoule / sub-photon per op optical lower bound is optical power only, not system — queued.

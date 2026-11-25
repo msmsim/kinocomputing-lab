@@ -1,0 +1,125 @@
+{
+ "metric": "min share of energy in converters+calibration, mid setting, 64-32-10",
+ "seed": 1,
+ "acc_float": 0.9796296296296296,
+ "acc_quantised": 0.9537037037037037,
+ "weight_noise_for_1pt_loss": 0.04,
+ "constants_low_mid_high": {
+  "walden_fJ_per_step": [
+   5,
+   20,
+   100
+  ],
+  "analog_core_fJ_per_mac": [
+   1,
+   5,
+   20
+  ],
+  "photonic_core_fJ_per_mac": [
+   0.02,
+   0.02,
+   0.02
+  ],
+  "write_pJ_per_cell": [
+   10,
+   50,
+   200
+  ],
+  "analog_drift_per_sqrt_hour": [
+   0.002,
+   0.01,
+   0.05
+  ],
+  "photonic_drift_per_sqrt_hour": [
+   0.005,
+   0.02,
+   0.1
+  ],
+  "heater_mW_per_weight": [
+   0.01,
+   1.0,
+   5.0
+  ],
+  "mod_pJ_per_input": [
+   0.1,
+   0.5,
+   2.0
+  ],
+  "analog_rate_per_s": [
+   10000.0,
+   1000.0,
+   100.0
+  ],
+  "photonic_rate_per_s": [
+   1000000.0,
+   100000.0,
+   10000.0
+  ]
+ },
+ "small_64_32_10_mid": {
+  "analog": {
+   "core": 5.0,
+   "converters": 142.7027027027027,
+   "calibration": 0.0008680555555555555,
+   "total": 147.70357075825825,
+   "share_conv_cal": 0.9661484148668055
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 162.97297297297297,
+   "calibration": 10000000.000034722,
+   "total": 10000162.993007695,
+   "share_conv_cal": 0.9999999980000325
+  }
+ },
+ "small_64_32_10_fav": {
+  "analog": {
+   "core": 20.0,
+   "converters": 35.67567567567568,
+   "calibration": 6.944444444444445e-07,
+   "total": 55.67567637012012,
+   "share_conv_cal": 0.6407767035097296
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 39.729729729729726,
+   "calibration": 10000.000000217016,
+   "total": 10039.749729946747,
+   "share_conv_cal": 0.9999980079184703
+  }
+ },
+ "large_784_128_10_mid": {
+  "analog": {
+   "core": 5.0,
+   "converters": 18.438287153652393,
+   "calibration": 0.0008680555555555556,
+   "total": 23.43915520920795,
+   "share_conv_cal": 0.7866817316847761
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 22.925062972292192,
+   "calibration": 10000000.000034723,
+   "total": 10000022.945097696,
+   "share_conv_cal": 0.9999999980000046
+  }
+ },
+ "large_784_128_10_fav": {
+  "analog": {
+   "core": 20.0,
+   "converters": 4.609571788413098,
+   "calibration": 6.944444444444445e-07,
+   "total": 24.609572482857544,
+   "share_conv_cal": 0.1873081089104032
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 5.5069269521410575,
+   "calibration": 10000.000000217013,
+   "total": 10005.526927169154,
+   "share_conv_cal": 0.9999980011047748
+  }
+ },
+ "value": 0.9661,
+ "killed": false
+}

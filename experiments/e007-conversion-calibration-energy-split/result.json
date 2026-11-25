@@ -1,0 +1,159 @@
+{
+ "metric": "min share of energy in converters+calibration, mid setting, 64-32-10",
+ "seed": 1,
+ "acc_float": 0.9796296296296296,
+ "acc_quantised": 0.9537037037037037,
+ "weight_noise_for_1pt_loss": 0.04,
+ "constants_low_mid_high": {
+  "walden_fJ_per_step": [
+   5,
+   20,
+   100
+  ],
+  "analog_core_fJ_per_mac": [
+   1,
+   5,
+   20
+  ],
+  "photonic_core_fJ_per_mac": [
+   0.02,
+   0.02,
+   0.02
+  ],
+  "write_pJ_per_cell": [
+   10,
+   50,
+   200
+  ],
+  "analog_drift_per_sqrt_hour": [
+   0.002,
+   0.01,
+   0.05
+  ],
+  "photonic_drift_per_sqrt_hour": [
+   0.005,
+   0.02,
+   0.1
+  ],
+  "heater_mW_per_weight": [
+   0.0,
+   0.01,
+   0.1
+  ],
+  "mod_pJ_per_input": [
+   0.1,
+   0.5,
+   2.0
+  ],
+  "analog_rate_per_s": [
+   10000.0,
+   1000.0,
+   100.0
+  ],
+  "photonic_rate_per_s": [
+   1000000000.0,
+   100000000.0,
+   10000000.0
+  ]
+ },
+ "small_64_32_10_mid": {
+  "analog": {
+   "core": 5.0,
+   "converters": 142.7027027027027,
+   "calibration": 0.0008680555555555555,
+   "total": 147.70357075825825,
+   "share_conv_cal": 0.9661484148668055,
+   "share_converters_only": 0.9661425378554978
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 162.97297297297297,
+   "calibration": 100.00000003472225,
+   "total": 262.99297300769524,
+   "share_conv_cal": 0.9999239523407363,
+   "share_converters_only": 0.6196856558909061
+  }
+ },
+ "small_64_32_10_fav": {
+  "analog": {
+   "core": 20.0,
+   "converters": 35.67567567567568,
+   "calibration": 6.944444444444445e-07,
+   "total": 55.67567637012012,
+   "share_conv_cal": 0.6407767035097296,
+   "share_converters_only": 0.6407766910366985
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 39.729729729729726,
+   "calibration": 2.1701388888888888e-10,
+   "total": 39.74972972994674,
+   "share_conv_cal": 0.999496851924884,
+   "share_converters_only": 0.9994968519194245
+  }
+ },
+ "large_784_128_10_mid": {
+  "analog": {
+   "core": 5.0,
+   "converters": 18.438287153652393,
+   "calibration": 0.0008680555555555556,
+   "total": 23.43915520920795,
+   "share_conv_cal": 0.7866817316847761,
+   "share_converters_only": 0.7866446972631935
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 22.925062972292192,
+   "calibration": 100.00000003472222,
+   "total": 122.94506300701441,
+   "share_conv_cal": 0.9998373257167809,
+   "share_converters_only": 0.18646590933858193
+  }
+ },
+ "large_784_128_10_fav": {
+  "analog": {
+   "core": 20.0,
+   "converters": 4.609571788413098,
+   "calibration": 6.944444444444445e-07,
+   "total": 24.609572482857544,
+   "share_conv_cal": 0.1873081089104032,
+   "share_converters_only": 0.18730808069193478
+  },
+  "photonic": {
+   "core": 0.02,
+   "converters": 5.5069269521410575,
+   "calibration": 2.170138888888889e-10,
+   "total": 5.526926952358071,
+   "share_conv_cal": 0.9963813525721619,
+   "share_converters_only": 0.9963813525328971
+  }
+ },
+ "photonic_heater_sweep_mid": {
+  "small_heater_0.0mW": {
+   "converters_share": 0.9999,
+   "total_fJ_per_mac": 162.99
+  },
+  "small_heater_0.01mW": {
+   "converters_share": 0.6197,
+   "total_fJ_per_mac": 262.99
+  },
+  "small_heater_0.1mW": {
+   "converters_share": 0.1401,
+   "total_fJ_per_mac": 1162.99
+  },
+  "large_heater_0.0mW": {
+   "converters_share": 0.9991,
+   "total_fJ_per_mac": 22.95
+  },
+  "large_heater_0.01mW": {
+   "converters_share": 0.1865,
+   "total_fJ_per_mac": 122.95
+  },
+  "large_heater_0.1mW": {
+   "converters_share": 0.0224,
+   "total_fJ_per_mac": 1022.95
+  }
+ },
+ "value": 0.9661,
+ "killed": false
+}
