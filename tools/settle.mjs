@@ -338,8 +338,26 @@ const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\
 const SHIFT_NAMES = { 1: "First shift", 2: "Second shift" };
 const shiftsWith = (said) => [...earlierShifts, { shift: SHIFT, said, out, told, spent, model: modelWords }]
   .sort((a, b) => a.shift - b.shift);
+// A shift's summary and what it left for the PI, apart: the brief gathers
+// every shift's "Waiting on a human" into one section after the summaries,
+// rather than one per shift, and a "nothing" says nothing.
+const WAITING = /^\*\*Waiting on a human\*\*\s*$/im;
+function splitWaiting(said) {
+  const at = (said ?? "").search(WAITING);
+  if (at === -1) return { body: (said ?? "").trim(), waiting: "" };
+  const rest = said.slice(at).replace(WAITING, "").trim();
+  const next = rest.search(/^\*\*[^*\n]+\*\*\s*$/m);
+  const waiting = (next === -1 ? rest : rest.slice(0, next)).trim();
+  const after = next === -1 ? "" : rest.slice(next).trim();
+  return {
+    body: [said.slice(0, at).trim(), after].filter(Boolean).join("\n\n"),
+    waiting: /^(?:-\s*)?nothing(?:\s+(?:tonight|today|yet))?\.?$/i.test(waiting) ? "" : waiting,
+  };
+}
 const briefOf = (said) => {
   const shifts = shiftsWith(said);
+  const parts = shifts.map((s) => ({ ...s, ...splitWaiting(s.said) }));
+  const waiting = parts.map((p) => p.waiting).filter(Boolean);
   const several = shifts.length > 1;
   // Everything the day published, once each, in the order it went out.
   const published = new Map();
@@ -348,10 +366,12 @@ const briefOf = (said) => {
   const models = [...new Set(shifts.map((s) => s.model).filter(Boolean))].join(" and ");
   return [
     `**Lab brief: ${dateWords}**`,
-    ...shifts.flatMap((s) => [
+    ...parts.flatMap((s) => [
       ...(several ? [`**${SHIFT_NAMES[s.shift] ?? `Shift ${s.shift}`}**`] : []),
-      s.said || "The researcher left no summary.",
+      s.body || "The researcher left no summary.",
     ]),
+    "**Waiting on a human**",
+    waiting.length ? waiting.join("\n\n") : "Nothing today.",
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
     "**Also today**",
     [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
