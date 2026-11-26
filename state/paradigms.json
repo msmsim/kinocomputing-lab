@@ -53,19 +53,19 @@
       "id": "thermodynamic",
       "name": "Thermodynamic / probabilistic computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-26"
     },
     {
       "id": "reversible",
       "name": "Reversible / adiabatic computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-26"
     },
     {
       "id": "quantum",
       "name": "Quantum computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-26"
     },
     {
       "id": "physical-reservoir",

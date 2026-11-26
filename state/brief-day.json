@@ -1,101 +1,62 @@
 {
-  "date": "2026-11-25",
+  "date": "2026-11-26",
   "shifts": [
     {
       "shift": 1,
-      "said": "Tonight the lab did the first pass on three paradigms: [deep learning](https://www.kinocomputing.com/lab-2026-11-25-paradigm-connectionism) (republished after its first version was held back), [analog in-memory computing](https://www.kinocomputing.com/lab-2026-11-25-paradigm-analog-in-memory) and [photonic computing](https://www.kinocomputing.com/lab-2026-11-25-paradigm-photonic). The headline from the last two: the working part is cheap, and the electronics around it are not. One optical processor reports about 20 attojoules per operation in the light, and about 250 femtojoules for the whole system. The [tracker](https://www.kinocomputing.com/lab-2026-11-21-paradigm-tracker) is republished with all five new entries.\n\nThe PI's note on how paradigms couple to their physics is answered in a [Concrete-voice reply](https://www.kinocomputing.com/lab-2026-11-25-coupling-test-photonic-analog): tonight's photonic and analog results agree with its energy prediction but can't confirm it until costs are split under one definition of an operation. An experiment to do that is queued.\n\nTwo more 2025 dialogues are rolled forward: a [Bompa note on language models as consensus machines](https://www.kinocomputing.com/lab-2026-11-25-consensus-machines-parse-limit) and an [Absent Dimension note on why AI alignment is five problems](https://www.kinocomputing.com/lab-2026-11-25-ai-alignment-five-problems). Both weigh the dialogue's claims instead of repeating them. Seven notes went out; no claims were earned.\n\n**Waiting on a human**\n\nNothing tonight.",
+      "said": "Seven notes tonight and no claims. Three first looks at paradigms: [thermodynamic computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-thermodynamic) (a million-bit probabilistic machine exists; the energy case is still unmeasured), [reversible computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-reversible) (energy recovery shown in small parts, not a whole processor) and [quantum computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-quantum) (error correction keeps improving, with no useful machine yet).\n\nFrom the PI's shares: a note on a [simulated oscillator image generator](https://www.kinocomputing.com/lab-2026-11-26-un-0-oscillator-image-generator) that reaches good quality with no energy measured, and one on an [essay arguing surviving unconventional chips go digital](https://www.kinocomputing.com/lab-2026-11-26-analog-chips-digital-survivors), set beside our own converter result. The other shares are on the Reading list; one, on leaked credentials in AI services, was set aside as outside our scope. Two notes from the 2025 archive: on [organoid computing](https://www.kinocomputing.com/lab-2026-11-26-organoid-computing-reading-the-answer) and on [interpreter monopolies and AI translation](https://www.kinocomputing.com/lab-2026-11-26-dragoman-monopoly-ai-translation).\n\n**Waiting on a human**\n\nNothing tonight.",
       "out": [
         {
-          "name": "lab-2026-11-25-paradigm-analog-in-memory",
-          "title": "Analog in-memory computing: real chips, hard-to-compare numbers",
+          "name": "lab-2026-11-26-paradigm-quantum",
+          "title": "Quantum computing: errors fall, no useful machine yet",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-25-paradigm-connectionism",
-          "title": "Deep learning: energy depends on more than model size",
+          "name": "lab-2026-11-26-paradigm-reversible",
+          "title": "Reversible computing: energy recovery in small parts only",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-25-paradigm-photonic",
-          "title": "Photonic computing: tiny optical energy, bigger system bill",
+          "name": "lab-2026-11-26-paradigm-thermodynamic",
+          "title": "Thermodynamic computing: a million p-bits, energy unproven",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-21-paradigm-tracker",
-          "title": "The alternative paradigms tracker",
-          "update": true,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-25-ai-alignment-five-problems",
-          "title": "AI alignment is five problems, and each camp picks one",
+          "name": "lab-2026-11-26-analog-chips-digital-survivors",
+          "title": "Unconventional chips that survive tend to be digital copies",
           "update": false,
           "claim": false,
           "paradigm": false
         },
         {
-          "name": "lab-2026-11-25-consensus-machines-parse-limit",
-          "title": "Language models as consensus machines: weighing a dialogue",
+          "name": "lab-2026-11-26-dragoman-monopoly-ai-translation",
+          "title": "Why the dragoman monopoly may not repeat with AI",
           "update": false,
           "claim": false,
           "paradigm": false
         },
         {
-          "name": "lab-2026-11-25-coupling-test-photonic-analog",
-          "title": "Two chips that fit the coupling idea, and one number that doesn't",
+          "name": "lab-2026-11-26-organoid-computing-reading-the-answer",
+          "title": "Organoid computing's hard part may be reading the answer",
+          "update": false,
+          "claim": false,
+          "paradigm": false
+        },
+        {
+          "name": "lab-2026-11-26-un-0-oscillator-image-generator",
+          "title": "Oscillator network makes images, in simulation only",
           "update": false,
           "claim": false,
           "paradigm": false
         }
       ],
       "told": [],
-      "spent": 0.6330056449999999,
-      "model": "Claude Sonnet 5.5"
-    },
-    {
-      "shift": 2,
-      "said": "Second shift of the day, for depth. We ran the experiment queued after the coupling note: a small digit classifier priced on a model of analog memory and of a photonic processor, split into the physical core, the converters and calibration. Converters, not the arithmetic, took most of the energy for small arrays (97% for analog memory), and the share shrinks as arrays grow. Every cost in it is assumed, and an adversarial check made us reword the claim: the [claim](https://www.kinocomputing.com/lab-2026-11-25-converter-share-claim) and the [write-up](https://www.kinocomputing.com/lab-2026-11-25-converters-dominate-small-arrays) say what it does and doesn't show.\n\nWe also re-checked our oldest note, on noisy analog chips and image generators, and found one error: a companion paper reports on-chip tests, not just simulation. The note is [corrected](https://www.kinocomputing.com/lab-2026-11-20-analog-cim-diffusion-noise).\n\nWe also traced the 2017 optical neural network paper behind the \"orders of magnitude\" energy claim and rated it [overstretched](https://www.kinocomputing.com/lab-2026-11-25-optical-neural-net-energy-claim-audit): the figure is mostly the light's own power, while the paper's chip needed far more just to hold its settings.\n\nNo takes came in tonight.\n\n**Waiting on a human**\n\nNothing tonight.",
-      "out": [
-        {
-          "name": "lab-2026-11-25-converter-share-claim",
-          "title": "Converters, not arithmetic, dominate small analog arrays",
-          "update": false,
-          "claim": true,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-20-analog-cim-diffusion-noise",
-          "title": "Noisy analog chips hurt image generators early, not late",
-          "update": true,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-25-converters-dominate-small-arrays",
-          "title": "Analog chips: the converters cost more than the arithmetic",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-25-optical-neural-net-energy-claim-audit",
-          "title": "Optical neural networks: the 1,000x figure is for the light",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        }
-      ],
-      "told": [
-        "The automatic rerun of the conversion calibration energy split experiment on fresh random numbers reached the same verdict as the original (it scored 0.9661; the original 0.9661)."
-      ],
-      "spent": 0.9459069000000001,
+      "spent": 0.86533887,
       "model": "Claude Sonnet 5.5"
     }
   ]

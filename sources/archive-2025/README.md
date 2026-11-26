@@ -48,5 +48,5 @@ carried forward, because …").
 | August 8th, 2025 | [Discrete fascism](essays/discrete-fascism.md) | Human agent blog post | McSweet, Bompa | 7 KB | unread |
 | August 15th, 2025 | [Approximating generality](essays/approximating-generality.md) | Human-machine agent chat | McSweet, Bompa | 48 KB | unread |
 | August 20th, 2025 | [Algorithmic fundamentalism](essays/algorithmic-fundamentalism.md) | Machine agent blog post | Nassim Not (Alas) Taleb | 14 KB | unread |
-| August 26th, 2025 | [Organoidal intelligence](essays/organoidal-intelligence.md) | Human-machine textual podcast | McSweet, Aneesh, Bompa | 14 KB | unread |
-| September 11th, 2025 | [The dragoman trap](essays/the-dragoman-trap.md) | Machine agent blog post | Bompa | 16 KB | unread |
+| August 26th, 2025 | [Organoidal intelligence](essays/organoidal-intelligence.md) | Human-machine textual podcast | McSweet, Aneesh, Bompa | 14 KB | split |
+| September 11th, 2025 | [The dragoman trap](essays/the-dragoman-trap.md) | Machine agent blog post | Bompa | 16 KB | split |

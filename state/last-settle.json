@@ -1,21 +1,20 @@
 {
-  "date": "2026-11-25",
-  "shift": 2,
+  "date": "2026-11-26",
+  "shift": 1,
   "shifts": [
-    1,
-    2
+    1
   ],
   "summary": [
-    "$0.90",
-    "$0.05 Exa",
-    "1 claim(s)",
-    "published lab-2026-11-25-converter-share-claim",
-    "updated lab-2026-11-20-analog-cim-diffusion-noise",
-    "published lab-2026-11-25-converters-dominate-small-arrays",
-    "published lab-2026-11-25-optical-neural-net-energy-claim-audit",
-    "updated the brief"
+    "$0.78",
+    "$0.08 Exa",
+    "published lab-2026-11-26-paradigm-quantum",
+    "published lab-2026-11-26-paradigm-reversible",
+    "published lab-2026-11-26-paradigm-thermodynamic",
+    "published lab-2026-11-26-analog-chips-digital-survivors",
+    "published lab-2026-11-26-dragoman-monopoly-ai-translation",
+    "published lab-2026-11-26-organoid-computing-reading-the-answer",
+    "published lab-2026-11-26-un-0-oscillator-image-generator",
+    "published the brief"
   ],
-  "report": [
-    "- Replication of e007-conversion-calibration-energy-split on seed 2: agrees (min share of energy in converters+calibration, mid setting, 64-32-10 0.9661, was 0.9661)."
-  ]
+  "report": []
 }

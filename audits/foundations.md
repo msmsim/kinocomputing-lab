@@ -35,3 +35,11 @@ Entry format:
 - Ambrogio 2018 Nature: software-equivalent PCM training, 28,065 GOPS/W calculated — queued.
 - Shen 2017 nanophotonic NN: "orders of magnitude" energy, ~100x speed; 56 MZI vowel task ~3/4 accuracy on 180 examples — **overstretched** (2026-11-25, full text minus supplement; reviewer agreed). Energy bound is nonlinearity trigger light only; demo chip held ~10 mW/modulator; nonlinearity was electronic in the demo; 76.7% is best of 3 runs. Evidence: audits/evidence/shen-2017-arxiv-1610.02365.txt. Published: lab-2026-11-25-optical-neural-net-energy-claim-audit.
 - Sub-attojoule / sub-photon per op optical lower bound is optical power only, not system — queued.
+
+## Added 2026-11-26 (untraced)
+- Gaussian/Ornstein-Uhlenbeck thermodynamic linear algebra: asymptotic speedup linear in matrix dimension (npj Unconventional Computing 2024) — queued.
+- p-bits invert Boolean logic and can replace stochastic nanomagnets (Camsari et al., PRX 2017) — queued.
+- Landauer 1961 kT ln2 per erased bit; Bennett 1973 uncompute; adiabatic loss falls as RC/T — queued.
+- "Below the Landauer limit" superconducting shift register: moves, not erases, bits (TASC 2026) — queued.
+- Magic-state factories need "up to 95%" of a quantum computer (Google's account) — queued.
+- Threshold theorem as justification for scalable QEC; Shor 1994 and Feynman 1982 founding arguments — queued.
