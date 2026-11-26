@@ -18,6 +18,7 @@ import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { join } from "node:path";
 import { LAB, now, readJson, readJsonl } from "./lib.mjs";
+import { searchMore, SOURCES } from "./sources.mjs";
 
 const ABSTRACT = 600;
 const decode = (s) => s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
@@ -98,6 +99,7 @@ export function format(results) {
     `${i + 1}. ${r.title}`,
     `   ${[r.authors.slice(0, 4).join(", ") + (r.authors.length > 4 ? " et al." : ""), r.date, r.cited_by != null ? `cited by ${r.cited_by}` : ""].filter(Boolean).join(" · ")}`,
     `   ${r.url}`,
+    ...(r.extra ? [`   ${r.extra}`] : []),
     ...(r.abstract ? [`   ${trim(r.abstract)}`] : []),
   ].join("\n")).join("\n\n");
 }
@@ -119,7 +121,7 @@ export function arxivQuery(query) {
 export const EXA_CATEGORIES = ["news", "publication", "company", "people", "financial report", "personal site"];
 
 /** The JSON body of an Exa search. `since` is a day, YYYY-MM-DD. */
-export function exaBody(query, { n = 5, category = null, since = null } = {}) {
+export function exaBody(query, { n = 5, category = null, since = null, patents = false } = {}) {
   if (category && !EXA_CATEGORIES.includes(category)) throw new Error(`Exa has no category "${category}": use ${EXA_CATEGORIES.join(", ")}`);
   if (since && !/^\d{4}-\d{2}-\d{2}$/.test(since)) throw new Error(`--since for Exa is a day, YYYY-MM-DD, not ${since}`);
   const dated = since && category !== "company" && category !== "people";
@@ -129,6 +131,8 @@ export function exaBody(query, { n = 5, category = null, since = null } = {}) {
     query, type: "auto", numResults: Math.min(n, category === "company" ? 25 : 10),
     ...(category ? { category } : {}),
     ...(dated ? { startPublishedDate: `${since}T00:00:00.000Z` } : {}),
+    // Patents, without a patent database: Exa's index of Google Patents.
+    ...(patents ? { includeDomains: ["patents.google.com"] } : {}),
     contents: { highlights: true },
   };
 }
@@ -172,7 +176,7 @@ export async function exaAgent(query, { effort = "low", schema = null, prices, r
   };
 }
 
-export async function search(source, query, { n = 10, since = null, recent = false, category = null, fetch = globalThis.fetch, run = null, log = [], key = process.env.EXA_API_KEY } = {}) {
+export async function search(source, query, { n = 10, since = null, recent = false, category = null, country = null, patents = false, preprints = false, fetch = globalThis.fetch, sleep, run = null, log = [], key = process.env.EXA_API_KEY } = {}) {
   if (source === "arxiv") {
     const url = `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(arxivQuery(query))}&start=0&max_results=${n}&sortBy=${recent ? "submittedDate&sortOrder=descending" : "relevance"}`;
     const response = await get(url, fetch);
@@ -180,7 +184,10 @@ export async function search(source, query, { n = 10, since = null, recent = fal
     return { results: parseArxiv(response.text), usd: 0 };
   }
   if (source === "openalex") {
-    const filter = since ? `&filter=from_publication_date:${since}-01-01` : "";
+    // `country`: institutions' countries, ISO codes (cn, jp,kr): the regional
+    // lens (AGENT.md, "Where to look").
+    const filters = [since && `from_publication_date:${since}-01-01`, country && `institutions.country_code:${String(country).toLowerCase().split(/[,|\s]+/).filter(Boolean).join("|")}`].filter(Boolean);
+    const filter = filters.length ? `&filter=${filters.join(",")}` : "";
     const url = `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per-page=${n}${filter}`;
     const response = await get(url, fetch);
     if (!response.ok) throw new Error(`OpenAlex answered ${response.status}`);
@@ -195,12 +202,14 @@ export async function search(source, query, { n = 10, since = null, recent = fal
       method: "POST",
       signal: AbortSignal.timeout(30_000),
       headers: { "content-type": "application/json", "x-api-key": key },
-      body: JSON.stringify(exaBody(query, { n, category, since })),
+      body: JSON.stringify(exaBody(query, { n, category, since, patents })),
     });
     if (!response.ok) throw new Error(`Exa answered ${response.status}`);
     return parseExa(await response.json());
   }
-  throw new Error(`unknown source ${source}: use arxiv, openalex or exa`);
+  const more = await searchMore(source, query, { n, since, recent, preprints, fetch, ...(sleep ? { sleep } : {}) });
+  if (more) return { results: more, usd: 0 };
+  throw new Error(`unknown source ${source}: use arxiv, openalex, exa, exa-agent, or ${Object.keys(SOURCES).join(", ")}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -211,14 +220,20 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const category = flag("--category", null);
   const effort = flag("--effort", "low");
   const schemaName = flag("--schema", null);
-  const recent = args.includes("--recent") ? !!args.splice(args.indexOf("--recent"), 1) : false;
+  const country = flag("--country", null);
+  const bool = (name) => (args.includes(name) ? !!args.splice(args.indexOf(name), 1) : false);
+  const recent = bool("--recent");
+  const patents = bool("--patents");
+  const preprints = bool("--preprints");
   const [source, ...words] = args;
   const query = words.join(" ").trim();
   if (!source || !query) {
     console.error([
-      'usage: node tools/search.mjs arxiv|openalex "query" [--n N] [--since YEAR] [--recent]',
-      '       node tools/search.mjs exa "query" [--n N] [--category news|publication|company|…] [--since YYYY-MM-DD]',
+      'usage: node tools/search.mjs arxiv|openalex "query" [--n N] [--since YEAR] [--recent] [--country cn,jp,…]',
+      '       node tools/search.mjs exa "query" [--n N] [--category news|publication|company|…] [--since YYYY-MM-DD] [--patents]',
       '       node tools/search.mjs exa-agent "question" [--effort minimal|low|medium] [--schema paradigm-scan]',
+      '       node tools/search.mjs <source> "query" [--n N] [--since YEAR or YYYY-MM-DD] [--preprints], where <source> is one of:',
+      ...Object.entries(SOURCES).map(([name, what]) => `         ${name.padEnd(15)} ${what}`),
     ].join("\n"));
     process.exit(2);
   }
@@ -240,7 +255,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         throw error;
       }
     } else {
-      const { results, usd } = await search(source, query, { n: n ?? (source === "exa" ? 5 : 10), since, recent, category, run, log: readJsonl(logPath) });
+      const { results, usd } = await search(source, query, { n: n ?? (source === "exa" ? 5 : 10), since, recent, category, country, patents, preprints, run, log: readJsonl(logPath) });
       if (source === "exa") logSpend(usd);
       console.log(format(results));
     }

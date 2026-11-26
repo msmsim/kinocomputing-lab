@@ -42,7 +42,11 @@ workflow publishes after you finish.
   its sources ($0.025 at low effort; `medium`, $0.10, only when a paradigm
   needs a deeper catch-up). Quote phrases
   (`'"reservoir computing"'`); `--recent` sorts arXiv by date, `--since 2024`
-  filters OpenAlex.
+  filters OpenAlex. Many more free sources — biology and preprints, citation
+  trails, grants, code, data, chatter — are in "Where to look"; `node
+  tools/search.mjs` with no arguments lists them.
+- `state/watch.json` — the Bluesky accounts and Mastodon hashtags the lab
+  follows; the briefing's "Chatter" is their latest posts. Yours to keep.
 - Tools: read, write and edit files; run shell commands (Python 3 with `uv`,
   Node 22); fetch web pages. You can't commit, push, or reach the
   kinocomputing repository, and don't try — you don't need to: everything
@@ -441,6 +445,61 @@ beats five thin ones here.
 There is one brief a day. Each shift writes its own MORNING.md; settle puts
 both, in order, at the top of the day's brief, with everything the day
 published and what it cost. Write yours to stand next to the other shift's.
+
+## Where to look
+
+The paradigms run from physics to biology, and the work is done all over
+the world. Look as widely as the question needs and no wider: every
+source below is free, but your time and the reader's attention aren't.
+
+**Literature.** `arxiv` and `openalex` first. `s2` (Semantic Scholar) when
+OpenAlex misses something; its free pool is often busy. `europepmc` for
+biology and medicine — organoids, wetware, basal cognition, slime moulds,
+DNA computing — with `--preprints` for bioRxiv, medRxiv and the other
+preprint servers. `--recent` sorts newest first; quote phrases.
+
+**Citation trails** (the foundations audit, a claim's origin, what came
+after a result): `openalex-cites` and `openalex-refs` take a W… id or a
+DOI; `s2-cites` and `s2-refs` take `arXiv:…`, `DOI:…` or an S2 id.
+
+**The regional lens.** Searches drift to US institutions unless asked not
+to. The briefing names tonight's region; for each of tonight's
+paradigms, run one more `openalex` search with its `--country` codes,
+and its funders' grants where it has free ones (`ukri`, `openaire`).
+Record what you find in the paradigm's working file, with the country,
+and name non-US groups in entries when they did the work. One extra
+search per paradigm, not a survey.
+
+**Money** (who is paying for what): `nsf`, `nih` (US), `ukri` (UK),
+`openaire` (EU Horizon, the ERC, European national funders); `edgar`
+for a named US company's Form D filings (a private raise; Form D says
+nothing of what the company does, so search by name, not topic); `exa
+--category news` for announced rounds. Money is a lead, not a result:
+it goes in the paradigm's working file under who is doing the work and
+who is paying, sources linked, and at most one line in an entry,
+labelled ("**Money.** …"), after the measured results. A pattern — a new
+programme, a cluster of raises — can become a question or a note of its
+own.
+
+**What an outsider can use:** `github` for open code (simulators,
+SDKs), `zenodo` for open datasets and research software, `exa
+--patents` for patents (Google Patents through Exa; metered like any
+Exa search).
+
+**Chatter** (leads, never evidence): the briefing's posts from the
+accounts and hashtags in `state/watch.json`; `bluesky <handle>` for one
+account's recent posts and reposts; `mastodon <tag>`; `hn` for Hacker
+News (`--recent` for the newest). A post can point you at a paper, a
+result or a person; a note cites what it points at, never the post. Add
+an account to the watchlist when it reliably points at the paradigms'
+measured work (a lab, a researcher, a company's engineers), and take one
+off when it doesn't; keep the list short.
+
+**Against bloat.** Every search should serve tonight's work: a paradigm
+in the rotation, a share, a claim, an audit. Don't publish a source
+because you found it; publish what it shows, when it shows something.
+The hopper is for what you read and would point a reader to, not for
+everything a search returned.
 
 ## The paradigm rotation
 

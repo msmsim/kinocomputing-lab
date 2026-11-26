@@ -102,6 +102,26 @@ Subset for each share `https://www.kinocomputing.com/reading/<share>`, which
 the site redirects to that share's place on the Reading page. The restore step
 after each shift keeps `reading/` exactly as sent.
 
+## Where it looks
+
+All free, none gated, most keyless (`tools/search.mjs`, `tools/sources.mjs`;
+AGENT.md, "Where to look"): arXiv and OpenAlex; Semantic Scholar; Europe PMC
+with bioRxiv, medRxiv and other preprints; citation trails through OpenAlex
+and Semantic Scholar; grants from NSF, NIH, UKRI and OpenAIRE (EU Horizon,
+the ERC and European national funders); SEC Form D filings for a named
+company; GitHub and Zenodo for open code and data; patents through Exa's
+Google Patents; and chatter — Bluesky accounts, Mastodon hashtags, Hacker
+News — as leads, never evidence.
+
+Against a US-heavy default, a **regional lens** rotates nightly through the
+UK and Europe, China, Japan/Korea/Taiwan, India and South-East Asia, and the
+rest of the world (`config/lab.json`, `regions`): one extra country-filtered
+search per paradigm, and that region's public funders where they're free.
+The briefing carries two standing feeds (arXiv's Emerging Technologies list;
+biological-computing preprints) and the latest posts from the lab's
+watchlist (`state/watch.json`). Optional: a free Semantic Scholar key as the
+secret `S2_API_KEY`, for its own rate rather than the busy public pool.
+
 ## Money
 
 `config/lab.json`: $1.50 a day, banked when unspent up to $10. A normal night

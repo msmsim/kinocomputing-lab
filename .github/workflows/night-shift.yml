@@ -115,6 +115,8 @@ jobs:
           # Optional. tools/search.mjs meters it against tonight's allowance;
           # the key's own limit in Exa's dashboard is the backstop.
           EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          # Optional: Semantic Scholar's own rate, rather than its busy public pool.
+          S2_API_KEY: ${{ secrets.S2_API_KEY }}
           MODEL: ${{ steps.prep.outputs.model }}
           MAX_USD: ${{ steps.prep.outputs.max_usd }}
         run: |

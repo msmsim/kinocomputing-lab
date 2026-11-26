@@ -97,3 +97,14 @@ export function normalizeOrigin(origin) {
   const path = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
   return `${url.protocol}//${url.host}${path}`;
 }
+
+/**
+ * Tonight's regional lens: the regions in turn, one a night, the same night
+ * for every paradigm, so a cycle of the rotation sees each region at least
+ * once without any one pass carrying more than one extra query.
+ */
+export function regionFor(date, regions) {
+  if (!regions?.length) return null;
+  const days = Math.floor(Date.parse(`${date}T00:00:00Z`) / 86_400_000);
+  return regions[((days % regions.length) + regions.length) % regions.length];
+}

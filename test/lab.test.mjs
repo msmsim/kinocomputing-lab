@@ -9,7 +9,8 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { allowance, frontMatter, KINO, LAB, rotation } from "../tools/lib.mjs";
+import { allowance, frontMatter, KINO, LAB, regionFor, rotation } from "../tools/lib.mjs";
+import * as sources from "../tools/sources.mjs";
 import { takeSteers } from "../tools/steers.mjs";
 import { renderNote } from "../tools/render.mjs";
 import { arxivQuery, exaAgent, exaBody, exaLeft, parseArxiv, parseExa, parseOpenAlex, search, unInvert } from "../tools/search.mjs";
@@ -253,6 +254,65 @@ test("exa agent: runs, polls to the end, returns the structured answer with its 
   assert.equal(error.usd, 0.025, "a failed run is still counted at its price");
 });
 
+test("sources: each free source's answer becomes the lab's result shape", () => {
+  const one = (r) => r[0];
+  assert.deepEqual(sources.parseS2Paper({ title: "T", authors: [{ name: "A" }], publicationDate: "2026-01-02", externalIds: { ArXiv: "2601.00001", DOI: "10.1/x" }, citationCount: 3, abstract: "Ab", venue: "Nature", openAccessPdf: { url: "https://x/pdf" } }),
+    { title: "T", authors: ["A"], date: "2026-01-02", url: "https://arxiv.org/abs/2601.00001", abstract: "Ab", cited_by: 3, extra: "Nature · open PDF: https://x/pdf" });
+  const pmc = one(sources.parseEuropePmc({ resultList: { result: [{ id: "PPR1", source: "PPR", title: "Brain organoid computing", authorString: "A B, C D.", firstPublicationDate: "2026-09-10", abstractText: "<p>Abstract text</p>", citedByCount: 0, bookOrReportDetails: { publisher: "bioRxiv" } }] } }));
+  assert.deepEqual([pmc.url, pmc.authors, pmc.abstract, pmc.extra], ["https://europepmc.org/article/PPR/PPR1", ["A B", "C D"], "Abstract text", "preprint, bioRxiv"]);
+  const nsf = one(sources.parseNsf({ response: { award: [{ id: "2611214", title: "T", awardeeName: "Princeton University", startDate: "10/15/2026", estimatedTotalAmt: "306340", program: "Novel devices", perfCountryCode: "US", piEmail: "x@y.edu" }] } }));
+  assert.deepEqual([nsf.date, nsf.url, nsf.extra], ["2026-10-15", "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2611214", "NSF · Novel devices · $306,340 · US"]);
+  assert.ok(!JSON.stringify(nsf).includes("x@y.edu"), "no one's email address");
+  assert.match(one(sources.parseNih({ results: [{ project_title: "T", organization: { org_name: "MAYO", org_country: "UNITED STATES" }, project_start_date: "2026-09-15T00:00:00", appl_id: 1, fiscal_year: 2026, award_amount: 500986 }] })).extra, /NIH · FY2026 · \$500,986/);
+  assert.equal(one(sources.parseUkri({ project: [{ title: "T", identifiers: { identifier: [{ type: "RCUK", value: "EP/P00542X/1" }] }, leadFunder: "EPSRC" }] })).url, "https://gtr.ukri.org/projects?ref=EP%2FP00542X%2F1");
+  const eu = one(sources.parseOpenAire({ response: { results: { result: [{ header: { "dri:objIdentifier": { $: "corda::1" } }, metadata: { "oaf:entity": { "oaf:project": { title: { $: "NeuMag" }, startdate: { $: "2027-07-01" }, fundedamount: { $: 260348 }, currency: { $: "EUR" }, fundingtree: { funder: { shortname: { $: "EC" }, jurisdiction: { $: "EU" } } } } } } }] } } }));
+  assert.deepEqual([eu.title, eu.extra], ["NeuMag", "EC · EU · EUR 260,348"]);
+  assert.equal(one(sources.parseEdgar({ hits: { hits: [{ _id: "0002119418-26-000001:primary_doc.xml", _source: { ciks: ["0002119418"], display_names: ["Gaingels Extropic LLC"], file_date: "2026-03-20", form: "D" } }] } })).url,
+    "https://www.sec.gov/Archives/edgar/data/2119418/000211941826000001/primary_doc.xml");
+  assert.match(one(sources.parseGithub({ items: [{ full_name: "reservoirpy/reservoirpy", html_url: "https://github.com/reservoirpy/reservoirpy", stargazers_count: 663, license: { spdx_id: "MIT" }, pushed_at: "2026-11-04T00:00:00Z" }] })).extra, /663 stars · MIT/);
+  const post = one(sources.parseBluesky({ feed: [{ reason: { $type: "repost" }, post: { uri: "at://did/app.bsky.feed.post/3abc", author: { handle: "lab.bsky.social" }, record: { text: "New paper", createdAt: "2026-11-25T10:00:00Z" }, embed: { external: { uri: "https://arxiv.org/abs/1" } } } }] }, "watcher.bsky.social"));
+  assert.deepEqual([post.url, post.extra], ["https://bsky.app/profile/lab.bsky.social/post/3abc", "reposted by watcher.bsky.social · links to https://arxiv.org/abs/1"]);
+  assert.equal(one(sources.parseHn({ hits: [{ title: "T", objectID: "9", points: 5, num_comments: 2, created_at: "2026-11-11T00:00:00Z" }] })).url, "https://news.ycombinator.com/item?id=9");
+});
+
+test("sources: Semantic Scholar waits and retries when its free pool is busy; NIH is asked by POST; SEC is told who is asking", async () => {
+  const calls = [];
+  const replies = [{ status: 429 }, { status: 200, body: { data: [{ title: "T", authors: [], externalIds: {} }] } }];
+  const fetch = async (url, init) => { calls.push({ url, init }); const r = replies.shift() ?? { status: 200, body: {} }; return { ok: r.status === 200, status: r.status, json: async () => r.body }; };
+  const slept = [];
+  const out = await sources.searchMore("s2", "thermodynamic computing", { n: 2, fetch, sleep: async (ms) => slept.push(ms), s2Key: "" });
+  assert.equal(out[0].title, "T");
+  assert.deepEqual(slept, [3000]);
+  assert.match(calls[0].url, /graph\/v1\/paper\/search\?query=thermodynamic%20computing&limit=2/);
+  await assert.rejects(sources.searchMore("s2", "x", { fetch: async () => ({ ok: false, status: 429, json: async () => ({}) }), sleep: async () => {} }), /busy/);
+  calls.length = 0;
+  const ok = async (url, init) => { calls.push({ url, init }); return { ok: true, status: 200, json: async () => ({}) }; };
+  await sources.searchMore("nih", "brain organoid", { fetch: ok });
+  assert.equal(calls[0].init.method, "POST");
+  assert.equal(JSON.parse(calls[0].init.body).criteria.advanced_text_search.search_text, "brain organoid");
+  await sources.searchMore("edgar", "Extropic", { fetch: ok });
+  assert.equal(calls[1].init.headers["user-agent"], "Kinocomputing lab lab@kinocomputing.com");
+  assert.match(calls[1].url, /q=%22Extropic%22&forms=D/);
+  assert.equal(await sources.searchMore("nowhere", "x", { fetch: ok }), null);
+});
+
+test("search: the regional lens filters OpenAlex by country; patents go through Exa's Google Patents", async () => {
+  let url;
+  const fetch = async (u) => { url = u; return { ok: true, status: 200, text: async () => JSON.stringify({ results: [] }), json: async () => ({ results: [] }) }; };
+  await search("openalex", "photonic computing", { since: "2026", country: "cn, HK", fetch });
+  assert.match(url, /filter=from_publication_date:2026-01-01,institutions\.country_code:cn\|hk/);
+  assert.deepEqual(exaBody("optical matrix multiplier", { patents: true }).includeDomains, ["patents.google.com"]);
+  await assert.rejects(search("nowhere", "x", { fetch }), /unknown source nowhere: use arxiv, openalex, exa, exa-agent, or s2/);
+});
+
+test("regions: one a night, in turn, the same night for every paradigm", () => {
+  const regions = [{ name: "A" }, { name: "B" }, { name: "C" }];
+  const names = ["2026-11-26", "2026-11-27", "2026-11-28", "2026-11-29"].map((d) => regionFor(d, regions).name);
+  assert.equal(new Set(names.slice(0, 3)).size, 3, "three nights, three regions");
+  assert.equal(names[3], names[0], "then round again");
+  assert.equal(regionFor("2026-11-26", []), null);
+});
+
 function makeWorld() {
   const root = mkdtempSync(join(tmpdir(), "lab-world-"));
   const lab = join(root, "lab");
@@ -475,6 +535,10 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
     write("state/paradigms.json", JSON.stringify({ paradigms: ids.map((id) => ({ id, name: `Paradigm ${id}`, group: "Let physics compute", last_checked: null })) }));
     write("state/run.json", JSON.stringify({ ...run, paradigms: ["photonic", "thermodynamic"] }));
     assert.match(read("state/tonight.md"), /## Tonight's paradigms\n\n[\s\S]*\*\*Paradigm dna-molecular\*\* \(`dna-molecular`, Let physics compute\): never looked at/);
+    const lens = regionFor("2026-11-21", JSON.parse(readFileSync(join(LAB, "config/lab.json"), "utf8")).regions);
+    assert.match(read("state/tonight.md"), new RegExp(`## Tonight's regional lens\\n\\n\\*\\*${lens.name}\\.\\*\\* For each of tonight's paradigms, one more OpenAlex search limited to institutions there \\(\`--country ${lens.countries.join(",")}\`\\)`));
+    assert.match(read("state/tonight.md"), /## Chatter \(leads, not evidence\)\n\nNone\./);
+    assert.equal(JSON.parse(read("state/run.json")).region, lens.name);
 
     write("outbox/lab-2026-11-21-paradigm-photonic.md", "---\nkind: paradigm\nparadigm: photonic\n---\n\n**Photonic computing**\n\nLight does the linear algebra. Nothing measured has moved since the round-up.\n");
     write("outbox/lab-2026-11-21-paradigm-nowhere.md", "---\nkind: paradigm\nparadigm: nowhere\n---\n\n**Nowhere**\n\nNot on the list.\n");

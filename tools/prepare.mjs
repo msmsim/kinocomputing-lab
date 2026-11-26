@@ -10,7 +10,8 @@
 
 import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, rotation } from "./lib.mjs";
+import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, regionFor, rotation } from "./lib.mjs";
+import { searchMore } from "./sources.mjs";
 import { readingShares, takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
 
@@ -107,7 +108,42 @@ if (!offline && process.env.LAB_NO_READING !== "1") {
       console.warn(`reading: ${q.file}: ${error.message}`);
     }
   }
+  // Standing feeds (config.search.feeds): arXiv's Emerging Technologies list,
+  // biological-computing preprints. New items only.
+  for (const feed of config.search.feeds ?? []) {
+    try {
+      const { results } = await search(feed.source, feed.query, { n: 15, recent: true });
+      const fresh = results.filter((r) => !shown.has(r.url)).slice(0, feed.n ?? 5);
+      for (const r of fresh) shown.add(r.url);
+      if (fresh.length) reading.push({ question: feed.name, results: fresh });
+    } catch (error) {
+      console.warn(`reading: ${feed.name}: ${error.message}`);
+    }
+  }
 }
+
+// Chatter: recent posts from the accounts and hashtags the lab watches
+// (state/watch.json, the lab's to keep). Leads, never evidence; a few a night.
+const chatter = [];
+const watch = readJson(join(LAB, "state/watch.json"), { bluesky: [], mastodon: [] });
+if (!offline && process.env.LAB_NO_READING !== "1") {
+  const since = new Date(Date.parse(`${today}T00:00:00Z`) - 2 * 86_400_000).toISOString().slice(0, 10);
+  for (const [source, names] of [["bluesky", watch.bluesky ?? []], ["mastodon", watch.mastodon ?? []]]) {
+    for (const name of names) {
+      try {
+        const posts = (await searchMore(source, name, { n: 20, since })).filter((p) => !shown.has(p.url));
+        for (const p of posts) chatter.push({ ...p, via: source === "bluesky" ? `@${name}` : `#${name}` });
+      } catch (error) {
+        console.warn(`chatter: ${source} ${name}: ${error.message}`);
+      }
+    }
+  }
+  chatter.sort((a, b) => b.date.localeCompare(a.date)).splice(config.search.chatter_per_night ?? 8);
+  for (const p of chatter) shown.add(p.url);
+}
+
+// Tonight's regional lens (config.regions, AGENT.md "Where to look").
+const region = regionFor(today, config.regions);
 
 // The paradigm rotation: every paradigm on the tracker is looked at once a
 // cycle. Tonight's are the ones looked at longest ago (never, first), enough
@@ -140,7 +176,8 @@ const run = {
   steers: steers.map(({ id, url, seen: mark }) => ({ id, url, seen: mark })),
   marks,
   baseline: seen.takes === undefined && !offline,
-  reading: reading.flatMap((r) => r.results.map((x) => x.url)),
+  reading: [...reading.flatMap((r) => r.results.map((x) => x.url)), ...chatter.map((p) => p.url)],
+  region: region?.name ?? null,
   paradigms: tonightParadigms.map((p) => p.id),
 };
 // A paradigm's note, if the lab has published one: the published note whose
@@ -207,6 +244,16 @@ const lines = [
   "## Replications since the last shift",
   "",
   ...(replications.length ? replications.map((r) => `- ${r.experiment}: ${r.error ? `failed to run — ${r.error.split("\n")[0]}` : r.skipped ?? `seed ${r.seed}, ${r.metric} ${r.value} (was ${r.original}), ${r.agrees ? "agrees" : "**disagrees**"}`}`) : ["None."]),
+  "",
+  ...(region ? [
+    "## Tonight's regional lens",
+    "",
+    `**${region.name}.** For each of tonight's paradigms, one more OpenAlex search limited to institutions there (\`--country ${region.countries.join(",")}\`)${region.funding.length ? `, and its public funders (\`${region.funding.join("\`, \`")}\`)` : ""}: who is doing the work outside the US, and what they have measured (AGENT.md, "Where to look").`,
+    "",
+  ] : []),
+  "## Chatter (leads, not evidence)",
+  "",
+  ...(chatter.length ? chatter.map((p) => `- ${p.via}, ${p.date}: ${p.title} ${p.url}${p.extra ? ` (${p.extra})` : ""}`) : ["None."]),
   "",
   "## New reading",
   "",

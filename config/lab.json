@@ -31,7 +31,22 @@
       "low": 0.025,
       "medium": 0.1
     },
-    "watch_per_question": 3
+    "watch_per_question": 3,
+    "feeds": [
+      {
+        "name": "arXiv: Emerging Technologies (unconventional computing)",
+        "source": "arxiv",
+        "query": "cat:cs.ET",
+        "n": 5
+      },
+      {
+        "name": "bioRxiv and other preprints: biological computing",
+        "source": "europepmc",
+        "query": "(\"organoid intelligence\" OR \"basal cognition\" OR \"DNA computing\" OR \"molecular computing\" OR \"physarum\" OR \"biohybrid computing\" OR (\"cultured neurons\" AND computing) OR (\"organoid\" AND \"reservoir computing\")) AND SRC:PPR",
+        "n": 3
+      }
+    ],
+    "chatter_per_night": 8
   },
   "lab": {
     "repo": "msmsim/kinocomputing-lab",
@@ -47,5 +62,97 @@
   "shifts": {
     "per_day": 2,
     "first_share": 0.4
-  }
+  },
+  "regions": [
+    {
+      "name": "the UK and Europe",
+      "countries": [
+        "gb",
+        "ie",
+        "de",
+        "fr",
+        "nl",
+        "be",
+        "lu",
+        "ch",
+        "at",
+        "it",
+        "es",
+        "pt",
+        "dk",
+        "se",
+        "no",
+        "fi",
+        "is",
+        "pl",
+        "cz",
+        "sk",
+        "hu",
+        "si",
+        "hr",
+        "ro",
+        "bg",
+        "gr",
+        "ee",
+        "lv",
+        "lt"
+      ],
+      "funding": [
+        "ukri",
+        "openaire"
+      ]
+    },
+    {
+      "name": "China",
+      "countries": [
+        "cn",
+        "hk",
+        "mo"
+      ],
+      "funding": []
+    },
+    {
+      "name": "Japan, Korea and Taiwan",
+      "countries": [
+        "jp",
+        "kr",
+        "tw"
+      ],
+      "funding": []
+    },
+    {
+      "name": "India and South-East Asia",
+      "countries": [
+        "in",
+        "sg",
+        "my",
+        "th",
+        "vn",
+        "id",
+        "ph"
+      ],
+      "funding": []
+    },
+    {
+      "name": "the rest of the world",
+      "countries": [
+        "au",
+        "nz",
+        "ca",
+        "br",
+        "mx",
+        "ar",
+        "cl",
+        "il",
+        "ae",
+        "sa",
+        "tr",
+        "za",
+        "ng",
+        "eg",
+        "ke"
+      ],
+      "funding": []
+    }
+  ]
 }
