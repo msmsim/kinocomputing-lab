@@ -420,12 +420,22 @@ const briefOf = (said) => {
   for (const s of shifts) for (const n of s.out ?? []) if (!published.has(n.name)) published.set(n.name, n);
   const total = shifts.reduce((sum, s) => sum + (s.spent ?? 0), 0);
   const models = [...new Set(shifts.map((s) => s.model).filter(Boolean))].join(" and ");
+  // The brief opens with a lead, since its first paragraph is its preview: the
+  // first shift's own words, unlabelled, and the later shifts after it under
+  // their names. When the first shift's summary doesn't open with a paragraph
+  // of its own, settle's one-line account of the day leads instead.
+  const body = parts.flatMap((s, i) => [
+    ...(i > 0 || s.shift !== 1 ? [`**${SHIFT_NAMES[s.shift] ?? `Shift ${s.shift}`}**`] : []),
+    s.body || "The researcher left no summary.",
+  ]);
+  const opensWithProse = body.length && !/^\*\*[^*\n]+\*\*\s*$/.test(body[0].split("\n\n")[0].trim())
+    && !/^(?:[-*] |> |#)/.test(body[0].trim()) && body[0] !== "The researcher left no summary.";
+  const noteCount = published.size;
+  const account = `The lab published ${noteCount === 0 ? "nothing" : `${noteCount} note${noteCount === 1 ? "" : "s"}`} today${several ? ` over ${shifts.length} shifts` : ""}${addedToday.length ? `, and added ${addedToday.length} link${addedToday.length === 1 ? "" : "s"} to Reading` : ""}.`;
   return [
     `**Lab brief: ${dateWords}**`,
-    ...parts.flatMap((s) => [
-      ...(several ? [`**${SHIFT_NAMES[s.shift] ?? `Shift ${s.shift}`}**`] : []),
-      s.body || "The researcher left no summary.",
-    ]),
+    ...(opensWithProse ? [] : [account]),
+    ...body,
     "**Waiting on a human**",
     waiting.length ? waiting.join("\n\n") : "Nothing today.",
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),

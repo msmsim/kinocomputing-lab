@@ -95,16 +95,29 @@ function describe(html) {
  * converter are the contract). Throws an Error whose message is the refusal.
  */
 /**
- * A voice's byline, under the note's title (or first, if it has none). The
+ * A voice's byline, at the foot of the note: the note opens with what it says,
+ * so its preview in the stream and in feeds is its lead, not who wrote it. The
  * voices are AI personas (voices/README.md); the byline says so and links to
  * where the site introduces them.
  */
 export function withByline(markdown, voice, origin) {
-  const line = `_By [${voice}](${origin}about), one of the lab's AI voices_`;
-  const title = markdown.match(/^\*\*.+\*\*[ \t]*$/m);
-  if (!title) return `${line}\n\n${markdown}`;
-  const at = title.index + title[0].length;
-  return `${markdown.slice(0, at)}\n\n${line}${markdown.slice(at)}`;
+  return `${markdown.trimEnd()}\n\n_By [${voice}](${origin}about), one of the lab's AI voices_\n`;
+}
+
+/**
+ * Whether a note's first paragraph after its title is a lead: prose, not a
+ * line that only labels (wholly bold, wholly italic) and not a list, a quote
+ * or a heading. Previews and descriptions are made from it.
+ */
+export function leadProblem(html) {
+  const blocks = html.match(/<(p|ul|ol|blockquote|h\d|pre|table)\b[^>]*>[\s\S]*?<\/\1>/g) ?? [];
+  const isTitle = (b) => /^<p><strong>[^<]*<\/strong><\/p>$/.test(b.trim());
+  const lead = isTitle(blocks[0] ?? "") ? blocks[1] : blocks[0];
+  if (!lead) return "has no first paragraph";
+  if (!/^<p\b/.test(lead)) return "opens with a list, quote or heading rather than a paragraph";
+  const inner = lead.replace(/^<p[^>]*>|<\/p>$/g, "").trim();
+  if (/^<(strong|em)>[\s\S]*<\/\1>[\s.:]*$/.test(inner) && !/<\/(strong|em)>[\s\S]*<(strong|em)>/.test(inner)) return "opens with a label (a line wholly in bold or italics) rather than a paragraph";
+  return null;
 }
 
 // The site's sections a note can ask for (kinocomputing's build lists them).
@@ -129,6 +142,13 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   if (kind === "paradigm" && markdown.trim().length > maxParadigm) throw new Error(`is a paradigm entry of ${markdown.trim().length} characters; an entry is at most ${maxParadigm}`);
   let html = marked.parse(extracted.markdown).trim();
   if (!html) throw new Error("is empty");
+  // Every note's first paragraph is its preview, in the stream, in feeds and
+  // in search results (AGENT.md, "Writing for the site"). The brief's is
+  // settle's to make right.
+  if (kind !== "brief") {
+    const problem = leadProblem(html);
+    if (problem) throw new Error(`${problem}; the first paragraph after the title is the note's preview, so it must say what the note found`);
+  }
   const id = labIdIn(html);
   if (id) throw new Error(`says "${id}", which readers on kinocomputing can't look up; say what it is instead`);
   const { htmlToMarkdown, textContent } = await import(pathToFileURL(join(kino, "tools", "blyg.mjs")).href);

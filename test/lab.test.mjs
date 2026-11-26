@@ -172,10 +172,21 @@ test("render: an answer to a take on kinocomputing ends with the source line kin
 
 test("render: a voice signs a write-up under its title; claims and the brief stay in the house voice", async () => {
   const page = await renderNote({ ...ARGS, voice: "Bompa", markdown: "**The road not taken**\n\nThe analog computer was winning in 1955.\n" });
-  assert.match(page, /<p><strong>The road not taken<\/strong><\/p>\n<p><em>By <a href="https:\/\/www\.kinocomputing\.com\/about">Bompa<\/a>, one of the lab(?:'|&#39;)s AI voices<\/em><\/p>\n<p>The analog computer/);
+  assert.match(page, /<p><strong>The road not taken<\/strong><\/p>\n<p>The analog computer was winning in 1955\.<\/p>\n<p><em>By <a href="https:\/\/www\.kinocomputing\.com\/about">Bompa<\/a>, one of the lab(?:'|&#39;)s AI voices<\/em><\/p>/, "the byline at the foot, so the note opens with its lead");
   assert.match(page, /<meta name="description" content="The analog computer was winning in 1955\.">/, "the byline isn't the description");
   await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "claim", markdown: "**C**\n\nA claim.\n" }), /claims, paradigm entries and the brief are the lab.s record/);
   await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "brief", markdown: "**B**\n\nA brief.\n" }), /claims, paradigm entries and the brief/);
+});
+
+test("render: a note opens with a lead, not a label, a list or nothing", async () => {
+  for (const [markdown, why] of [
+    ["**T**\n\n**Where it stands.**\n\nThe rest.\n", /opens with a label/],
+    ["**T**\n\n_A line in italics._\n\nThe rest.\n", /opens with a label/],
+    ["**T**\n\n- a list first\n", /opens with a list, quote or heading/],
+    ["**T**\n", /has no first paragraph/],
+  ]) await assert.rejects(renderNote({ ...ARGS, markdown }), why, markdown);
+  await renderNote({ ...ARGS, markdown: "**T**\n\n**Where it stands.** A labelled paragraph that goes on to say something is a lead.\n" });
+  await renderNote({ ...ARGS, markdown: "**T**\n\nPlain prose, with *some* emphasis, is a lead.\n" });
 });
 
 test("render: refuses what the blyg can't carry, before it reaches the site", async () => {
@@ -418,7 +429,7 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     assert.deepEqual(JSON.parse(read("state/last-settle.json")).shifts, [1, 2]);
 
     const briefMd = read("published/lab-2026-11-21-brief.md");
-    assert.match(briefMd, /\*\*First shift\*\*\n\nThe first shift went wide\.\n\n\*\*Second shift\*\*\n\nThe second shift went deep\.\n\n\*\*Waiting on a human\*\*\n\n- A paywalled paper only the PI can get\.\n\n\*\*Published today\*\*/, "both shifts' own words, in order, then one Waiting on a human");
+    assert.match(briefMd, /\*\*Lab brief: 21 November 2026\*\*\n\nThe first shift went wide\.\n\n\*\*Second shift\*\*\n\nThe second shift went deep\.\n\n\*\*Waiting on a human\*\*\n\n- A paywalled paper only the PI can get\.\n\n\*\*Published today\*\*/, "both shifts' own words, in order, then one Waiting on a human");
     assert.equal(briefMd.match(/Waiting on a human/g).length, 1, "once, not per shift; a 'nothing' says nothing");
     assert.match(briefMd, /\[first-01\][\s\S]*\[claim-d\][\s\S]*\[second-1\]/, "everything the day published");
     assert.match(briefMd, /The day's 2 shifts cost \$1\.30, on Claude Sonnet 5\.5\./);
@@ -442,7 +453,9 @@ test("a short day is reported by its last shift, counting both", async () => {
     writeFileSync(join(w.lab, "outbox/lab-2026-11-21-two.md"), "---\nkind: notebook\n---\n\n**Two**\n\nThe second shift's only note.\n");
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.3, num_turns: 9, is_error: false }));
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T06:00:00Z", { LAB_SHIFT: "2" });
-    assert.match(readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8"), /Only 2 notes were published today, short of the lab's daily 5\./);
+    const shortDay = readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8");
+    assert.match(shortDay, /Only 2 notes were published today, short of the lab's daily 5\./);
+    assert.match(shortDay, /\*\*Lab brief: 21 November 2026\*\*\n\nThe lab published 2 notes today over 2 shifts\.\n\nThe researcher left no summary\.\n\n\*\*Second shift\*\*/, "with no summary of its own to lead, settle's account of the day leads");
   } finally {
     w.dispose();
   }

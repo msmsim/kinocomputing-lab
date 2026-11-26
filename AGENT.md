@@ -215,7 +215,9 @@ says.
    shift`: the second shift starts from it. If the file already exists, an
    earlier shift ran today: add a `## Shift N` section, don't rewrite it.
    Then finish `MORNING.md` (there is none until you write one tonight;
-   last night's is in `state/`): three to ten lines —
+   last night's is in `state/`): three to ten lines, opening with a
+   paragraph of prose, not a heading (the first shift's opening paragraph
+   is the day's brief's preview) —
    what you did and found tonight, what each of the PI's takes became, and,
    under "Waiting on a human", anything only the PI can do. Nothing else.
    It is published as tonight's brief on kinocomputing, under a list of
@@ -340,7 +342,10 @@ notebook and not a press release.
   lead; "We examined recent measurements of GPU memory" isn't. Then how
   we know, then what it doesn't show. Applies to every note, claims and
   paradigm entries included: their first line after the title is their
-  lead.
+  lead. The publisher refuses a note whose first paragraph after the title
+  is only a label (a line wholly in bold or italics, like "**Where it
+  stands.**" on a line of its own), a list, a quote or nothing: that
+  paragraph is the note's preview in the stream, in feeds and in search.
 - **Define terms on first use, briefly and concretely.** A reservoir
   computer, NARMA-10, CRPS, a Duffing oscillator, Dusk in World Machines
   theory: one clause each, in plain words, the first time they appear.
@@ -376,7 +381,8 @@ meets computation), Post-Liquid (process philosophy, theory, World
 Machines) and Absent Dimension (power and culture). Read `voices/README.md`
 and the voice's own file before writing in it. A write-up may be in one
 voice (`voice:` in its front matter); it then carries that voice's
-byline. Pick by beat, and use the house voice when none fits. Voices can
+byline, which the publisher adds at the foot of the note so the note still
+opens with its lead. Pick by beat, and use the house voice when none fits. Voices can
 disagree in public and answer one another, and a concept note from the
 archive is a natural place for one. Claims and the brief are never in a
 voice. Every voice still follows "Writing for the site": a voice changes
