@@ -43,3 +43,12 @@ Entry format:
 - "Below the Landauer limit" superconducting shift register: moves, not erases, bits (TASC 2026) — queued.
 - Magic-state factories need "up to 95%" of a quantum computer (Google's account) — queued.
 - Threshold theorem as justification for scalable QEC; Shor 1994 and Feynman 1982 founding arguments — queued.
+
+## Worked 2026-11-26 (shift 2): "brain and chatbot both ~10^21 above Landauer" (symmetrybroken.com, Coherence at 300 Kelvin, 2026-02-20)
+- Recomputed from the essay's stated inputs: kT ln2 at 300 K = 2.87e-21 J. Brain 20 W / 10 bits/s = 2 J/bit = 10^20.84 x floor. GPT-4o 0.3 Wh / 500 tokens / 1.3 bits = 1.66 J/bit = 10^20.76 x floor. Split into per-op x ops-per-bit also reproduces (brain 7e7 x 1e13; GPU 3.5e9 x 1.5e11). Arithmetic holds.
+- Inputs traced: 10 bits/s is Zheng & Meister (arXiv 2408.10234), a behavioural throughput, not the brain's total information processing (they say so). 20 W is the whole brain. 0.3 Wh is Epoch AI's (Feb 2025) estimate for a *typical short text* query: 100 B active params, 1 s of H100 time at 1,500 W x 70%; Epoch calls it somewhat pessimistic and says long-input queries run 2.5-40 Wh. 1.3 bits/token is a text-entropy figure.
+- Status: **overstretched** as evidence of a shared mechanism (the essay itself says "suggests rather than proves"). Not sent to reviewer: no verdict against the essay's arithmetic, only a note on how much the match can bear. Published as a note with a conjecture-stage claim.
+
+## Screened 2026-11-26 (shift 2): Landauer's principle (kT ln2 minimum heat to erase a bit)
+- Chain: Landauer 1961 (IBM J. Res. Dev.), stated for erasure of a logically irreversible operation; Bennett 1973 shows computation can be made logically reversible; Bérut, Arakelyan, Petrosyan, Ciliberto, Dillenschneider, Lutz 2012 (Nature), and Bérut/Petrosyan/Ciliberto 2015 (J. Stat. Mech., abstract read via OpenAlex: one colloidal particle in a double well; mean heat dissipated saturates at the Landauer bound for long erasure cycles).
+- Status: **holds** as a bound on erasure, measured in a one-bit colloidal system at the limit of slow cycles. Screen only: full texts of 1961/1973/2012 not read tonight; keep queued for a full-text pass before a write-up. Caution for citers: it is a floor on erasing, not a prediction of what a real chip dissipates (essay comparisons to 10^21 x the floor are about practice, not the bound).
