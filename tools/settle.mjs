@@ -23,7 +23,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { KINO, LAB, frontMatter, json, now, readJson, readJsonl } from "./lib.mjs";
+import { KINO, LAB, frontMatter, json, now, readJson, readJsonl, sundayPlan } from "./lib.mjs";
 import { labIdIn, renderNote } from "./render.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
@@ -375,7 +375,8 @@ if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for
 // The day's floor, judged by the day's last shift on everything the day
 // published. Settle can't write notes, so a short day is said plainly, here
 // and in the brief, rather than made up.
-const floor = config.publish.min_notes_per_day ?? 0;
+// A Sunday's is lower: the week in review and the deep dive or roundtable.
+const floor = sundayPlan(run.date, config.sunday) ? config.sunday.floor : config.publish.min_notes_per_day ?? 0;
 const dayTotal = earlierToday + out.length;
 if (SHIFT >= (config.shifts?.per_day ?? 1) && dayTotal < floor) {
   report.push(`- Published ${dayTotal} note(s) today, under the daily minimum of ${floor}.`);

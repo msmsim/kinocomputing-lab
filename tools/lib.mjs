@@ -108,3 +108,22 @@ export function regionFor(date, regions) {
   const days = Math.floor(Date.parse(`${date}T00:00:00Z`) / 86_400_000);
   return regions[((days % regions.length) + regions.length) % regions.length];
 }
+
+/**
+ * A Sunday's plan (AGENT.md, "Sundays"), or null on any other day. The first
+ * shift writes the week in review; the second, a deep dive in one voice and a
+ * roundtable of all five, in alternate weeks, counted from the first Sunday
+ * (`sunday.first`), the deep dives' voices taken in turn.
+ */
+export function sundayPlan(date, sunday) {
+  if (!sunday?.first || new Date(`${date}T00:00:00Z`).getUTCDay() !== 0) return null;
+  const n = Math.round((Date.parse(`${date}T00:00:00Z`) - Date.parse(`${sunday.first}T00:00:00Z`)) / (7 * 86_400_000));
+  if (n < 0) return null;
+  const deepDive = n % 2 === 0;
+  const voices = sunday.voices ?? [];
+  return {
+    number: n + 1,
+    format: deepDive ? "deep-dive" : "roundtable",
+    voice: deepDive && voices.length ? voices[(n / 2) % voices.length] : null,
+  };
+}

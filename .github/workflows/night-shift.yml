@@ -77,11 +77,14 @@ jobs:
     needs: check
     if: needs.check.outputs.go == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    # A Sunday's second shift has a 120-minute clock (config/lab.json, sunday).
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          # The whole history: a Sunday's week in review reads the week's commits.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -121,7 +124,7 @@ jobs:
           MAX_USD: ${{ steps.prep.outputs.max_usd }}
         run: |
           set +e
-          node tools/timebox.mjs "$(( $(jq -r .shift.minutes config/lab.json) * 60 ))" claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
+          node tools/timebox.mjs "$(( $(jq -r .minutes state/run.json) * 60 ))" claude -p "Read AGENT.md and work tonight's shift. Your briefing is state/tonight.md." \
             --model "$MODEL" \
             --max-budget-usd "$MAX_USD" \
             --output-format json \

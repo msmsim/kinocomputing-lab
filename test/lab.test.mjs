@@ -9,7 +9,8 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { allowance, frontMatter, KINO, LAB, regionFor, rotation } from "../tools/lib.mjs";
+import { allowance, frontMatter, KINO, LAB, regionFor, rotation, sundayPlan } from "../tools/lib.mjs";
+import { labChanges, siteChanges } from "../tools/week.mjs";
 import * as sources from "../tools/sources.mjs";
 import { takeSteers } from "../tools/steers.mjs";
 import { renderNote } from "../tools/render.mjs";
@@ -311,6 +312,42 @@ test("regions: one a night, in turn, the same night for every paradigm", () => {
   assert.equal(new Set(names.slice(0, 3)).size, 3, "three nights, three regions");
   assert.equal(names[3], names[0], "then round again");
   assert.equal(regionFor("2026-11-26", []), null);
+});
+
+test("sundays: a deep dive and a roundtable in alternate weeks from the first Sunday, the deep dives' voices in turn", () => {
+  const sunday = { first: "2026-11-29", voices: ["bompa", "concrete", "santa-feist", "post-liquid", "absent-dimension"] };
+  const plan = (d) => sundayPlan(d, sunday);
+  assert.equal(plan("2026-11-28"), null, "a Saturday");
+  assert.equal(plan("2026-11-22"), null, "a Sunday before the first");
+  assert.deepEqual(plan("2026-11-29"), { number: 1, format: "deep-dive", voice: "bompa" });
+  assert.deepEqual(plan("2026-12-06"), { number: 2, format: "roundtable", voice: null });
+  assert.equal(plan("2026-12-13").voice, "concrete");
+  assert.equal(plan("2027-01-24").voice, "absent-dimension", "across the new year, still in turn");
+  assert.equal(plan("2027-02-07").voice, "bompa", "and round again");
+});
+
+test("the week's changes: people's commits to the lab and the site, not the machinery running", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "week-"));
+  const git = (...a) => execFileSync("git", a, { cwd: dir, stdio: "ignore" });
+  try {
+    git("init", "-q", "-b", "main");
+    const commit = (name, message) => git("-c", `user.name=${name}`, "-c", "user.email=x@y", "commit", "-q", "--allow-empty", "-m", message);
+    commit("msmsim", "Two shifts a day");
+    commit("kinocomputing-lab[bot]", "night shift 2026-11-25 (shift 1): $0.58");
+    commit("MS", "subset: share 752-jade-otters");
+    commit("msmsim", "Reading: the lab's list");
+    assert.deepEqual(labChanges(dir, "2000-01-01"), ["Reading: the lab's list", "Two shifts a day"]);
+    const site = await siteChanges("msmsim/kinocomputing", "2026-11-23", async () => [
+      { commit: { author: { name: "msmsim" }, message: "Previews lead with the lead\n\nDetail." }, author: { login: "msmsim" } },
+      { commit: { author: { name: "github-actions[bot]" }, message: "blyg: record state" }, author: { login: "github-actions[bot]" } },
+      { commit: { author: { name: "kinocomputing-lab[bot]" }, message: "lab: $0.54" }, author: null },
+      { commit: { author: { name: "msmsim" }, message: "motes: publish 021-amber-egrets (#24)" }, author: { login: "msmsim" } },
+    ]);
+    assert.deepEqual(site, ["Previews lead with the lead"]);
+    assert.deepEqual(await siteChanges("x/y", "2026-11-23", async () => { throw new Error("offline"); }), [], "unreadable is nothing, not a failure");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 function makeWorld() {
@@ -693,6 +730,58 @@ test("shares from Subset: waiting in reading/, briefed like takes, offered again
     assert.equal(JSON.parse(read("state/seen.json")).takes["share:501-ash-bees"], 1, "disregarded, with a reason, counts as handled");
     w.commit();
     assert.ok(!read("state/tonight.md").includes("share:500-amber-owls"), "handled once, gone");
+  } finally {
+    w.dispose();
+  }
+});
+
+test("a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    writeFileSync(join(w.lab, "state/paradigms.json"), JSON.stringify({ paradigms: [{ id: "photonic", name: "Photonic", group: "G", last_checked: "2026-11-25" }] }));
+    writeFileSync(join(w.lab, "published/lab-2026-11-25-brief.md"), "---\nkind: brief\n---\n\n**Lab brief: 25 November 2026**\n");
+    writeFileSync(join(w.lab, "published/lab-2026-11-26-photonic-note.md"), "---\nkind: notebook\n---\n\n**A photonic note**\n\nIts lead.\n");
+    writeFileSync(join(w.lab, "published/lab-2026-11-20-too-old.md"), "---\nkind: notebook\n---\n\n**Too old**\n\nLast week.\n");
+    writeFileSync(join(w.lab, "state/claims.jsonl"), `${JSON.stringify({ id: "c-009", stage: "simulated", statement: "Converters dominate small arrays.", at: "2026-11-25T05:00:00Z" })}\n`);
+    w.commit();
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-29T02:23:00Z");
+    let run = JSON.parse(read("state/run.json"));
+    assert.deepEqual([run.paradigms, run.minutes, run.sunday], [[], 60, { number: 1, format: "deep-dive", voice: "bompa", job: "week-in-review" }], "no rotation; the week in review");
+    const first = read("state/tonight.md");
+    assert.match(first, /## Sunday 1, shift 1: the week in review\n\nNo rotation today\. Write the week in review for 2026-11-23 to 2026-11-29/);
+    assert.match(first, /- `published\/lab-2026-11-25-brief\.md`/);
+    assert.match(first, /- `lab-2026-11-26-photonic-note` \(notebook\): A photonic note/);
+    assert.ok(!first.includes("(notebook): Too old"), "the week, not before");
+    assert.match(first, /- c-009 → simulated: Converters dominate small arrays\./);
+    assert.match(first, /Paradigms looked at this week: Photonic\./);
+    assert.match(first, /What changed in how the lab works[^\n]*\n\n- night\n- seed/, "people's commits to the lab");
+    assert.match(first, /The second shift writes a deep dive in Bompa's voice/);
+    assert.ok(!first.includes("## Tonight's paradigms\n\nThe rotation"), "no paradigms tonight");
+
+    writeFileSync(join(w.lab, "outbox/lab-2026-11-29-the-week.md"), "---\nkind: notebook\n---\n\n**The week the converters won**\n\nThe week's lead.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.5, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-29T03:00:00Z");
+    w.commit();
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-29T05:07:00Z", { LAB_SHIFT: "2" });
+    run = JSON.parse(read("state/run.json"));
+    assert.deepEqual([run.kind, run.model, run.minutes], ["deep", "claude-opus-5-5", 120], "the deep model, a longer clock");
+    assert.ok(run.max_usd > 0 && run.max_usd + (run.exa_usd ?? 0) <= 4, "from the bank, at most its Sunday's draw");
+    const second = read("state/tonight.md");
+    assert.match(second, /## Sunday 1, shift 2: a deep dive, in Bompa's voice\n\nOne piece of 3000 to 5000 words, in Bompa's voice \(`voice: bompa`\)/);
+    assert.match(second, /stopped at \*\*07:07 UTC\*\* \(120 minutes\)/);
+
+    writeFileSync(join(w.lab, "outbox/lab-2026-11-29-deep-dive.md"), "---\nkind: analysis\nvoice: bompa\n---\n\n**The road not taken**\n\nThe analog computer was winning in 1955.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 2.9, num_turns: 40, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-29T07:00:00Z", { LAB_SHIFT: "2" });
+    assert.ok(!/short of the lab/.test(read("published/lab-2026-11-29-brief.md")), "two is Sunday's floor");
+    w.commit();
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-12-06T05:07:00Z", { LAB_SHIFT: "2" });
+    assert.match(read("state/tonight.md"), /## Sunday 2, shift 2: the roundtable\n\nThe roundtable: all five voices on one question orthogonal to the week, each turn written by the `voice` subagent in that voice\. Positions of at most 150 words, rebuttals of at most 120, the crux in at most 100, and a bet each of at most 80/);
   } finally {
     w.dispose();
   }

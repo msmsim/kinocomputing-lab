@@ -154,5 +154,28 @@
       ],
       "funding": []
     }
-  ]
+  ],
+  "sunday": {
+    "first": "2026-11-29",
+    "floor": 2,
+    "depth_minutes": 120,
+    "depth_usd": 4,
+    "voices": [
+      "bompa",
+      "concrete",
+      "santa-feist",
+      "post-liquid",
+      "absent-dimension"
+    ],
+    "deep_dive_words": [
+      3000,
+      5000
+    ],
+    "roundtable": {
+      "opening_words": 150,
+      "rebuttal_words": 120,
+      "crux_words": 100,
+      "bet_words": 80
+    }
+  }
 }

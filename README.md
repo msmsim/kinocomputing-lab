@@ -102,6 +102,19 @@ Subset for each share `https://www.kinocomputing.com/reading/<share>`, which
 the site redirects to that share's place on the Reading page. The restore step
 after each shift keeps `reading/` exactly as sent.
 
+## Sundays
+
+No rotation. The first shift writes **the week in review**: the week's
+themes across paradigms, regions and money, what your takes and shares
+became, and what changed in how the lab and the site work (from the week's
+commits to both repositories, the routine ones left out). The second shift,
+on Opus with a 120-minute clock and up to $4 from the bank, writes a
+**deep dive** (3,000–5,000 words, one voice, the voices in turn) and a
+**roundtable** (all five voices, each turn written separately, ending in
+dated, falsifiable bets) in alternate weeks, on a subject orthogonal to the
+week. Sunday's floor is two notes. `config/lab.json`, `sunday`, holds the
+first Sunday, the voices' order, the word limits and the money.
+
 ## Where it looks
 
 All free, none gated, most keyless (`tools/search.mjs`, `tools/sources.mjs`;

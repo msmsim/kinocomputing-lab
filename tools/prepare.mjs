@@ -10,7 +10,8 @@
 
 import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, regionFor, rotation } from "./lib.mjs";
+import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, regionFor, rotation, sundayPlan } from "./lib.mjs";
+import { weekInReview } from "./week.mjs";
 import { searchMore } from "./sources.mjs";
 import { readingShares, takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
@@ -47,6 +48,16 @@ if (SHIFT === 1 && config.shifts.per_day > 1 && !process.env.LAB_RUN_KIND) {
   money.maxUsd = Math.round(money.maxUsd * config.shifts.first_share * 100) / 100;
   money.skip = money.maxUsd < config.budget.min_run_usd;
 }
+// Sundays (AGENT.md, "Sundays"): the first shift writes the week in review;
+// the second, a deep dive or a roundtable, on the deep model, with a longer
+// clock and a draw on the bank, which is what the bank is for.
+const SUNDAY = sundayPlan(today, config.sunday);
+if (SUNDAY && SHIFT === 2 && !process.env.LAB_RUN_KIND) {
+  money.kind = "deep";
+  money.maxUsd = Math.round(Math.max(0, Math.min(money.bank, config.sunday.depth_usd)) * 100) / 100;
+  money.skip = money.maxUsd < config.budget.min_run_usd;
+}
+const MINUTES = SUNDAY && SHIFT === 2 ? config.sunday.depth_minutes : config.shift.minutes;
 
 // The night's money is one pot. Exa, when the lab has a key, gets a slice of
 // it; the model gets the rest.
@@ -151,7 +162,7 @@ const region = regionFor(today, config.regions);
 const paradigmList = readJson(join(LAB, "state/paradigms.json"), { paradigms: [] }).paradigms ?? [];
 // The rotation is the first shift's; the second goes deeper on what the
 // first found.
-const tonightParadigms = SHIFT === 1 ? rotation(paradigmList, config.paradigms.cycle_days) : [];
+const tonightParadigms = SHIFT === 1 && !SUNDAY ? rotation(paradigmList, config.paradigms.cycle_days) : [];
 
 const published = existsSync(join(LAB, "published"))
   ? readdirSync(join(LAB, "published")).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")).sort()
@@ -161,11 +172,18 @@ const replications = readJson(join(LAB, "state/replications.json"), []);
 const model = config.models[money.kind];
 // The shift has a wall clock as well as a budget: the runner stops it at
 // config.shift.minutes, and an unfinished shift loses its write-up.
-const deadline = new Date(new Date(at).getTime() + config.shift.minutes * 60_000).toISOString().slice(11, 16);
+const deadline = new Date(new Date(at).getTime() + MINUTES * 60_000).toISOString().slice(11, 16);
+// The week in review's material, on a Sunday's first shift.
+const week = SUNDAY && SHIFT === 1
+  ? await weekInReview(LAB, today, { siteRepo: config.kinocomputing.repo, fetchJson: offline || process.env.LAB_NO_READING === "1" ? null : fetchJson })
+  : null;
+const voiceName = (id) => readFileSync(join(LAB, "voices", `${id}.md`), "utf8").match(/^# (.+)$/m)?.[1] ?? id;
 const run = {
   date: today,
   at,
   shift: SHIFT,
+  minutes: MINUTES,
+  ...(SUNDAY ? { sunday: { ...SUNDAY, job: SHIFT === 1 ? "week-in-review" : SUNDAY.format } } : {}),
   skip: money.skip,
   kind: money.kind,
   model,
@@ -198,21 +216,58 @@ const lines = [
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
   "",
-  `## Shift ${SHIFT} of ${config.shifts.per_day}: ${SHIFT === 1 ? "breadth" : "depth"}`,
-  "",
-  SHIFT === 1
-    ? `The day's first shift: tonight's paradigms, units from the archive, takes, and the day's floor of notes. ${config.shifts.per_day > 1 ? "A second, deeper shift follows; end your journal entry with what it should take up (AGENT.md, \"Two shifts a day\")." : ""}`
-    : "The day's second shift, for depth (AGENT.md, \"Two shifts a day\"): start from what the first shift asked of you at the end of today's journal and in `state/last-morning.md`. No rotation tonight.",
-  "",
+  ...(!SUNDAY ? [
+    `## Shift ${SHIFT} of ${config.shifts.per_day}: ${SHIFT === 1 ? "breadth" : "depth"}`,
+    "",
+    SHIFT === 1
+      ? `The day's first shift: tonight's paradigms, units from the archive, takes, and the day's floor of notes. ${config.shifts.per_day > 1 ? "A second, deeper shift follows; end your journal entry with what it should take up (AGENT.md, \"Two shifts a day\")." : ""}`
+      : "The day's second shift, for depth (AGENT.md, \"Two shifts a day\"): start from what the first shift asked of you at the end of today's journal and in `state/last-morning.md`. No rotation tonight.",
+    "",
+  ] : SHIFT === 1 ? [
+    `## Sunday ${SUNDAY.number}, shift 1: the week in review`,
+    "",
+    `No rotation today. Write the week in review for ${week.since} to ${today} (AGENT.md, "Sundays"), and take today's takes and shares as on any shift. The second shift writes ${SUNDAY.format === "deep-dive" ? `a deep dive in ${voiceName(SUNDAY.voice)}'s voice` : "the roundtable"}; end the journal with the week's themes, so it can go somewhere else.`,
+    "",
+    "The week's briefs, which say what each shift did, published and added to Reading:",
+    "",
+    ...(week.briefs.length ? week.briefs.map((b) => `- \`published/${b}.md\``) : ["- None."]),
+    "",
+    "The week's notes:",
+    "",
+    ...(week.notes.length ? week.notes.map((n) => `- \`${n.name}\` (${n.kind}): ${n.title}`) : ["- None."]),
+    "",
+    "Claims that moved this week:",
+    "",
+    ...(week.claims.length ? week.claims.map((c) => `- ${c.id} → ${c.stage}: ${c.statement}`) : ["- None."]),
+    "",
+    `Paradigms looked at this week: ${week.paradigms.length ? week.paradigms.join(", ") : "none"}.`,
+    "",
+    "What changed in how the lab works (commits to this repository, the lab's own nightly ones left out):",
+    "",
+    ...(week.changes.lab.length ? week.changes.lab.map((c) => `- ${c}`) : ["- None."]),
+    "",
+    "What changed on the site (commits to kinocomputing, its bookkeeping left out):",
+    "",
+    ...(week.changes.site.length ? week.changes.site.map((c) => `- ${c}`) : ["- None."]),
+    "",
+  ] : [
+    `## Sunday ${SUNDAY.number}, shift 2: ${SUNDAY.format === "deep-dive" ? `a deep dive, in ${voiceName(SUNDAY.voice)}'s voice` : "the roundtable"}`,
+    "",
+    SUNDAY.format === "deep-dive"
+      ? `One piece of ${config.sunday.deep_dive_words[0]} to ${config.sunday.deep_dive_words[1]} words, in ${voiceName(SUNDAY.voice)}'s voice (\`voice: ${SUNDAY.voice}\`), on a subject orthogonal to the week: today's journal ends with the week's themes, so go somewhere else (AGENT.md, "Sundays").`
+      : `The roundtable: all five voices on one question orthogonal to the week, each turn written by the \`voice\` subagent in that voice. Positions of at most ${config.sunday.roundtable.opening_words} words, rebuttals of at most ${config.sunday.roundtable.rebuttal_words}, the crux in at most ${config.sunday.roundtable.crux_words}, and a bet each of at most ${config.sunday.roundtable.bet_words} (AGENT.md, "Sundays").`,
+    "",
+  ]),
   "## Tonight's output",
   "",
-  `The day publishes **${config.publish.min_notes_per_day} to ${config.publish.max_notes_per_day} notes** across its shifts, claims included (settle holds back any past ${config.publish.max_notes_per_day}). ${SHIFT === 1 ? `Reach the ${config.publish.min_notes_per_day} yourself.` : `${earlierToday} went out in today's earlier shift; add what depth earns, not to make up numbers.`} Use the money: aim to spend most of the $${modelUsd.toFixed(2)}. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.`,
+  ...(SUNDAY ? [`Sunday publishes at least ${config.sunday.floor} notes: the week in review and the ${SUNDAY.format === "deep-dive" ? "deep dive" : "roundtable"}, and whatever takes and shares earn. Use the money: $${modelUsd.toFixed(2)} on ${model}.`, ""] : []),
+  ...(SUNDAY ? [] : [`The day publishes **${config.publish.min_notes_per_day} to ${config.publish.max_notes_per_day} notes** across its shifts, claims included (settle holds back any past ${config.publish.max_notes_per_day}). ${SHIFT === 1 ? `Reach the ${config.publish.min_notes_per_day} yourself.` : `${earlierToday} went out in today's earlier shift; add what depth earns, not to make up numbers.`} Use the money: aim to spend most of the $${modelUsd.toFixed(2)}. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.`]),
   "",
   ...(process.env.LAB_ENV_NOTE ? ["## Where this shift runs", "", process.env.LAB_ENV_NOTE, ""] : []),
   ...(focus ? ["## Focus", "", `The operator running this shift set its focus: **${focus}**. Make it tonight's unit of work, after the PI's takes.`, ""] : []),
   "## Time",
   "",
-  `This shift is stopped at **${deadline} UTC** (${config.shift.minutes} minutes), finished or not. Check \`date -u\` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
+  `This shift is stopped at **${deadline} UTC** (${MINUTES} minutes), finished or not. Check \`date -u\` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
   "",
   "## Tonight's paradigms",
   "",

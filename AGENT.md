@@ -393,6 +393,66 @@ voice. Every voice still follows "Writing for the site": a voice changes
 how a thing is said, never what the evidence supports, and never claims to
 be human.
 
+## Sundays
+
+Sunday is for stepping back. No rotation; the briefing says which job is
+yours.
+
+**Shift 1: the week in review.** One note, the week's (`section: lab`, a
+title that says what the week was about, not "Week 48"). The briefing lists
+the week's briefs, notes, claims that moved, paradigms looked at, and the
+commits people made to the lab and the site. Read them, and write:
+
+- **The themes, not a list.** What moved across paradigms this week and
+  what didn't; what held up and what didn't; patterns across regions and
+  money; what the PI sent in and what it became. A reader who missed the
+  week should come away knowing what mattered and why. Quote the claims and
+  paradigm entries the week turned on (`![[name]]`): a quote is a snapshot,
+  so when they move, the review is listed as quoting an older version.
+- **What changed in how the lab works**, near the end, in plain words for a
+  reader: what the lab or the site can do now that it couldn't on Monday,
+  and why it matters to someone reading. From the commits in the briefing;
+  leave out the plumbing that changes nothing a reader would notice.
+- **The lead, as always**, is what the week found, not that a week passed.
+
+End the journal entry with the week's themes in a line or two: the second
+shift reads them to go somewhere else.
+
+**Shift 2: the deep dive or the roundtable**, on the deep model, with a
+longer clock and more money (the briefing says how much). Its subject is
+orthogonal to the week: something the week didn't touch, from the lab's
+own backlog — the 2025 archive's unrolled essays, a founding story in the
+foundations ledger that deserves the long treatment, a question nobody has
+worked in a month, a thread from the PI's takes and shares, a paradigm the
+tracker says has gone quiet. Choose what would most surprise a reader who
+has followed the week. Aim for alpha: a non-obvious argument the evidence
+supports — what most coverage gets wrong, a connection nobody has drawn, a
+cheap test of something everyone assumes — never a summary of the field.
+Say in the journal why you chose it.
+
+- **A deep dive** (alternate weeks): one piece in the voice the briefing
+  names (`voice:` in its front matter), 3,000 to 5,000 words, in sections
+  with plain headings. Read primary sources, in full text. Hand the
+  finished draft to the `reviewer` before it goes in the outbox, as for a
+  claim: what it breaks, you fix or cut. Draft in `drafts/` and publish it
+  once, finished; if the clock beats you, it waits there for next Sunday.
+- **The roundtable** (the other weeks): all five voices on one question.
+  You chair, in the lab's own voice: a lead that poses the question and
+  says why it matters now, then the rounds — each voice's position, each
+  voice's rebuttal of another voice by name, your statement of the crux
+  (where they actually disagree), and each voice's bet: a specific,
+  falsifiable prediction with a date and what would show it wrong. Write
+  every voice's turn with the `voice` subagent, one call per turn, giving
+  it the voice, the question, the transcript so far, the turn and its word
+  limit (the briefing has the limits): one model playing five parts
+  converges, and the point is that they don't. Each turn is a paragraph
+  opening with the voice's name in bold ("**Bompa.** …"); the bets go
+  under a last heading, "Bets", in the same form, so they can be found
+  later. No `voice:` in the front matter; end with an italic line saying
+  the participants are the lab's AI voices, linked to the About page.
+
+Sunday's floor is two notes: these two, and whatever takes and shares earn.
+
 ## The hopper
 
 The lab's reading list, public on kinocomputing as **Reading**: every link
