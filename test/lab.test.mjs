@@ -4,6 +4,7 @@
 // is played by a script.
 
 import { test } from "node:test";
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -12,6 +13,7 @@ import { join } from "node:path";
 import { allowance, frontMatter, KINO, LAB, regionFor, rotation, sundayPlan } from "../tools/lib.mjs";
 import { labChanges, siteChanges } from "../tools/week.mjs";
 import * as sources from "../tools/sources.mjs";
+import { checkImage, sketch } from "../tools/figure.mjs";
 import { takeSteers } from "../tools/steers.mjs";
 import { renderNote } from "../tools/render.mjs";
 import { arxivQuery, exaAgent, exaBody, exaLeft, parseArxiv, parseExa, parseOpenAlex, search, unInvert } from "../tools/search.mjs";
@@ -797,6 +799,56 @@ test("a Sunday: the week in review first, then the deep dive or roundtable on th
   } finally {
     w.dispose();
   }
+});
+
+test("images: drawn in the house style, checked, named by their contents, published beside their note; the house rules refuse what breaks them", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  const plate = sketch({ width: 640, height: 300, elements: [{ type: "rect", x: 40, y: 60, w: 200, h: 160, fill: "paper-light", fillStyle: "solid" }, { type: "text", x: 140, y: 150, text: "processor", anchor: "middle" }, { type: "arrow", x1: 400, y1: 140, x2: 260, y2: 140, stroke: "vermilion" }] });
+  assert.deepEqual(checkImage(Buffer.from(plate), "plate-wall.svg").problems, [], "the sketch tool draws in the house style");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-27T02:23:00Z");
+    const note = (name, body) => writeFileSync(join(w.lab, `outbox/lab-2026-11-27-${name}.md`), `---\nkind: notebook\n---\n\n**${name}**\n\nThe lead, which says what the note found and why it matters.\n\n${body}\n`);
+    const asset = (name, file, text) => { mkdirSync(join(w.lab, `outbox/lab-2026-11-27-${name}`), { recursive: true }); writeFileSync(join(w.lab, `outbox/lab-2026-11-27-${name}/${file}`), text); };
+    asset("wall", "plate-wall.svg", plate);
+    note("wall", '![A wall between a processor and a memory, data squeezing through a gap](plate-wall.svg "The memory wall: moving data costs more than computing on it.")\n\nMore.');
+    note("inline", "Text with ![an image of a wall](plate-wall.svg \"Caption\") inside it.");
+    asset("nocaption", "plate-wall.svg", plate);
+    note("nocaption", "![A wall between a processor and a memory](plate-wall.svg)");
+    asset("offstyle", "fig-x.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><text x="1" y="20" font-size="8" fill="#ff00ff">tiny</text></svg>');
+    note("offstyle", '![A chart that breaks the house rules on purpose](fig-x.svg "A chart.")');
+    asset("unsafe", "fig-y.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><script>alert(1)</script></svg>');
+    note("unsafe", '![A chart with a script in it, on purpose](fig-y.svg "A chart.")');
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.4, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-27T03:20:00Z");
+
+    const hash = createHash("sha256").update(plate).digest("hex").slice(0, 16);
+    assert.equal(readFileSync(join(w.kino, `media/${hash}.svg`), "utf8"), plate, "the image, named by its contents, in kinocomputing's media");
+    const page = readFileSync(join(w.kino, "notes/lab-2026-11-27-wall.html"), "utf8");
+    assert.match(page, new RegExp(`<figure class="plate"><img src="https://www\\.kinocomputing\\.com/media/${hash}\\.svg" alt="A wall between a processor and a memory, data squeezing through a gap" width="640" height="300" loading="lazy" decoding="async"><figcaption>The memory wall: moving data costs more than computing on it\\.</figcaption></figure>`));
+    assert.ok(existsSync(join(w.lab, "published/lab-2026-11-27-wall/plate-wall.svg")) && !existsSync(join(w.lab, "outbox/lab-2026-11-27-wall")), "the source kept beside the published note");
+    const morning = read("MORNING.md");
+    assert.match(morning, /lab-2026-11-27-inline has an image inside a paragraph/);
+    assert.match(morning, /lab-2026-11-27-nocaption has an image \(plate-wall\.svg\) without a caption/);
+    assert.match(morning, /lab-2026-11-27-offstyle has an image "fig-x\.svg" that uses colours outside the house palette: #ff00ff; has text at 8/);
+    assert.match(morning, /lab-2026-11-27-unsafe has an image "fig-y\.svg" that has a script/);
+  } finally {
+    w.dispose();
+  }
+});
+
+test("figure: the house rules", () => {
+  const svg = (inner, box = "0 0 640 300") => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${box}">${inner}</svg>`);
+  assert.deepEqual(checkImage(svg('<text font-size="20" fill="#1a1a1a">ok</text>'), "fig-a.svg").problems, []);
+  assert.match(checkImage(svg('<text font-size="20" fill="#c8553d">no</text>'), "fig-a.svg").problems.join(), /vermilion/);
+  assert.match(checkImage(svg('<text font-size="14" fill="#1a1a1a">small</text>'), "fig-a.svg").problems.join(), /can't be read/);
+  assert.deepEqual(checkImage(svg('<text font-size="14" fill="#1a1a1a">a small drawing shows at its own size</text>', "0 0 300 200"), "fig-a.svg").problems, []);
+  assert.match(checkImage(svg('<a href="https://x.example/"><path d="M0 0"/></a>'), "fig-a.svg").problems.join(), /fetches something/);
+  assert.match(checkImage(svg('<path onclick="x()" d="M0 0"/>'), "fig-a.svg").problems.join(), /event handler/);
+  assert.match(checkImage(svg('<path stroke="#000" d="M0 0"/>'), "fig-a.svg").problems.join(), /pure black/);
+  assert.equal(checkImage(svg(""), "plate-b.svg").kind, "plate");
+  assert.match(checkImage(Buffer.from("GIF89a"), "fig.gif").problems.join(), /images are SVG, or PNG/);
 });
 
 test("timebox: stops a command past its limit with 124, passes an exit code through", () => {

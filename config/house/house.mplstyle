@@ -1,0 +1,38 @@
+# Kinocomputing's chart style (config/house/STYLE.md), for matplotlib:
+#   import matplotlib.pyplot as plt; plt.style.use("config/house/house.mplstyle")
+# Transparent ground, ink axes, light grid, no top or right spine, the
+# house series in order. Drawn at 5 x 3.3 in (an SVG of about 420 units
+# across), so 15 pt labels still read at about 12 px on a phone.
+figure.figsize: 5.0, 3.3
+figure.dpi: 100
+savefig.dpi: 100
+savefig.transparent: True
+savefig.bbox: tight
+svg.fonttype: none
+font.family: sans-serif
+font.sans-serif: Helvetica, Arial, DejaVu Sans
+font.size: 15
+axes.titlesize: 17
+axes.titleweight: semibold
+axes.titlelocation: left
+axes.labelsize: 15
+axes.labelcolor: 333333
+axes.edgecolor: 1a1a1a
+axes.linewidth: 1.0
+axes.spines.top: False
+axes.spines.right: False
+axes.grid: True
+axes.grid.axis: y
+axes.axisbelow: True
+axes.prop_cycle: cycler('color', ['1a1a1a', '2f5d8c', 'c8553d', '555555'])
+axes.facecolor: none
+grid.color: a9c6ea
+grid.linewidth: 0.8
+xtick.color: 333333
+ytick.color: 333333
+xtick.labelsize: 15
+ytick.labelsize: 15
+lines.linewidth: 1.8
+lines.markersize: 5
+legend.frameon: False
+legend.fontsize: 15

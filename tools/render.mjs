@@ -144,8 +144,41 @@ export function leadProblem(html) {
 // A paradigm entry is the tracker's and a brief the briefs', whatever it asks.
 export const SECTIONS = ["lab", "tracker", "audits"];
 
+// Images (config/house/STYLE.md): each on a line of its own, as
+// `![alt text](file.svg "Caption.")`, the file beside the note. `image`, from
+// settle, checks the file against the house rules and says where it will
+// live: { url, width, height, kind } (kind: plate or figure). A plate opens
+// a piece and may break out of the column; a figure sits in it.
+const LONE_IMAGE = /^!\[([^\]]*)\]\(\s*([^\s)]+)(?:\s+"([^"]*)")?\s*\)\s*$/;
+const escapeHtml = (text) => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+export function withFigures(markdown, image, { most = 3 } = {}) {
+  const drawn = [];
+  const lines = markdown.split("\n");
+  let fenced = false;
+  const out = lines.map((line) => {
+    if (/^```/.test(line.trim())) fenced = !fenced;
+    if (fenced) return line;
+    const lone = line.trim().match(LONE_IMAGE);
+    if (!lone) {
+      if (/!\[[^\]]*\]\(/.test(line)) throw new Error("has an image inside a paragraph; an image stands on a line of its own");
+      return line;
+    }
+    const [, alt, src, caption] = lone;
+    if (alt.trim().length < 12) throw new Error(`has an image (${src}) without alt text: say what it shows, for a reader who can't see it`);
+    if (!caption?.trim()) throw new Error(`has an image (${src}) without a caption: say what to see, in its title`);
+    const placed = image(src);
+    drawn.push(`<figure class="${placed.kind}"><img src="${escapeHtml(placed.url)}" alt="${escapeHtml(alt.trim())}" width="${Math.round(placed.width)}" height="${Math.round(placed.height)}" loading="lazy" decoding="async"><figcaption>${escapeHtml(caption.trim())}</figcaption></figure>`);
+    return `KINOFIG${drawn.length - 1}X`;
+  });
+  if (drawn.length > most) throw new Error(`has ${drawn.length} images; a note has at most ${most}`);
+  const plates = drawn.filter((f) => f.startsWith('<figure class="plate"')).length;
+  if (plates > Math.max(1, most - 2)) throw new Error(`has ${plates} plates; one opens a piece, more only in a long one`);
+  return { markdown: out.join("\n"), put: (html) => html.replace(/<p>KINOFIG(\d+)X<\/p>/g, (m, i) => drawn[Number(i)]), count: drawn.length };
+}
+
 export async function renderNote({ markdown, name, pin = false, changeNote = null, answers = null, kind = "notebook", voice = null, section = null,
-  maxClaim = 1000, maxParadigm = 1500, quote = null, model, at, kino, origin }) {
+  maxClaim = 1000, maxParadigm = 1500, quote = null, image = null, model, at, kino, origin }) {
   const refused = refusals(markdown);
   if (refused.length) throw new Error(`uses ${refused.join(" and ")}, which the blyg can't carry`);
   const extracted = extractQuotes(markdown.trim());
@@ -167,7 +200,12 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   } catch (error) {
     throw new Error(`has TeX the site can't draw: ${error.message.split("\n")[0]}`);
   }
-  let html = maths.put(marked.parse(maths.markdown).trim());
+  // Figures before the markdown is parsed; a long piece (2,500 words and up)
+  // may carry more of them.
+  const words = maths.markdown.split(/\s+/).length;
+  const figures = withFigures(maths.markdown, image ?? ((src) => { throw new Error(`has an image (${src}), and nothing here can place images`); }), { most: words >= 2500 ? 5 : 3 });
+  if (figures.count && (fragment || kind === "brief")) throw new Error(`is a ${kind} with an image; images go in notes, not claims, paradigm entries or the brief`);
+  let html = maths.put(figures.put(marked.parse(figures.markdown).trim()));
   if (!html) throw new Error("is empty");
   // Every note's first paragraph is its preview, in the stream, in feeds and
   // in search results (AGENT.md, "Writing for the site"). The brief's is

@@ -9,6 +9,11 @@ import { join } from "node:path";
 import { LAB } from "../tools/lib.mjs";
 
 const MUTANTS = [
+  ["images with scripts", "tools/figure.mjs", 'if (/<script\\b/i.test(text)) problems.push("has a script");', ""],
+  ["images off the palette", "tools/figure.mjs", "if (strays.length) problems.push", "if (false) problems.push"],
+  ["images without captions", "tools/render.mjs", "if (!caption?.trim()) throw", "if (false) throw"],
+  ["images inside paragraphs", "tools/render.mjs", 'if (/!\\[[^\\]]*\\]\\(/.test(line)) throw', "if (false) throw"],
+  ["images published though the house rules fail", "tools/settle.mjs", "if (problems.length) throw new Error(`has an image", "if (false) throw new Error(`has an image"],
   ["the lab's own notes count as takes", "tools/steers.mjs", "if (doc.generated?.length) { marks.push(mark); continue; }", ""],
   ["the first look replays history", "tools/steers.mjs", "if (baseline || item.kind", "if (item.kind"],
   ["experiments see the lab's secrets", "tools/replicate.mjs", "env: { ...settings, PATH: process.env.PATH, HOME: process.env.HOME,", "env: { ...process.env, ...settings,"],

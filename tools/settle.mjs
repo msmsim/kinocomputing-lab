@@ -21,10 +21,11 @@
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { KINO, LAB, frontMatter, json, now, readJson, readJsonl, sundayPlan } from "./lib.mjs";
 import { labIdIn, renderNote } from "./render.mjs";
+import { checkImage } from "./figure.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -307,16 +308,41 @@ for (const { file, name, data, body } of parsed) {
     }
     voice = readFileSync(guide, "utf8").match(/^# (.+)$/m)?.[1] ?? data.voice;
   }
+  // A note's images live beside it, in a folder of its name: in the outbox
+  // while it waits, in published/ once it's out (an update can reuse them).
+  // Each is checked against the house rules, named by its contents, and
+  // written to kinocomputing's media/ only once the note itself renders.
+  const placed = [];
+  const image = (src) => {
+    if (!/^[a-z0-9][a-z0-9._-]*\.(?:svg|png)$/i.test(src)) throw new Error(`has an image "${src}": name a file beside the note (letters, digits, dashes; .svg or .png)`);
+    const from = [join(outbox, name, src), join(LAB, "published", name, src)].find((p) => existsSync(p));
+    if (!from) throw new Error(`has an image "${src}" that isn't in outbox/${name}/`);
+    const bytes = readFileSync(from);
+    const { kind, width, height, problems } = checkImage(bytes, src);
+    if (problems.length) throw new Error(`has an image "${src}" that ${problems.join("; ")} (config/house/STYLE.md)`);
+    const file = `${createHash("sha256").update(bytes).digest("hex").slice(0, 16)}${src.slice(src.lastIndexOf(".")).toLowerCase()}`;
+    placed.push({ file, bytes });
+    return { url: `${config.kinocomputing.origin}media/${file}`, width, height, kind };
+  };
   let page;
   try {
     page = await renderNote({
       markdown: body, name, voice, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
       answers: !update && data.answers ? data.answers : null, kind: data.kind, section: data.section ?? null, maxClaim: config.publish.max_claim_chars, maxParadigm: config.publish.max_paradigm_chars,
-      quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+      quote: quoteResolver, image, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {
     reject(file, error.message);
     continue;
+  }
+  for (const { file: media, bytes } of placed) {
+    mkdirSync(join(KINO, "media"), { recursive: true });
+    writeFileSync(join(KINO, "media", media), bytes);
+  }
+  if (existsSync(join(outbox, name))) {
+    mkdirSync(join(LAB, "published", name), { recursive: true });
+    for (const f of readdirSync(join(outbox, name))) renameSync(join(outbox, name, f), join(LAB, "published", name, f));
+    rmSync(join(outbox, name), { recursive: true, force: true });
   }
   writeFileSync(join(KINO, "notes", `${name}.html`), page);
   mkdirSync(join(LAB, "published"), { recursive: true });

@@ -10,6 +10,8 @@
     "replicate": "node tools/replicate.mjs"
   },
   "dependencies": {
-    "marked": "18.2.1"
+    "marked": "18.2.1",
+    "pele": "^1.13.0",
+    "roughjs": "^4.6.6"
   }
 }

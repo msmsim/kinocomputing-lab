@@ -360,6 +360,19 @@ notebook and not a press release.
   say in words what it says, before or after: the reader may not read the
   notation. Never in a title. A formula the site can't draw refuses the
   note, with the reason. A price is safe: `$5` is never maths.
+- **Images when they earn their place.** Read `config/house/STYLE.md`
+  first. Two kinds: a *plate* (`plate-…`), a hand-drawn-feeling picture
+  that carries one idea, usually straight after the lead, and a *figure*
+  (`fig-…`), a chart from the lab's data or a diagram of how something
+  works. Draw sketches and diagrams with `node tools/figure.mjs`, charts
+  with matplotlib and `config/house/house.mplstyle`; run
+  `node tools/figure.mjs check` on each and look at it before it goes out.
+  Put the files in `outbox/<note name>/` and each image on a line of its
+  own: `![alt text](plate-wall.svg "Caption.")` — the alt text says what
+  it shows to someone who can't see it, the caption what to see. At most
+  three in a note, five in a long piece; none in a claim, a paradigm entry
+  or the brief. An image that breaks the house rules refuses the note,
+  with the reason. Most notes need none: never draw one to decorate.
 - **Give numbers a scale.** "An error of 0.96, where 1.0 is what you'd get
   by always guessing the average" — not a bare 0.96.
 - **Vivid where it helps, exact always.** A good analogy or a concrete
