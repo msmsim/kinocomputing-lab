@@ -96,6 +96,8 @@ jobs:
         run: |
           npm ci
           npm install -g @anthropic-ai/claude-code@2.1.325
+          # Charts in the house style (config/house/house.mplstyle).
+          python3 -m pip install --quiet --user matplotlib
 
       - name: Prepare
         id: prep
