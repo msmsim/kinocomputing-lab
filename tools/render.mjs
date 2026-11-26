@@ -204,7 +204,8 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   // may carry more of them.
   const words = maths.markdown.split(/\s+/).length;
   const figures = withFigures(maths.markdown, image ?? ((src) => { throw new Error(`has an image (${src}), and nothing here can place images`); }), { most: words >= 2500 ? 5 : 3 });
-  if (figures.count && (fragment || kind === "brief")) throw new Error(`is a ${kind} with an image; images go in notes, not claims, paradigm entries or the brief`);
+  if (figures.count && fragment) throw new Error(`is a ${kind} with an image; images go in notes and the brief, not claims or paradigm entries`);
+  if (kind === "brief" && figures.count > 1) throw new Error(`is the brief with ${figures.count} images; it has one, the day's picture`);
   let html = maths.put(figures.put(marked.parse(figures.markdown).trim()));
   if (!html) throw new Error("is empty");
   // Every note's first paragraph is its preview, in the stream, in feeds and

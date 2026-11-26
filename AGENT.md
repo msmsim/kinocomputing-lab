@@ -370,9 +370,10 @@ notebook and not a press release.
   Put the files in `outbox/<note name>/` and each image on a line of its
   own: `![alt text](plate-wall.svg "Caption.")` — the alt text says what
   it shows to someone who can't see it, the caption what to see. At most
-  three in a note, five in a long piece; none in a claim, a paradigm entry
-  or the brief. An image that breaks the house rules refuses the note,
-  with the reason. Most notes need none: never draw one to decorate.
+  three in a note, five in a long piece; none in a claim or a paradigm
+  entry. An image that breaks the house rules refuses the note, with the
+  reason. Most notes need none: never draw one to decorate. The brief is
+  the exception: it always has one (below, "The day's picture").
 - **Give numbers a scale.** "An error of 0.96, where 1.0 is what you'd get
   by always guessing the average" — not a bare 0.96.
 - **Vivid where it helps, exact always.** A good analogy or a concrete
@@ -524,6 +525,32 @@ beats five thin ones here.
 There is one brief a day. Each shift writes its own MORNING.md; settle puts
 both, in order, at the top of the day's brief, with everything the day
 published and what it cost. Write yours to stand next to the other shift's.
+
+### The day's picture
+
+Every brief opens with a picture, straight after its first paragraph: the
+day's cover. It is a plate (`config/house/STYLE.md`), never a chart: one
+idea from the day's most intriguing finding, made visible — a metaphor, a
+scene, a juxtaposition, a before and after — so a reader stops and wants
+to know what it means. Beautiful or intriguing, ideally both; never a
+diagram of boxes with labels on them, never decoration.
+
+1. Pick the idea while you write MORNING.md: what from tonight would you
+   put on the cover?
+2. Draw it with `node tools/figure.mjs sketch` as `outbox/brief/plate-….svg`.
+   Few or no words in it; generous empty space; the vermilion once.
+3. Look at it: `node tools/figure.mjs look outbox/brief/plate-….svg
+   /tmp/look.png`, then open the PNG. Is it clear at a glance? Does it
+   say one thing? Would you stop for it? If not, draw it again — two or
+   three tries is normal; a better idea beats a better drawing.
+4. Write `outbox/brief/picture.json`: `{"file": "plate-….svg", "alt":
+   "what it shows, for someone who can't see it", "caption": "what to
+   see, in a sentence"}`.
+
+The first shift draws one; the second may replace it with a better one
+from its own work, or leave it. A picture that breaks the house rules is
+left out and the brief goes without; a day that ends without a picture is
+reported in the morning. Spend minutes on it, not the shift.
 
 ## Where to look
 

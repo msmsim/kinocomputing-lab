@@ -551,6 +551,58 @@ test("a day of two shifts: the first takes its share, the second has the rest an
   }
 });
 
+test("the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported", async () => {
+  const w = makeWorld();
+  const brief = () => readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8");
+  const page = () => readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+  const picture = (file, svg, meta) => {
+    mkdirSync(join(w.lab, "outbox/brief"), { recursive: true });
+    writeFileSync(join(w.lab, `outbox/brief/${file}`), svg);
+    writeFileSync(join(w.lab, "outbox/brief/picture.json"), JSON.stringify(meta));
+  };
+  const shift = (n, at, cost = 0.3) => {
+    writeFileSync(join(w.lab, "MORNING.md"), "# Morning\n\nTonight the lab looked at the memory wall, and found it taller than expected.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: cost, num_turns: 9, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], at, n === 2 ? { LAB_SHIFT: "2" } : {});
+  };
+  const wall = sketch({ width: 640, height: 300, seed: 4, elements: [{ type: "rect", x: 280, y: 30, w: 60, h: 240, fill: "grey", fillStyle: "cross-hatch" }, { type: "arrow", x1: 500, y1: 150, x2: 360, y2: 150, stroke: "vermilion" }] });
+  const pond = sketch({ width: 640, height: 300, seed: 9, elements: [{ type: "ellipse", x: 320, y: 150, w: 400, h: 160, fill: "paper-light", fillStyle: "solid" }] });
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:23:00Z");
+    picture("plate-wall.svg", wall, { file: "plate-wall.svg", alt: "A cross-hatched wall with a red arrow stopped against it", caption: "The memory wall, taller than we thought." });
+    shift(1, "2026-11-21T03:00:00Z");
+    const hash = (svg) => createHash("sha256").update(svg).digest("hex").slice(0, 16);
+    assert.match(brief(), new RegExp(`\\*\\*Lab brief: 21 November 2026\\*\\*\\n\\nTonight the lab looked at the memory wall, and found it taller than expected\\.\\n\\n!\\[A cross-hatched wall with a red arrow stopped against it\\]\\(${hash(wall)}\\.svg "The memory wall, taller than we thought\\."\\)\\n\\n`), "the picture straight after the lead");
+    assert.match(page(), new RegExp(`<figure class="plate"><img src="https://www\\.kinocomputing\\.com/media/${hash(wall)}\\.svg"`));
+    assert.ok(existsSync(join(w.kino, `media/${hash(wall)}.svg`)) && existsSync(join(w.lab, "published/lab-2026-11-21-brief/plate-wall.svg")) && !existsSync(join(w.lab, "outbox/brief")));
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:07:00Z", { LAB_SHIFT: "2" });
+    picture("plate-bad.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><path stroke="#ff00ff" d="M0 0L9 9"/></svg>', { file: "plate-bad.svg", alt: "A magenta line that breaks the palette", caption: "Off-palette on purpose." });
+    shift(2, "2026-11-21T06:00:00Z");
+    assert.match(readFileSync(join(w.lab, "MORNING.md"), "utf8"), /The day's picture wasn't used: it uses colours outside the house palette: #ff00ff/);
+    assert.match(brief(), new RegExp(`${hash(wall)}\\.svg`), "the first shift's picture kept");
+    assert.equal((brief().match(/!\[/g) ?? []).length, 1);
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:30:00Z", { LAB_SHIFT: "2" });
+    picture("plate-pond.svg", pond, { file: "plate-pond.svg", alt: "A still pond, drawn in one wobbling line", caption: "A reservoir is a pond." });
+    shift(2, "2026-11-21T06:30:00Z");
+    assert.match(brief(), new RegExp(`${hash(pond)}\\.svg`), "a later picture replaces it");
+    assert.ok(!brief().includes(hash(wall)));
+    assert.ok(!/has no picture/.test(readFileSync(join(w.lab, "MORNING.md"), "utf8")));
+
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T02:23:00Z");
+    shift(1, "2026-11-22T03:00:00Z");
+    assert.ok(!/has no picture/.test(readFileSync(join(w.lab, "MORNING.md"), "utf8")), "not yet: a shift is still to come");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T05:07:00Z", { LAB_SHIFT: "2" });
+    shift(2, "2026-11-22T06:00:00Z");
+    assert.match(readFileSync(join(w.lab, "MORNING.md"), "utf8"), /Today's brief has no picture/);
+    assert.ok(!/picture/i.test(readFileSync(join(w.lab, "published/lab-2026-11-22-brief.md"), "utf8")), "readers aren't told");
+  } finally {
+    w.dispose();
+  }
+});
+
 test("a short day is reported by its last shift, counting both", async () => {
   const w = makeWorld();
   try {

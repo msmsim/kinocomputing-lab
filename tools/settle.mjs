@@ -409,6 +409,38 @@ if (SHIFT >= (config.shifts?.per_day ?? 1) && dayTotal < floor) {
   told.push(`${dayTotal === 0 ? "Nothing was" : `Only ${dayTotal} note${dayTotal === 1 ? " was" : "s were"}`} published today, short of the lab's daily ${floor}.`);
 }
 
+// The day's picture: every brief opens with one (AGENT.md, "The brief"). The
+// shift leaves it in outbox/brief/ — the drawing and picture.json, its file,
+// alt text and caption — and it goes in straight after the brief's lead. A
+// later shift's replaces an earlier one's. A picture that fails the house
+// rules is left out and reported, never holding up the brief; a day that
+// ends with none is reported too.
+const pictureDir = join(outbox, "brief");
+let picture = earlierShifts.map((s) => s.picture).filter(Boolean).at(-1) ?? null;
+if (existsSync(pictureDir)) {
+  try {
+    const meta = readJson(join(pictureDir, "picture.json"), null);
+    if (!meta?.file) throw new Error("has no picture.json naming its file, alt text and caption");
+    if (!/^plate-[a-z0-9._-]*\.(?:svg|png)$/i.test(meta.file)) throw new Error(`is "${meta.file}": the day's picture is a plate (plate-….svg)`);
+    if (!existsSync(join(pictureDir, meta.file))) throw new Error(`names ${meta.file}, which isn't in outbox/brief/`);
+    if (String(meta.alt ?? "").trim().length < 12) throw new Error("has no alt text: say what it shows, for a reader who can't see it");
+    if (!String(meta.caption ?? "").trim()) throw new Error("has no caption: say what to see");
+    const bytes = readFileSync(join(pictureDir, meta.file));
+    const { width, height, problems } = checkImage(bytes, meta.file);
+    if (problems.length) throw new Error(`${problems.join("; ")} (config/house/STYLE.md)`);
+    const file = `${createHash("sha256").update(bytes).digest("hex").slice(0, 16)}${meta.file.slice(meta.file.lastIndexOf(".")).toLowerCase()}`;
+    mkdirSync(join(KINO, "media"), { recursive: true });
+    writeFileSync(join(KINO, "media", file), bytes);
+    picture = { file, width, height, alt: String(meta.alt).trim().replace(/\s+/g, " "), caption: String(meta.caption).trim().replace(/\s+/g, " ") };
+  } catch (error) {
+    report.push(`- The day's picture wasn't used: it ${error.message}.`);
+  }
+  mkdirSync(join(LAB, "published", BRIEF), { recursive: true });
+  for (const f of readdirSync(pictureDir)) renameSync(join(pictureDir, f), join(LAB, "published", BRIEF, f));
+  rmSync(pictureDir, { recursive: true, force: true });
+}
+if (!picture && SHIFT >= (config.shifts?.per_day ?? 1)) report.push("- Today's brief has no picture: every brief opens with one (AGENT.md, \"The brief\").");
+
 // 5. The day's brief, on kinocomputing: each shift's own account, then what
 // went out and what settle saw, across the day. The second shift updates it.
 const morningPath = join(LAB, "MORNING.md");
@@ -419,7 +451,7 @@ const shiftSaid = existsSync(morningPath)
 const dateWords = new Date(`${run.date}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/ (\w)/g, (m, c) => ` ${c.toUpperCase()}`);
 const SHIFT_NAMES = { 1: "First shift", 2: "Second shift" };
-const shiftsWith = (said) => [...earlierShifts, { shift: SHIFT, said, out, told, spent, model: modelWords }]
+const shiftsWith = (said) => [...earlierShifts.map((s) => ({ ...s, picture: null })), { shift: SHIFT, said, out, told, spent, model: modelWords, picture }]
   .sort((a, b) => a.shift - b.shift);
 // A shift's summary and what it left for the PI, apart: the brief gathers
 // every shift's "Waiting on a human" into one section after the summaries,
@@ -459,10 +491,12 @@ const briefOf = (said) => {
     && !/^(?:[-*] |> |#)/.test(body[0].trim()) && body[0] !== "The researcher left no summary.";
   const noteCount = published.size;
   const account = `The lab published ${noteCount === 0 ? "nothing" : `${noteCount} note${noteCount === 1 ? "" : "s"}`} today${several ? ` over ${shifts.length} shifts` : ""}${addedToday.length ? `, and added ${addedToday.length} link${addedToday.length === 1 ? "" : "s"} to Reading` : ""}.`;
+  const opening = [...(opensWithProse ? [] : [account]), ...body].join("\n\n").split("\n\n");
   return [
     `**Lab brief: ${dateWords}**`,
-    ...(opensWithProse ? [] : [account]),
-    ...body,
+    opening[0],
+    ...(picture ? [`![${picture.alt.replace(/[\[\]]/g, "")}](${picture.file} "${picture.caption.replace(/"/g, "”")}")`] : []),
+    ...opening.slice(1),
     "**Waiting on a human**",
     waiting.length ? waiting.join("\n\n") : "Nothing today.",
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
@@ -483,6 +517,10 @@ let briefPage = null;
 const renderBrief = (markdown) => renderNote({
   markdown, name: BRIEF, kind: "brief", changeNote: briefUpdate ? "Updated with the day's second shift: its summary, what it published and what it cost." : null,
   quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+  image: (src) => {
+    if (!picture || src !== picture.file) throw new Error(`has an image (${src}) that isn't the day's picture`);
+    return { url: `${config.kinocomputing.origin}media/${picture.file}`, width: picture.width, height: picture.height, kind: "plate" };
+  },
 });
 try {
   briefPage = await renderBrief(briefMd);

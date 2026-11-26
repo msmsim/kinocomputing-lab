@@ -10,6 +10,7 @@
     "replicate": "node tools/replicate.mjs"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "marked": "18.2.1",
     "pele": "^1.13.0",
     "roughjs": "^4.6.6"

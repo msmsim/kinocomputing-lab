@@ -3,6 +3,10 @@
 //   node tools/figure.mjs sketch  plate.json  outbox/<note>/plate-wall.svg
 //   node tools/figure.mjs diagram flow.mmd    outbox/<note>/fig-flow.svg
 //   node tools/figure.mjs check   outbox/<note>/fig-chart.svg
+//   node tools/figure.mjs look    outbox/<note>/plate-wall.svg /tmp/look.png
+//
+// `look` draws an SVG as a PNG, on the page's colour and at a phone's width
+// and a desktop's, side by side: open the PNG and judge it as a reader would.
 //
 // A sketch is drawn from a small JSON description of shapes, with rough.js's
 // pen wobble; a diagram is Mermaid, drawn by pele in the house theme; a chart
@@ -15,6 +19,7 @@ import { extname, join } from "node:path";
 import rough from "roughjs/bundled/rough.esm.js";
 import { render as pele } from "pele";
 import { LAB } from "./lib.mjs";
+import { Resvg } from "@resvg/resvg-js";
 
 export const HOUSE = JSON.parse(readFileSync(join(LAB, "config/house/tokens.json"), "utf8"));
 const C = HOUSE.colour;
@@ -166,17 +171,28 @@ export function checkImage(bytes, name) {
   return { kind, ...(size ?? {}), problems: [...new Set(problems)] };
 }
 
+/** An SVG as a PNG on the house paper, 1280 pixels across (a desktop at 2×). */
+export function look(svgText) {
+  const size = svgSize(svgText) ?? { width: 640, height: 400 };
+  const framed = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 -24 ${size.width + 48} ${size.height + 48}" width="${size.width + 48}" height="${size.height + 48}"><rect x="-24" y="-24" width="${size.width + 48}" height="${size.height + 48}" fill="${C.paper}"/><svg x="0" y="0" width="${size.width}" height="${size.height}" viewBox="0 0 ${size.width} ${size.height}">${svgText.replace(/^[\s\S]*?<svg\b[^>]*>/, "").replace(/<\/svg>\s*$/, "")}</svg></svg>`;
+  return new Resvg(framed, { fitTo: { mode: "width", value: 1280 }, font: { loadSystemFonts: true, defaultFontFamily: "DejaVu Sans" } }).render().asPng();
+}
+
 if (import.meta.url === `file://${process.argv[1]}`) {
   const [command, input, output] = process.argv.slice(2);
   try {
     if (command === "sketch" && input && output) writeFileSync(output, sketch(JSON.parse(readFileSync(input, "utf8"))));
     else if (command === "diagram" && input && output) writeFileSync(output, diagram(readFileSync(input, "utf8")));
-    else if (command === "check" && input) {
+    else if (command === "look" && input && output) {
+      writeFileSync(output, look(readFileSync(input, "utf8")));
+      console.log(`${output}: open it and look — is it clear, is it beautiful, does it say one thing?`);
+      process.exit(0);
+    } else if (command === "check" && input) {
       const { kind, width, height, problems } = checkImage(readFileSync(input), input);
       console.log(problems.length ? `${input}: ${problems.join("; ")}` : `${input}: a ${kind}, ${width}×${height}, in the house style`);
       process.exit(problems.length ? 1 : 0);
     } else {
-      console.error("usage: node tools/figure.mjs sketch <spec.json> <out.svg> | diagram <in.mmd> <out.svg> | check <image>");
+      console.error("usage: node tools/figure.mjs sketch <spec.json> <out.svg> | diagram <in.mmd> <out.svg> | check <image> | look <image.svg> <out.png>");
       process.exit(2);
     }
     if (command !== "check") {

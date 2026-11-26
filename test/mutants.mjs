@@ -9,6 +9,9 @@ import { join } from "node:path";
 import { LAB } from "../tools/lib.mjs";
 
 const MUTANTS = [
+  ["the brief without its picture", "tools/settle.mjs", "...(picture ? [`![", "...(false ? [`!["],
+  ["a day without a picture unreported", "tools/settle.mjs", "if (!picture && SHIFT >=", "if (false && SHIFT >="],
+  ["a later shift's bad picture throws away a good one", "tools/settle.mjs", "    report.push(`- The day's picture wasn't used", "    picture = null; report.push(`- The day's picture wasn't used"],
   ["images with scripts", "tools/figure.mjs", 'if (/<script\\b/i.test(text)) problems.push("has a script");', ""],
   ["images off the palette", "tools/figure.mjs", "if (strays.length) problems.push", "if (false) problems.push"],
   ["images without captions", "tools/render.mjs", "if (!caption?.trim()) throw", "if (false) throw"],
@@ -60,7 +63,7 @@ const MUTANTS = [
   ["the first shift takes the whole day", "tools/prepare.mjs", "money.maxUsd = Math.round(money.maxUsd * config.shifts.first_share * 100) / 100;", ""],
   ["the second shift rotates too", "tools/prepare.mjs", "const tonightParadigms = SHIFT === 1 && !SUNDAY ?", "const tonightParadigms = !SUNDAY ?"],
   ["the day's limit forgets the first shift", "tools/settle.mjs", "if (earlierToday + count + claims >= config.publish.max_notes_per_day) {", "if (count + claims >= config.publish.max_notes_per_day) {"],
-  ["the brief forgets the first shift", "tools/settle.mjs", "const shiftsWith = (said) => [...earlierShifts, {", "const shiftsWith = (said) => [{"],
+  ["the brief forgets the first shift", "tools/settle.mjs", "const shiftsWith = (said) => [...earlierShifts.map((s) => ({ ...s, picture: null })), {", "const shiftsWith = (said) => [{"],
   ["the first shift judges the day", "tools/settle.mjs", "if (SHIFT >= (config.shifts?.per_day ?? 1) && dayTotal < floor) {", "if (dayTotal < floor) {"],
   ["the second shift needn't wait", "tools/check-shift.sh", 'elif [ "$shift_no" = 2 ] && ! has 1; then', 'elif false; then'],
   ["a settled shift runs again", "tools/check-shift.sh", "  if has \"$shift_no\"; then", "  if false; then"],
@@ -73,7 +76,7 @@ const MUTANTS = [
   ["notes may open with a label", "tools/render.mjs", "    const problem = leadProblem(html);", "    const problem = null;"],
   ["the byline leads", "tools/render.mjs", "return `${markdown.trimEnd()}\\n\\n_By [${voice}](${origin}about), one of the lab's AI voices_\\n`;", "return `_By [${voice}](${origin}about), one of the lab's AI voices_\\n\\n${markdown}`;"],
   ["the brief opens with a label", "tools/settle.mjs", "    ...(i > 0 || s.shift !== 1 ? [", "    ...(true ? ["],
-  ["no account of the day to lead", "tools/settle.mjs", "    ...(opensWithProse ? [] : [account]),", ""],
+  ["no account of the day to lead", "tools/settle.mjs", "const opening = [...(opensWithProse ? [] : [account]), ...body]", "const opening = [...body]"],
   ["no regional lens", "tools/prepare.mjs", "const region = regionFor(today, config.regions);", "const region = null;"],
   ["the country filter ignored", "tools/search.mjs", "country && `institutions.country_code:", "false && `institutions.country_code:"],
   ["Semantic Scholar gives up at once", "tools/sources.mjs", "    if (r.status !== 429) throw new Error(`Semantic Scholar answered ${r.status}`);", "    throw new Error(`Semantic Scholar answered ${r.status}`);"],

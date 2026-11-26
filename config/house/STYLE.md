@@ -27,7 +27,12 @@ house theme); simple schematics as sketches with a low roughness. Placed
 where the argument needs them, at the column's width.
 
 At most three images in a note, five in a deep dive. Every image earns its
-place: if the text says it as well, cut the image.
+place: if the text says it as well, cut the image. The one exception is the
+day's brief, which always opens with a plate: the day's cover (AGENT.md,
+"The day's picture").
+
+Look at every image before it goes out: `node tools/figure.mjs look
+<file.svg> <out.png>` draws it on the page's colour, to open and judge.
 
 ## Colour
 
