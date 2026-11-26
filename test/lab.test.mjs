@@ -180,6 +180,18 @@ test("render: a voice signs a write-up under its title; claims and the brief sta
   await assert.rejects(renderNote({ ...ARGS, voice: "Bompa", kind: "brief", markdown: "**B**\n\nA brief.\n" }), /claims, paradigm entries and the brief/);
 });
 
+test("render: maths as kinocomputing draws it — TeX safe from markdown, MathML with the TeX kept, prices and code left alone, unreadable TeX refused", async () => {
+  const page = await renderNote({ ...ARGS, markdown: "**Energy per bit**\n\nLandauer's floor is $k_B T \\ln 2$ per bit, and $x_1 * y_2 * z_3$ stays a product; the chip cost $5 and $10.\n\n$$E = \\sum_{i=1}^{n} p_i \\log_2 \\frac{1}{p_i}$$\n\nIn code it is `$x_1$`.\n" });
+  assert.match(page, /<math><semantics>[\s\S]*?<annotation encoding="application\/x-tex">k_B T \\ln 2<\/annotation><\/semantics><\/math> per bit/);
+  assert.match(page, /<annotation encoding="application\/x-tex">x_1 \* y_2 \* z_3<\/annotation>/, "underscores and asterisks are the formula's, not emphasis");
+  assert.ok(!/<em>|<strong>1/.test(page.split("<main>")[1].split("</main>")[0].replace(/<p><strong>Energy per bit<\/strong><\/p>/, "")), "no emphasis made from TeX");
+  assert.match(page, /<p><math display="block"><semantics>/);
+  assert.match(page, /the chip cost \$5 and \$10\./);
+  assert.match(page, /<code>\$x_1\$<\/code>/);
+  assert.match(page, /<meta name="description" content="Landauer’s floor is kBTln\S?2 per bit, and x1∗y2∗z3 stays a product/, "the description reads the formula once");
+  await assert.rejects(renderNote({ ...ARGS, markdown: "**Bad**\n\nA broken formula, $\\frac{1}{$, here.\n" }), /has TeX the site can't draw/);
+});
+
 test("render: a note opens with a lead, not a label, a list or nothing", async () => {
   for (const [markdown, why] of [
     ["**T**\n\n**Where it stands.**\n\nThe rest.\n", /opens with a label/],
@@ -358,8 +370,8 @@ function makeWorld() {
   cpSync(join(LAB, "node_modules"), join(lab, "node_modules"), { recursive: true });
   for (const dir of ["state/questions", "outbox", "published", "journal", "experiments"]) mkdirSync(join(lab, dir), { recursive: true });
   writeFileSync(join(lab, "state/questions/q-001-test.md"), "---\nid: q-001\ntitle: A test question\nkind: experiment\nstatus: open\npriority: 1\n---\n\nWhy.\n");
-  for (const path of ["tools", "notes/_note.html", "notes/_stream.html", "note.css", "favicon.svg", "favicon.ico", "apple-touch-icon.png", "kinocomputing-basic-og.jpg"]) {
-    cpSync(join(KINO, path), join(kino, path), { recursive: true });
+  for (const path of ["tools", "notes/_note.html", "notes/_stream.html", "note.css", "favicon.svg", "favicon.ico", "apple-touch-icon.png", "kinocomputing-basic-og.jpg", "fonts"]) {
+    if (existsSync(join(KINO, path))) cpSync(join(KINO, path), join(kino, path), { recursive: true });
   }
   mkdirSync(join(kino, "blyg"), { recursive: true });
   const git = (...a) => execFileSync("git", a, { cwd: lab, stdio: "ignore" });

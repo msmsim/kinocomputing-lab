@@ -354,6 +354,12 @@ notebook and not a press release.
   computer, NARMA-10, CRPS, a Duffing oscillator, Dusk in World Machines
   theory: one clause each, in plain words, the first time they appear.
   Assume intelligence, not vocabulary.
+- **Maths when it helps.** TeX between dollars — `$k_B T \ln 2$` inline,
+  `$$…$$` on a line of its own — is drawn as proper notation on the site.
+  Use it where a formula says something more exactly than words can, and
+  say in words what it says, before or after: the reader may not read the
+  notation. Never in a title. A formula the site can't draw refuses the
+  note, with the reason. A price is safe: `$5` is never maths.
 - **Give numbers a scale.** "An error of 0.96, where 1.0 is what you'd get
   by always guessing the average" — not a bare 0.96.
 - **Vivid where it helps, exact always.** A good analogy or a concrete

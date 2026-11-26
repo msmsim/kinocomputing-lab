@@ -79,12 +79,32 @@ export function labIdIn(html) {
 
 const escapeAttr = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+// Mathematics: TeX between dollars, as kinocomputing reads it (its
+// tools/maths.mjs, pandoc's tex_math_dollars): `$$…$$` displayed; `$…$`
+// inline when the opening dollar is followed by a non-space and the closing
+// one follows a non-space and isn't followed by a digit, so "$5 and $10"
+// stays prices. Taken out of the markdown before it is parsed, so a
+// formula's underscores and asterisks can't become emphasis, and drawn as
+// MathML by kinocomputing's own maths.mjs, so the two can't disagree.
+const MATH = /(?<!\\)\$\$([\s\S]+?)\$\$|(?<![\\$])\$(?=[^\s$])((?:[^$\n\\]|\\.)*?[^\s\\])\$(?!\d)/g;
+
+export function withMathsSet(markdown, draw) {
+  const drawn = [];
+  // Code — fenced blocks and inline spans — is left as written.
+  const out = markdown.split(/(```[\s\S]*?```|`[^`\n]+`)/).map((part, i) => (i % 2 ? part : part.replace(MATH, (whole, display, inline) => {
+    const tex = (display ?? inline).trim();
+    drawn.push(draw(tex, display != null)); // throws on TeX it can't read: the note is refused with the reason
+    return `KINOMATH${drawn.length - 1}X`;
+  }))).join("");
+  return { markdown: out, put: (html) => html.replace(/KINOMATH(\d+)X/g, (m, i) => drawn[Number(i)]) };
+}
+
 /** The opening paragraph as a description, cut at a word near 160 characters. */
 function describe(html) {
   const paragraphs = [...html.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((m) => m[1]);
   // Not the title (all bold) or a byline (all italic): the first real paragraph.
   const opening = paragraphs.find((p) => !/^<(strong|em)>[\s\S]*<\/\1>$/.test(p.trim())) ?? paragraphs[0] ?? "";
-  const text = opening.replace(/<[^>]+>/g, "").replace(/&#39;/g, "’").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+  const text = opening.replace(/<annotation\b[^>]*>[\s\S]*?<\/annotation>/g, "").replace(/<[^>]+>/g, "").replace(/&#39;/g, "’").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
   if (text.length <= 160) return text;
   const cut = text.slice(0, 160);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), 100)).replace(/[\s.,;:—–-]+$/, "")}…`;
@@ -140,7 +160,14 @@ export async function renderNote({ markdown, name, pin = false, changeNote = nul
   if (section && !SECTIONS.includes(section)) throw new Error(`asks for the section "${section}", which the site doesn't have; use ${SECTIONS.join(", ")}`);
   const shelf = kind === "paradigm" ? "tracker" : kind === "brief" ? "briefs" : section ?? "lab";
   if (kind === "paradigm" && markdown.trim().length > maxParadigm) throw new Error(`is a paradigm entry of ${markdown.trim().length} characters; an entry is at most ${maxParadigm}`);
-  let html = marked.parse(extracted.markdown).trim();
+  const { mathml } = await import(pathToFileURL(join(kino, "tools", "maths.mjs")).href);
+  let maths;
+  try {
+    maths = withMathsSet(extracted.markdown, mathml);
+  } catch (error) {
+    throw new Error(`has TeX the site can't draw: ${error.message.split("\n")[0]}`);
+  }
+  let html = maths.put(marked.parse(maths.markdown).trim());
   if (!html) throw new Error("is empty");
   // Every note's first paragraph is its preview, in the stream, in feeds and
   // in search results (AGENT.md, "Writing for the site"). The brief's is

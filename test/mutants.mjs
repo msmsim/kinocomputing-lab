@@ -79,6 +79,7 @@ const MUTANTS = [
   ["Sunday's clock as any other", "tools/prepare.mjs", "const MINUTES = SUNDAY && SHIFT === 2 ? config.sunday.depth_minutes : config.shift.minutes;", "const MINUTES = config.shift.minutes;"],
   ["Sunday's floor as any other", "tools/settle.mjs", "const floor = sundayPlan(run.date, config.sunday) ? config.sunday.floor :", "const floor = false ? config.sunday.floor :"],
   ["the machinery counts as change", "tools/week.mjs", ".filter(([author, subject]) => !BOTS.test(author) && !ROUTINE.test(subject))", ".filter(() => true)"],
+  ["TeX left to markdown", "tools/render.mjs", "    maths = withMathsSet(extracted.markdown, mathml);", "    maths = { markdown: extracted.markdown, put: (h) => h };"],
   ["the brief's name up for grabs", "tools/settle.mjs", "if (name === BRIEF) {", "if (false) {"],
   ["timebox never stops", "tools/timebox.mjs", "  child.kill(\"SIGTERM\");", "  return;"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
