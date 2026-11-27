@@ -665,7 +665,17 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
     write("outbox/lab-2026-11-21-tracker.md", "---\nkind: notebook\nsection: tracker\n---\n\n**The tracker**\n\nWhat it is.\n\n![[lab-2026-11-21-paradigm-photonic]]\n");
     write("MORNING.md", "Looked at photonics.\n");
     write("state/claude-output.json", JSON.stringify({ total_cost_usd: 0.5, num_turns: 9, is_error: false }));
+    write("state/search-log.jsonl", [
+      { date: "2026-11-20", shift: 1, source: "github", query: "yesterday's" },
+      { date: "2026-11-21", shift: 1, source: "openalex", query: "photonic" },
+      { date: "2026-11-21", shift: 1, source: "openalex", query: "photonic", country: "jp,kr" },
+      { date: "2026-11-21", shift: 1, source: "openalex", query: "photonic matmul" },
+      { date: "2026-11-21", shift: 1, source: "s2-cites", query: "arXiv:2401.00001" },
+      { date: "2026-11-21", shift: 2, source: "zenodo", query: "the second shift's" },
+    ].map((l) => JSON.stringify(l)).join("\n") + "\n");
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z");
+    assert.match(read("MORNING.md"), /- Searches: openalex 2, openalex \(regional\) 1, s2-cites 1\./, "tonight's shift's, by source");
+    assert.match(read("MORNING.md"), /- Paradigms were looked at without literature beyond OpenAlex and arXiv, money, what an outsider can use \(AGENT\.md, "Where to look"\)\./);
 
     const entry = readFileSync(join(w.kino, "notes/lab-2026-11-21-paradigm-photonic.html"), "utf8");
     assert.ok(!/blyg:kind" content="thread"/.test(entry), "an entry is a fragment");
@@ -711,6 +721,21 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
   }
 });
 
+test("search: every search is logged, free or paid, with the shift that ran it", () => {
+  const dir = mkdtempSync(join(tmpdir(), "search-log-"));
+  try {
+    mkdirSync(join(dir, "state"));
+    mkdirSync(join(dir, "tools"));
+    cpSync(join(LAB, "tools"), join(dir, "tools"), { recursive: true });
+    writeFileSync(join(dir, "state/run.json"), JSON.stringify({ date: "2026-11-21", shift: 2 }));
+    spawnSync(process.execPath, ["tools/search.mjs", "no-such-source", "a query", "--country", "jp"], { cwd: dir, encoding: "utf8", env: { ...process.env, LAB_DIR: dir } });
+    const [line] = readFileSync(join(dir, "state/search-log.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    assert.deepEqual([line.date, line.shift, line.source, line.query, line.country], ["2026-11-21", 2, "no-such-source", "a query", "jp"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("check-shift: which shift a run is, and whether it should work it", () => {
   const dir = mkdtempSync(join(tmpdir(), "check-"));
   const file = join(dir, "last-settle.json");
@@ -728,6 +753,10 @@ test("check-shift: which shift a run is, and whether it should work it", () => {
     assert.equal(check({ EVENT: "schedule", SCHEDULE: "41 3 * * *" }, today(null)), "shift=1 go=false", "a settle from before shifts were counted was a first shift");
     assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "2" }, today([1])), "shift=2 go=true");
     assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "2" }, today([1, 2])), "shift=2 go=false");
+    assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "1" }, today([1])), "shift=2 go=true", "the scheduler's run after the first is the second, asked or not");
+    assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "1" }, today([1, 2])), "shift=2 go=false");
+    assert.equal(check({ EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: "1" }, null), "shift=1 go=true");
+    assert.equal(check({ EVENT: "workflow_dispatch", ASKED: "1" }, today([1])), "shift=1 go=true", "by hand, as asked");
     assert.equal(check({ EVENT: "schedule", SCHEDULE: "7 5 * * *" }, null), "shift=2 go=false", "the second waits for the first");
     assert.equal(check({ EVENT: "schedule", SCHEDULE: "29 6 * * *" }, today([1])), "shift=2 go=true");
     assert.equal(check({ EVENT: "workflow_dispatch", ASKED: "2" }, today([1, 2])), "shift=2 go=true", "by hand always goes ahead");
@@ -933,6 +962,27 @@ test("figure: the house rules", () => {
   assert.match(checkImage(svg('<path stroke="#000" d="M0 0"/>'), "fig-a.svg").problems.join(), /pure black/);
   assert.equal(checkImage(svg(""), "plate-b.svg").kind, "plate");
   assert.match(checkImage(Buffer.from("GIF89a"), "fig.gif").problems.join(), /images are SVG, or PNG/);
+  // No background: on the dark page it would be a slab of light.
+  assert.match(checkImage(svg('<rect width="640" height="300" fill="#cbdff7"/><path d="M0 0" stroke="#1a1a1a"/>'), "plate-c.svg").problems.join(), /has a background/);
+  assert.match(checkImage(svg('<rect width="100%" height="100%" style="fill:#e6f1fe"/>'), "plate-c.svg").problems.join(), /has a background/);
+  assert.deepEqual(checkImage(svg('<rect width="640" height="300" fill="none" stroke="#1a1a1a"/><rect x="10" y="10" width="200" height="100" fill="#e6f1fe"/>'), "plate-c.svg").problems, [], "a frame, or a filled shape, isn't one");
+  const png = (colourType) => { const b = Buffer.alloc(40); b.writeUInt32BE(0x89504e47, 0); b.writeUInt32BE(640, 16); b.writeUInt32BE(300, 20); b[25] = colourType; return b; };
+  assert.match(checkImage(png(2), "fig-d.png").problems.join(), /no transparency/);
+  assert.deepEqual(checkImage(png(6), "fig-d.png").problems, []);
+});
+
+test("figure: the organic shapes draw in the house style, the same every time, with no background", () => {
+  const spec = JSON.parse(readFileSync(join(LAB, "config/house/plate-example.json"), "utf8"));
+  const drawn = sketch(spec);
+  assert.equal(drawn, sketch(spec), "seeded: the same drawing every time");
+  assert.deepEqual(checkImage(Buffer.from(drawn), "plate-example.svg").problems, []);
+  assert.ok(!/NaN/.test(drawn));
+  const types = new Set(spec.elements.map((e) => e.type));
+  for (const t of ["blob", "trail", "flow", "spiral"]) assert.ok(types.has(t), `the example shows ${t}`);
+  assert.match(drawn, /<g opacity="0\.[0-9]+">/, "a trail's echoes fade");
+  const hairy = sketch({ elements: [{ type: "blob", x: 100, y: 100, r: 40, cilia: 10 }] });
+  const bare = sketch({ elements: [{ type: "blob", x: 100, y: 100, r: 40 }] });
+  assert.ok((hairy.match(/<path/g) ?? []).length >= (bare.match(/<path/g) ?? []).length + 8, "cilia");
 });
 
 test("timebox: stops a command past its limit with 124, passes an exit code through", () => {

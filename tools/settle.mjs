@@ -412,6 +412,26 @@ if (addedToday.length > 5 && !addedToday.some((h) => picked.has(h.url))) {
 }
 const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
 if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);
+// Where the shift looked (AGENT.md, "Where to look"): every search it ran,
+// by source, and each kind of looking a paradigm pass owes that it skipped.
+const searched = readJsonl(join(LAB, "state/search-log.jsonl")).filter((s) => s.date === run.date && Number(s.shift ?? 1) === SHIFT);
+const KINDS = {
+  "literature beyond OpenAlex and arXiv": (s) => ["s2", "europepmc"].includes(s.source),
+  "a citation trail": (s) => /-(?:cites|refs)$/.test(s.source),
+  "the regional lens": (s) => Boolean(s.country) || ["ukri", "openaire"].includes(s.source),
+  "money": (s) => ["nsf", "nih", "ukri", "openaire", "edgar"].includes(s.source),
+  "what an outsider can use": (s) => ["github", "zenodo"].includes(s.source) || s.patents,
+};
+if (searched.length || looked.size) {
+  const bySource = new Map();
+  for (const s of searched) {
+    const name = s.source === "openalex" && s.country ? "openalex (regional)" : s.source === "exa" && s.patents ? "exa (patents)" : s.source;
+    bySource.set(name, (bySource.get(name) ?? 0) + 1);
+  }
+  report.push(`- Searches: ${searched.length ? [...bySource].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(", ") : "none logged"}.`);
+  const skipped = looked.size ? Object.entries(KINDS).filter(([, is]) => !searched.some(is)).map(([kind]) => kind) : [];
+  if (skipped.length) report.push(`- Paradigms were looked at without ${skipped.join(", ")} (AGENT.md, "Where to look").`);
+}
 const held = parsed.length - out.length;
 if (held) told.push(`${held} note${held === 1 ? " was" : "s were"} held back for failing the publishing checks; [the lab's log](https://github.com/${config.lab.repo}/blob/main/MORNING.md) says why.`);
 // The day's floor, judged by the day's last shift on everything the day

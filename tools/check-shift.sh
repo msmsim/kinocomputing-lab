@@ -29,6 +29,11 @@ if [ -f "$settle_file" ]; then
 fi
 has() { case " $settled " in *" $1 "*) return 0 ;; *) return 1 ;; esac; }
 
+# The on-time scheduler's run is the day's next shift: one that finds the
+# first already settled works the second, whatever shift it asked for. Its
+# 05:07 run once arrived asking for none, and stood down as a settled first.
+if [ "${NIGHTLY:-}" = true ] && [ "$shift_no" = 1 ] && has 1; then shift_no=2; fi
+
 go=true
 if [ "${EVENT:-}" = schedule ] || [ "${NIGHTLY:-}" = true ]; then
   if has "$shift_no"; then

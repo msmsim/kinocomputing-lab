@@ -10,13 +10,28 @@ diagrams in the style, and checks any image against it.
 
 ## Two kinds of image
 
-**Plates** say something. A hand-drawn-feeling illustration that carries an
-idea rhetorically: a metaphor made visible (the memory wall as a wall, a
-reservoir as a pond of ripples), a scene, a juxtaposition, a before and
-after. One idea per plate; few or no labels; generous empty space; ink lines,
-with the vermilion once, on the thing the reader should look at. Draw them
-with `figure.mjs sketch`, which gives a pen's wobble. File names start
-`plate-`. At most one per note, usually straight after the lead, where it
+**Plates** say something. An illustration that carries an idea
+rhetorically: a metaphor made visible, a scene, a juxtaposition, a before
+and after. One idea per plate; few or no labels; generous empty space; ink
+lines, with the vermilion once, on the thing the reader should look at.
+
+Their look is **alien and organic, and always moving**: forms that seem
+grown rather than ruled — lumpy bodies, cells, membranes, tendrils, cilia,
+spirals, currents — still with a clear shape and a hint of geometry (a
+lattice under the growth, a symmetry half kept), never boxes and arrows. And
+something is always in motion: a body with the fading echoes of where it
+was, streamlines parting round an obstacle, a spiral winding in, a ripple
+spreading. A reservoir is a living pool with currents through it, not a box
+labelled "reservoir"; a computer that settles is a body sinking through
+eddies to rest, not a ball in a ruled valley. Kinocomputing is computing
+that moves: the plates should look it.
+
+Draw them with `figure.mjs sketch` and its organic shapes — `blob` (a grown
+body; `cilia` for hairs, `stretch` and `angle` to lean it into its motion),
+`trail` (a body moving along a path, echoes behind), `flow` (streamlines,
+with `around` for an obstacle), `spiral` — mixed with the plain shapes where
+a little geometry helps, at a low `roughness` (0.5–0.8). `plate-example.json`
+here is one to start from. File names start `plate-`. At most one per note, usually straight after the lead, where it
 opens the piece the way a magazine's opener does. A deep dive may have one
 per section.
 
@@ -32,12 +47,17 @@ day's brief, which always opens with a plate: the day's cover (AGENT.md,
 "The day's picture").
 
 Look at every image before it goes out: `node tools/figure.mjs look
-<file.svg> <out.png>` draws it on the page's colour, to open and judge.
+<file.svg> <out.png>` draws it as it will appear on the site's light page
+and, below, its dark one, to open and judge both.
 
 ## Colour
 
-Draw on a transparent ground; images are made for the light page, and on the
-site's dark page they sit on a light card.
+Draw on nothing: no background, no filled rectangle behind the drawing (a
+PNG saved on a transparent ground). Images are made for the light page; on
+the site's dark page they are turned over — inverted, then their hues turned
+half round — so the ink comes out light, the blue light blue, the vermilion
+still warm, and the dark page shows through. A background would come out as
+a slab of colour on the dark page, so the checks refuse one.
 
 | token | colour | for |
 |---|---|---|

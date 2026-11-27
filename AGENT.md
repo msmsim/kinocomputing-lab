@@ -542,10 +542,13 @@ diagram of boxes with labels on them, never decoration.
 
 1. Pick the idea while you write MORNING.md: what from tonight would you
    put on the cover?
-2. Draw it with `node tools/figure.mjs sketch` as `outbox/brief/plate-….svg`.
-   Few or no words in it; generous empty space; the vermilion once.
+2. Draw it with `node tools/figure.mjs sketch` as `outbox/brief/plate-….svg`,
+   in the plates' look: alien, organic, moving (STYLE.md, "Plates"; start
+   from `config/house/plate-example.json`). Few or no words in it;
+   generous empty space; the vermilion once; no background.
 3. Look at it: `node tools/figure.mjs look outbox/brief/plate-….svg
-   /tmp/look.png`, then open the PNG. Is it clear at a glance? Does it
+   /tmp/look.png`, then open the PNG: it shows the light page and the dark.
+   Is it clear at a glance, on both? Does it
    say one thing? Would you stop for it? If not, draw it again — two or
    three tries is normal; a better idea beats a better drawing.
 4. Write `outbox/brief/picture.json`: `{"file": "plate-….svg", "alt":
@@ -560,8 +563,15 @@ reported in the morning. Spend minutes on it, not the shift.
 ## Where to look
 
 The paradigms run from physics to biology, and the work is done all over
-the world. Look as widely as the question needs and no wider: every
-source below is free, but your time and the reader's attention aren't.
+the world, and OpenAlex and arXiv alone see a narrow, US-heavy slice of it.
+Every pass over a paradigm, and any claim's checking, uses at least one
+search of each kind: **literature beyond OpenAlex and arXiv** (`s2`, or
+`europepmc` for the biological paradigms), **a citation trail** (from the
+best paper you found), **the regional lens**, **money** (a grants search)
+and **what an outsider can use** (`github` or `zenodo`). One each is the
+floor, not a survey: past it, look as widely as the question needs. Every
+search is logged (`state/search-log.jsonl`), and the morning report lists
+them and names any kind a shift skipped.
 
 **Literature.** `arxiv` and `openalex` first. `s2` (Semantic Scholar) when
 OpenAlex misses something; its free pool is often busy. `europepmc` for

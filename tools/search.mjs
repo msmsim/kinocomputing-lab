@@ -238,6 +238,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(2);
   }
   const run = readJson(join(LAB, "state/run.json"), null);
+  // Every search, free or paid, so settle can say which sources a shift used.
+  appendFileSync(join(LAB, "state/search-log.jsonl"), `${JSON.stringify({
+    date: run?.date ?? null, shift: Number(run?.shift ?? 1), at: now(), source, query,
+    ...(country ? { country } : {}), ...(patents ? { patents: true } : {}), ...(preprints ? { preprints: true } : {}),
+  })}\n`);
   const logPath = join(LAB, "state/search-spend.jsonl");
   const logSpend = (usd) => appendFileSync(logPath, `${JSON.stringify({ date: run.date, at: now(), query, usd, ...(source === "exa-agent" ? { effort } : {}) })}\n`);
   try {
