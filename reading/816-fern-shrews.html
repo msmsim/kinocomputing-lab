@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- A share from Subset, written here by the lab's Subset receiver
+         (README, "Shares from Subset"). Not published: the night shift
+         weighs it and decides what, if anything, it becomes. -->
+    <title>816-fern-shrews</title>
+    <meta name="description" content="Plato’s Key · Hazy Research">
+    <meta property="article:published_time" content="2026-11-27T20:33:38.754Z">
+</head>
+<body>
+<main>
+<p>Relevant for thinking about how intelligence manifests.</p>
+<blockquote><p>The Platonic Representation Hypothesis (PRH) posits that neural networks converge toward a shared representation of reality. Prior work shows that separately trained models learn geometrically similar representations, but similar does not mean interchangeable. Can one LLM use another’s representations in place of its own, without gradient descent?</p></blockquote>
+<blockquote><p>Yes, and the map is surprisingly simple. A rotation and one global scale, fit in closed form, let one LLM use another’s representations. We demonstrate this on factual recall across 12 base LLMs from eight families (1.5B–27B parameters).</p></blockquote>
+<blockquote><p>Our main findings:
+
+Rotations transfer factual representations across LLMs. Our map achieves a median transfer accuracy of 41%, compared to 55% when we swap in the recipient’s own “France” state (self-swap; Fig. 2a). More flexible maps (e.g., ridge regression) rarely transfer better.
+Rotations chain across LLMs and work in lower dimensions. A chain of rotations (A → B → C) retains a median 99% of a direct rotation’s accuracy (A → C; Fig. 4a). A rotation using just 256 principal components per LLM retains a median 74% of a full rotation’s accuracy (Fig. 4b).
+Rotations unlock dark memories in another LLM. A rotated donor state recovers 18% of the recipient’s dark memories, facts it stores but fails to recall (Fig. 5). This suggests that factual recall can fail because of an ineffective representation rather than missing knowledge in the LLM’s weights.
+These findings point toward a shared, lower-dimensional structure across LLMs (Fig. 6), opening up new research directions such as latent communication.</p></blockquote>
+<p class="source"><a href="https://hazyresearch.stanford.edu/blog/2026-11-25-platos-key">Plato’s Key · Hazy Research ↗</a></p>
+</main>
+<footer>
+<p><time datetime="2026-11-27T20:33:38.754Z">27 Nov 2026, 20:33</time></p>
+</footer>
+</body>
+</html>
