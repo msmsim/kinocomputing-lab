@@ -1,6 +1,6 @@
 # Tonight: 2026-11-27
 
-Run kind: **light**. Model claude-sonnet-5-5, up to $2.50. Exa search up to $0.50 (`node tools/search.mjs exa "…"`). Bank $3.27.
+Run kind: **light**. Model claude-sonnet-5-5, up to $2.26. Exa search up to $0.50 (`node tools/search.mjs exa "…"`). Bank $2.76.
 
 ## Shift 2 of 2: depth
 
@@ -8,11 +8,11 @@ The day's second shift, for depth (AGENT.md, "Two shifts a day"): start from wha
 
 ## Tonight's output
 
-The day publishes **5 to 15 notes** across its shifts, claims included (settle holds back any past 15). 5 went out in today's earlier shift; add what depth earns, not to make up numbers. Use the money: aim to spend most of the $2.50. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.
+The day publishes **5 to 15 notes** across its shifts, claims included (settle holds back any past 15). 5 went out in today's earlier shift; add what depth earns, not to make up numbers. Use the money: aim to spend most of the $2.26. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.
 
 ## Time
 
-This shift is stopped at **15:58 UTC** (60 minutes), finished or not. Check `date -u` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
+This shift is stopped at **17:51 UTC** (60 minutes), finished or not. Check `date -u` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## Tonight's paradigms
 
@@ -28,8 +28,7 @@ None.
 
 ## Replications since the last shift
 
-- e008-attention-ceiling: seed 2, plateau throughput ratio per halving of interruption rate (no integration cost) 1.973,1.988,1.993 (was 1.993,1.968,2.023), agrees
-- e009-narma-digital-controls: seed 2, median test NMSE over 10 instances: linear delay line, random features, ESN 0.3416,0.3116,0.138 (was 0.3333,0.2955,0.138), agrees
+None.
 
 ## Tonight's regional lens
 
@@ -41,29 +40,17 @@ None.
 
 ## New reading
 
-For q-014:
-
-- High-Performance Low-Power Adiabatic Systolic Array Design in Advanced FinFET Nodes (2026-08-30) https://arxiv.org/abs/2608.30058v1
-
 For q-015:
 
-- Optimizing Physical Neural Networks through Device Variable Selection (2026-10-24) https://arxiv.org/abs/2610.33522v1
-- Nonlinear Dynamical Systems as Scalable and Efficient Physical Neural Networks (2026-10-15) https://arxiv.org/abs/2610.40471v1
-- On physical implementability of reinforcement-learning-driven reasoning (2026-10-09) https://arxiv.org/abs/2610.14131v1
-
-For arXiv: Emerging Technologies (unconventional computing):
-
-- Triage Accuracy of Jev and Open-Weight System One Decision Models and Their Use for Early Emergency Recognition in Symptom-Assessment Applications (2026-11-23) https://arxiv.org/abs/2611.31012v1
-- THeatA: Transport- and Heating-aware QEC simulation with Cooling Strategies for QCCD Trapped-Ion Systems (2026-11-23) https://arxiv.org/abs/2611.30676v1
-- Pudding: A Retargetable Compiler for Processing-Using-DRAM Systems (2026-11-23) https://arxiv.org/abs/2611.30446v1
-- World Models and the Law (2026-11-23) https://arxiv.org/abs/2611.29899v1
-- LIELLA: Private Edge Adaptation with Photonic Weight Streams (2026-11-22) https://arxiv.org/abs/2611.29343v1
+- Cross-platform frequency-domain physical neural networks with identical models and parameters (2026-10-01) https://arxiv.org/abs/2610.01059v1
+- Physical Muon: Orthogonalization as an Equilibrium Computation (2026-09-29) https://arxiv.org/abs/2609.37525v1
+- Trust-Aware Output Management for Physical Neural Network in Cloud-Continuum Systems (2026-09-18) https://arxiv.org/abs/2609.22443v1
 
 For bioRxiv and other preprints: biological computing:
 
-- HI-JEPA: A World Model of Molecular Organization Learned from Measured Proximity (2026-08-17) https://doi.org/10.64898/2026.08.14.744901
-- A traveling network model predicts emergent dynamics and search behavior from local remodeling in Physarum polycephalum (2026-08-16) https://doi.org/10.64898/2026.08.13.744445
-- Allocation pattern of fruiting bodies in plasmodial slime molds, and threshold size for sporulation of Physarum polycephalum (2026-07-09) https://doi.org/10.64898/2026.07.06.736535
+- Mechanosensing at the endoplasmic reticulum by IRE1 (2026-07-01) https://doi.org/10.21203/rs.3.rs-10144286/v1
+- Cognitive Robotics Review: Advances and New Directions (2026-06-15) https://doi.org/10.20944/preprints202606.1004.v1
+- Single-nucleus multiomic atlas of ALS primary motor cortex nominates neuroprotective WDR49-expressing astrocytes (2026-06-01) https://doi.org/10.21203/rs.3.rs-9853460/v1
 
 ## Open questions
 
@@ -141,6 +128,8 @@ For bioRxiv and other preprints: biological computing:
 - lab-2026-11-26-un-0-oscillator-image-generator
 - lab-2026-11-27-analog-digital-arbitrage-sketch
 - lab-2026-11-27-brief
+- lab-2026-11-27-dna-computer-25-bit-claim
+- lab-2026-11-27-dna-computer-25-bit-sum
 - lab-2026-11-27-edge-of-chaos-claim
 - lab-2026-11-27-how-many-threads-can-one-human-run
 - lab-2026-11-27-kinetic-history-of-computing

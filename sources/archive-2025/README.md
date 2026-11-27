@@ -33,7 +33,7 @@ carried forward, because …").
 | June 20th, 2025 | [Pick your apocalypse](essays/pick-your-apocalypse.md) | Human-machine agent chat | McSweet, Bompa | 15 KB | split |
 | June 23rd, 2025 | [Non-John computing](essays/non-john-computing.md) | Human-machine agent chat | McSweet, Bompa | 76 KB | unread |
 | June 26th, 2025 | [Consensus machines](essays/consensus-machines.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | split |
-| July 1st, 2025 | [Negative attributes of AGI](essays/negative-attributes-of-agi.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | unread |
+| July 1st, 2025 | [Negative attributes of AGI](essays/negative-attributes-of-agi.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | split |
 | July 3rd, 2025 | [The discrete option](essays/the-discrete-option.md) | Human-machine agent chat | McSweet, Bompa | 37 KB | unread |
 | July 4th, 2025 | [A kinetic case study of computation](essays/a-kinetic-case-study-of-computation.md) | Human-machine agent chat | McSweet, Bompa | 41 KB | split |
 | July 9th, 2025 | [Memory as pertubation](essays/memory-as-pertubation.md) | Human-machine agent chat | McSweet, Bompa | 73 KB | unread |

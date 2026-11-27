@@ -39,3 +39,5 @@ reservoirs buy nothing here.
   parametrisation). Seed 2 run in the repository agrees on both tasks.
 
 2026-11-27 (shift 2): e009 ran the standardised digital controls on NARMA-10 (linear 10-tap 0.33, random features 0.30, ESN 0.14 median NMSE). Pre-registered prediction for the linear control (0.5-0.9) was wrong. A measured MEMS chip's 0.6-0.8 is worse than the linear control, which has exact memory the device lacks. Next: a delay-reservoir control (single node with feedback) and a memory-matched linear control.
+
+2026-11-27 (shift 2, session 3): e010 gave the linear control fading memory (50 leaky integrators): median NMSE 0.28, better than the exact 10-tap window on 9/10 instances; a small-gain delay reservoir 0.29. Prediction (0.5-0.9) wrong; killed. Claim c-014 (simulated, review weakened). Next: delay reservoir with stronger gains, add readout noise to the controls.
