@@ -484,7 +484,7 @@ night and is what readers, and the lab itself, can sort and search later.
 One line per link in `state/hopper.jsonl`:
 
 ```json
-{"url": "https://…", "title": "The source's own title", "why": "One line, in the lab's words, on what it is and why it matters, under 240 characters.", "paradigms": ["photonic"], "share": "<the share's file, for a share>", "from": "lab", "used_in": ["lab-YYYY-MM-DD-name"]}
+{"url": "https://…", "title": "The source's own title", "why": "One line, in the lab's words, on what it is and why it matters, under 240 characters.", "paradigms": ["photonic"], "pick": true, "share": "<the share's file, for a share>", "from": "lab", "used_in": ["lab-YYYY-MM-DD-name"]}
 ```
 
 - `why` is the lab's line, for a stranger: what the source is and what it
@@ -496,11 +496,16 @@ One line per link in `state/hopper.jsonl`:
 - `used_in` lists the lab notes that cite it. When a later note uses a
   link already in the hopper, append a line with just its `url` and the
   new `used_in`: lines for the same link merge, and the first fixes when it
-  was added.
+  was added. Settle stamps that day (`added`) itself; leave it out.
+- `pick: true` marks one of the day's best: the brief names five of the
+  day's new links and counts the rest, so pick the five you'd most want a
+  curious reader to open. The second shift can pick too, or drop an
+  earlier pick with a line of its `url` and `"pick": false`; the first five
+  picked are the ones shown.
 
 Settle checks the lines (a link, a title, no lab ids, a short `why`) and
-publishes the list to the site's Reading page; the brief lists the day's
-additions.
+publishes the list to the site's Reading page; the brief lists five of the
+day's additions, the picked ones first, and says how many more there are.
 
 ## Two shifts a day
 

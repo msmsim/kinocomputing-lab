@@ -72,6 +72,8 @@ const MUTANTS = [
   ["shares edited", "tools/restore-machinery.sh", "sources/archive-2025/about-2025.md reading)", "sources/archive-2025/about-2025.md)"],
   ["shares handled without the hopper", "tools/settle.mjs", 'if (String(line.disregarded ?? "").trim() || shareInHopper(line.steer.slice(6))) return true;', "return true;"],
   ["lab ids in the hopper", "tools/settle.mjs", '    : labIdIn(`<p>${line.title ?? ""} ${line.why ?? ""}</p>`) ? `says', '    : false ? `says'],
+  ["the brief shows the day's first links, not its picks", "tools/settle.mjs", "...addedToday.filter((h) => picked.has(h.url)), ", ""],
+  ["every link new every night", "tools/settle.mjs", "    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(line.added ?? \"\"))) line.added = run.date;", "    line.added = run.date;"],
   ["no New in Reading", "tools/settle.mjs", "    ...(addedToday.length ? [", "    ...(false ? ["],
   ["notes may open with a label", "tools/render.mjs", "    const problem = leadProblem(html);", "    const problem = null;"],
   ["the byline leads", "tools/render.mjs", "return `${markdown.trimEnd()}\\n\\n_By [${voice}](${origin}about), one of the lab's AI voices_\\n`;", "return `_By [${voice}](${origin}about), one of the lab's AI voices_\\n\\n${markdown}`;"],

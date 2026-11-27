@@ -142,6 +142,15 @@ if (machinery.length) {
 // it was added, later ones adding or correcting. A line that fails the checks
 // is left out of what the site shows, and said.
 const hopperLines = readJsonl(join(LAB, "state/hopper.jsonl"));
+// When each link came in: settle stamps a line with the day it first reads
+// it, and the stamp stays, so a link keeps its own day on the Reading page
+// however many nights later the list is rebuilt.
+if (hopperLines.some((line) => !/^\d{4}-\d{2}-\d{2}$/.test(String(line.added ?? "")))) {
+  for (const line of hopperLines) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(line.added ?? ""))) line.added = run.date;
+  }
+  writeFileSync(join(LAB, "state/hopper.jsonl"), hopperLines.map((line) => JSON.stringify(line)).join("\n") + "\n");
+}
 const knownParadigms = new Set((readJson(join(LAB, "state/paradigms.json"), { paradigms: [] }).paradigms ?? []).map((p) => p.id));
 const hopper = new Map();
 for (const line of hopperLines) {
@@ -394,6 +403,13 @@ if (hopperItems.length || existsSync(join(KINO, "notes", "_hopper.json"))) {
   writeFileSync(join(KINO, "notes", "_hopper.json"), json({ updated: run.date, items: hopperItems }));
 }
 const addedToday = hopperItems.filter((h) => h.added === run.date);
+// The brief names five of them: the ones the shifts marked `pick`, in the
+// order they were picked, then the day's others to make up the five.
+const picked = new Set([...hopper.values()].filter((h) => h.pick === true).map((h) => h.url));
+const briefReads = [...addedToday.filter((h) => picked.has(h.url)), ...addedToday.filter((h) => !picked.has(h.url))].slice(0, 5);
+if (addedToday.length > 5 && !addedToday.some((h) => picked.has(h.url))) {
+  report.push(`- None of today's ${addedToday.length} new links was picked for the brief, so it shows the first five; mark the best with \`"pick": true\` (AGENT.md, "The hopper").`);
+}
 const unvisited = (run.paradigms ?? []).filter((id) => !looked.has(id));
 if (unvisited.length) report.push(`- Tonight's paradigms not looked at, so they come round again: ${unvisited.join(", ")}.`);
 const held = parsed.length - out.length;
@@ -502,9 +518,10 @@ const briefOf = (said) => {
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
     ...(addedToday.length ? [
       "**New in Reading**",
-      [...addedToday.slice(0, 12).map((h) => `- [${h.title}](${h.url})${h.why ? `: ${h.why}` : ""}`),
-        ...(addedToday.length > 12 ? [`- And ${addedToday.length - 12} more.`] : []),
-        `- All of it: [Reading](${ORIGIN}reading).`].join("\n"),
+      [...briefReads.map((h) => `- [${h.title}](${h.url})${h.why ? `: ${h.why}` : ""}`),
+        addedToday.length > briefReads.length
+          ? `- And ${addedToday.length - briefReads.length} more made it to [Reading](${ORIGIN}reading) today.`
+          : `- All of it: [Reading](${ORIGIN}reading).`].join("\n"),
     ] : []),
     "**Also today**",
     [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),

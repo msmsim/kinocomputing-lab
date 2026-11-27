@@ -22,6 +22,20 @@ import { replicateAll } from "../tools/replicate.mjs";
 const BUDGET = { daily_usd: 1.5, bank_cap_usd: 10, light_run_max_usd: 1.5, deep_run_threshold_usd: 6, deep_run_max_usd: 6, min_run_usd: 0.1 };
 const KINO_ORIGIN = "https://www.kinocomputing.com/";
 
+test("night shift: what settle writes into kinocomputing is what the workflow publishes", () => {
+  const settle = readFileSync(join(LAB, "tools/settle.mjs"), "utf8");
+  const written = new Set([...settle.matchAll(/join\(KINO, "([^"/]+)/g)].map((m) => m[1]));
+  for (const dir of ["notes", "media"]) assert.ok(written.has(dir), `settle writes ${dir}/`);
+  const flow = readFileSync(join(LAB, ".github/workflows/night-shift.yml"), "utf8");
+  const publish = flow.slice(flow.indexOf("- name: Publish to kinocomputing"));
+  const status = publish.match(/git status --porcelain ([^)]+)\)/)[1].split(/\s+/);
+  const added = publish.match(/git add ([^\n]+)/)[1].split(/\s+/);
+  const read = new Set(["blyg"]); // read for quotes, never written
+  for (const dir of [...written].filter((d) => !read.has(d))) {
+    assert.ok(status.includes(dir) && added.includes(dir), `${dir}/ is written by settle but never published`);
+  }
+});
+
 test("budget: the allowance banks unspent days, caps, and buys a deep run when it has saved enough", () => {
   assert.deepEqual(allowance(BUDGET, [], "2026-11-21", "2026-11-21"), { bank: 1.5, kind: "light", maxUsd: 1.5, skip: false });
   const quietWeek = allowance(BUDGET, [], "2026-11-25", "2026-11-21");
@@ -796,6 +810,24 @@ test("shares from Subset: waiting in reading/, briefed like takes, offered again
     assert.equal(JSON.parse(read("state/seen.json")).takes["share:501-ash-bees"], 1, "disregarded, with a reason, counts as handled");
     w.commit();
     assert.ok(!read("state/tonight.md").includes("share:500-amber-owls"), "handled once, gone");
+
+    // A link keeps the day it came in, however many nights later the list is rebuilt.
+    const later = JSON.parse(readFileSync(join(w.kino, "notes/_hopper.json"), "utf8"));
+    assert.deepEqual([...new Set(later.items.map((i) => i.added))], ["2026-11-22"]);
+    assert.ok(read("state/hopper.jsonl").trim().split("\n").every((l) => JSON.parse(l).added === "2026-11-22"), "stamped once, in the lab's own file");
+    assert.ok(!read("published/lab-2026-11-23-brief.md").includes("New in Reading"), "nothing new on the 23rd");
+
+    // The brief names five of the day's links, the picked ones first, and counts the rest.
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-24T02:00:00Z");
+    const day = Array.from({ length: 8 }, (_, i) => ({ url: `https://example.org/r${i}`, title: `Read ${i}`, why: `Line ${i}.`, from: "lab", ...(i === 3 || i === 6 ? { pick: true } : {}) }));
+    writeFileSync(join(w.lab, "state/hopper.jsonl"), read("state/hopper.jsonl") + day.map((l) => JSON.stringify(l)).join("\n") + "\n");
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-24T03:00:00Z");
+    const reads = read("published/lab-2026-11-24-brief.md").match(/\*\*New in Reading\*\*\n\n([\s\S]*?)(?:\n\n|$)/)[1].split("\n");
+    assert.deepEqual(reads.map((l) => l.match(/^- \[([^\]]+)\]/)?.[1] ?? l), [
+      "Read 3", "Read 6", "Read 0", "Read 1", "Read 2",
+      "- And 3 more made it to [Reading](https://www.kinocomputing.com/reading) today.",
+    ]);
+    assert.ok(!read("MORNING.md").includes("was picked for the brief"), "picked, so nothing to say");
   } finally {
     w.dispose();
   }
