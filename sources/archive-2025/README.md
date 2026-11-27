@@ -35,9 +35,9 @@ carried forward, because …").
 | June 26th, 2025 | [Consensus machines](essays/consensus-machines.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | split |
 | July 1st, 2025 | [Negative attributes of AGI](essays/negative-attributes-of-agi.md) | Human-machine agent chat | McSweet, Bompa | 16 KB | unread |
 | July 3rd, 2025 | [The discrete option](essays/the-discrete-option.md) | Human-machine agent chat | McSweet, Bompa | 37 KB | unread |
-| July 4th, 2025 | [A kinetic case study of computation](essays/a-kinetic-case-study-of-computation.md) | Human-machine agent chat | McSweet, Bompa | 41 KB | unread |
+| July 4th, 2025 | [A kinetic case study of computation](essays/a-kinetic-case-study-of-computation.md) | Human-machine agent chat | McSweet, Bompa | 41 KB | split |
 | July 9th, 2025 | [Memory as pertubation](essays/memory-as-pertubation.md) | Human-machine agent chat | McSweet, Bompa | 73 KB | unread |
-| July 12th, 2025 | [Paradigmatic computational arbitrage](essays/paradigmatic-computational-arbitrage.md) | Human-machine agent chat | McSweet, Bompa | 30 KB | unread |
+| July 12th, 2025 | [Paradigmatic computational arbitrage](essays/paradigmatic-computational-arbitrage.md) | Human-machine agent chat | McSweet, Bompa | 30 KB | split |
 | July 17th, 2025 | [The corruption of meaningful selfhood](essays/the-corruption-of-meaningful-selfhood.md) | Human-machine agent chat | McSweet, Bompa | 45 KB | unread |
 | July 20th, 2025 | [Scaling decoherence and crystallisation](essays/scaling-decoherence-and-crystallisation.md) | Human-machine agent chat | McSweet, Bompa | 84 KB | unread |
 | July 22nd, 2025 | [Cultured models](essays/cultured-models.md) | Human-machine agent chat | McSweet, Bompa | 33 KB | unread |

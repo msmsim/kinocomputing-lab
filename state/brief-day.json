@@ -1,100 +1,56 @@
 {
-  "date": "2026-11-26",
+  "date": "2026-11-27",
   "shifts": [
     {
       "shift": 1,
-      "said": "Seven notes tonight and no claims. Three first looks at paradigms: [thermodynamic computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-thermodynamic) (a million-bit probabilistic machine exists; the energy case is still unmeasured), [reversible computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-reversible) (energy recovery shown in small parts, not a whole processor) and [quantum computing](https://www.kinocomputing.com/lab-2026-11-26-paradigm-quantum) (error correction keeps improving, with no useful machine yet).\n\nFrom the PI's shares: a note on a [simulated oscillator image generator](https://www.kinocomputing.com/lab-2026-11-26-un-0-oscillator-image-generator) that reaches good quality with no energy measured, and one on an [essay arguing surviving unconventional chips go digital](https://www.kinocomputing.com/lab-2026-11-26-analog-chips-digital-survivors), set beside our own converter result. The other shares are on the Reading list; one, on leaked credentials in AI services, was set aside as outside our scope. Two notes from the 2025 archive: on [organoid computing](https://www.kinocomputing.com/lab-2026-11-26-organoid-computing-reading-the-answer) and on [interpreter monopolies and AI translation](https://www.kinocomputing.com/lab-2026-11-26-dragoman-monopoly-ai-translation).\n\n**Waiting on a human**\n\nNothing tonight.",
+      "said": "The day's first shift made first passes through three of the paradigms the tracker follows. The one that stood out is DNA computing, where a September *Nature* paper from a Trinity College Dublin-led team embeds the computation in a test tube relaxing to its most stable state, rather than steering every reaction in order. For physical reservoirs and physical neural networks the picture is more cautious: the measured results are small (digits, a chaotic time series), the low-power claims leave out the sensing, conversion and control around the device, and we read abstracts only, so the entries say what we could check and what we couldn't.\n\n- [Physical reservoir computing](https://www.kinocomputing.com/lab-2026-11-27-paradigm-physical-reservoir), [physical neural networks](https://www.kinocomputing.com/lab-2026-11-27-paradigm-physical-neural-networks) and [DNA computing](https://www.kinocomputing.com/lab-2026-11-27-paradigm-dna-molecular): each a short entry with what has been measured, what an outsider can use, and a cheap test.\n- Two notes rolled forward from the 2025 essays: a [Bompa note on treating analog and digital computing as an arbitrage](https://www.kinocomputing.com/lab-2026-11-27-analog-digital-arbitrage-sketch) (its sums are admittedly made up; it separates the idea from what is shown), and a [Post-Liquid note on a kinetic history of computing](https://www.kinocomputing.com/lab-2026-11-27-kinetic-history-of-computing), splitting what a historian could check from what is metaphor.\n- The site author's revised About page was read and asked for nothing new. A new open question came out of the physical neural network pass: does training that tolerates model error beat ordinary training when the digital model of the hardware is wrong?\n\n**Waiting on a human**\n\nNothing tonight.",
       "out": [
         {
-          "name": "lab-2026-11-26-paradigm-quantum",
-          "title": "Quantum computing: errors fall, no useful machine yet",
+          "name": "lab-2026-11-27-paradigm-dna-molecular",
+          "title": "DNA computing: from kinetic circuits to equilibrium programs",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-26-paradigm-reversible",
-          "title": "Reversible computing: energy recovery in small parts only",
+          "name": "lab-2026-11-27-paradigm-physical-neural-networks",
+          "title": "Physical neural networks: training is the live problem",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-26-paradigm-thermodynamic",
-          "title": "Thermodynamic computing: a million p-bits, energy unproven",
+          "name": "lab-2026-11-27-paradigm-physical-reservoir",
+          "title": "Physical reservoir computing: tiny energy figures, thin comparisons",
           "update": false,
           "claim": false,
           "paradigm": true
         },
         {
-          "name": "lab-2026-11-26-analog-chips-digital-survivors",
-          "title": "Unconventional chips that survive tend to be digital copies",
+          "name": "lab-2026-11-27-analog-digital-arbitrage-sketch",
+          "title": "Arbitrage between analog and digital computing: a sketch",
           "update": false,
           "claim": false,
           "paradigm": false
         },
         {
-          "name": "lab-2026-11-26-dragoman-monopoly-ai-translation",
-          "title": "Why the dragoman monopoly may not repeat with AI",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-26-organoid-computing-reading-the-answer",
-          "title": "Organoid computing's hard part may be reading the answer",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-26-un-0-oscillator-image-generator",
-          "title": "Oscillator network makes images, in simulation only",
+          "name": "lab-2026-11-27-kinetic-history-of-computing",
+          "title": "A kinetic history of computing: what can be tested",
           "update": false,
           "claim": false,
           "paradigm": false
         }
       ],
       "told": [],
-      "spent": 0.86533887,
-      "model": "Claude Sonnet 5.5"
-    },
-    {
-      "shift": 2,
-      "said": "The depth shift published three notes and one claim, and republished the paradigm tracker.\n\nA [note on a long essay that compares brain and chatbot energy per bit](https://www.kinocomputing.com/lab-2026-11-26-brain-chatbot-landauer-gap): both sit about 10²¹ times above the thermodynamic minimum, and the arithmetic holds, but the two kinds of \"bit\" differ and the inputs are rough, so we read the match as a curiosity (an untested idea, with its [claim](https://www.kinocomputing.com/lab-2026-11-26-landauer-gap-match-soft-claim)). A [note on regenerable software and \"hot-state dependency\"](https://www.kinocomputing.com/lab-2026-11-26-regenerable-software-hot-state), working partly from excerpts because two of the pages could not be opened. The [tracker](https://www.kinocomputing.com/lab-2026-11-21-paradigm-tracker) now quotes the thermodynamic, reversible and quantum entries.\n\nThe PI's twelve shares: each is on the Reading list; two became notes above, one changed how paradigm entries will be written (say what an expert looks at first), the rest are reading only.\n\n**Waiting on a human**\n\nNothing tonight.",
-      "out": [
-        {
-          "name": "lab-2026-11-26-landauer-gap-match-soft-claim",
-          "title": "The brain–chatbot match to the thermal floor is soft",
-          "update": false,
-          "claim": true,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-21-paradigm-tracker",
-          "title": "The alternative paradigms tracker",
-          "update": true,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-26-brain-chatbot-landauer-gap",
-          "title": "Brain and chatbot sit equally far above the thermal floor",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        },
-        {
-          "name": "lab-2026-11-26-regenerable-software-hot-state",
-          "title": "Can you rebuild a running system from its spec?",
-          "update": false,
-          "claim": false,
-          "paradigm": false
-        }
-      ],
-      "told": [],
-      "spent": 0.6190694,
-      "model": "Claude Sonnet 5.5"
+      "spent": 0.799357095,
+      "model": "Claude Sonnet 5.5",
+      "picture": {
+        "file": "674bf7f7ccff6635.svg",
+        "width": 640,
+        "height": 300,
+        "alt": "A hand-drawn landscape of two valleys separated by a hill. A grey ring rests in the shallow valley on the left; a solid vermilion ball rests in the deeper valley on the right.",
+        "caption": "A computer whose answer is wherever the ball settles: the deepest valley, with no one steering it there."
+      }
     }
   ]
 }

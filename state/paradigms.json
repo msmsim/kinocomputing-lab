@@ -71,19 +71,19 @@
       "id": "physical-reservoir",
       "name": "Physical reservoir computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-27"
     },
     {
       "id": "physical-neural-networks",
       "name": "Physical neural networks",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-27"
     },
     {
       "id": "dna-molecular",
       "name": "DNA / molecular computing",
       "group": "Let physics compute",
-      "last_checked": null
+      "last_checked": "2026-11-27"
     },
     {
       "id": "neuromorphic",

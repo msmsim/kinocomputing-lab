@@ -1,19 +1,18 @@
 {
-  "date": "2026-11-26",
-  "shift": 2,
+  "date": "2026-11-27",
+  "shift": 1,
   "shifts": [
-    1,
-    2
+    1
   ],
   "summary": [
-    "$0.54",
-    "$0.08 Exa",
-    "1 claim(s)",
-    "published lab-2026-11-26-landauer-gap-match-soft-claim",
-    "updated lab-2026-11-21-paradigm-tracker",
-    "published lab-2026-11-26-brain-chatbot-landauer-gap",
-    "published lab-2026-11-26-regenerable-software-hot-state",
-    "updated the brief"
+    "$0.72",
+    "$0.07 Exa",
+    "published lab-2026-11-27-paradigm-dna-molecular",
+    "published lab-2026-11-27-paradigm-physical-neural-networks",
+    "published lab-2026-11-27-paradigm-physical-reservoir",
+    "published lab-2026-11-27-analog-digital-arbitrage-sketch",
+    "published lab-2026-11-27-kinetic-history-of-computing",
+    "published the brief"
   ],
   "report": []
 }
