@@ -1,0 +1,18 @@
+{
+  "of": "94fad814",
+  "seed": 2,
+  "at": "2026-11-27T08:37:30Z",
+  "metric": "plateau throughput ratio per halving of interruption rate (no integration cost)",
+  "original": [
+    1.993,
+    1.968,
+    2.023
+  ],
+  "value": [
+    1.973,
+    1.988,
+    1.993
+  ],
+  "killed": false,
+  "agrees": true
+}

@@ -1,0 +1,1207 @@
+Mutual Information and the Edge of Chaos in Reservoir Computers
+T. L. Carroll∗
+US Naval Research Lab, Washington, DC 20375
+(Dated: July 22, 2019)
+A reservoir computer is a dynamical system that may be used to perform computations. A
+reservoir computer usually consists of a set of nonlinear nodes coupled together in a network so that
+there are feedback paths. Training the reservoir computer consists of inputing a signal of interest
+and ﬁtting the time series signals of the reservoir computer nodes to a training signal that is related
+to the input signal. It is believed that dynamical systems function most eﬃciently as computers
+at the ”edge of chaos”, the point at which the largest Lyapunov exponent of the dynamical system
+transitions from negative to positive. In this work I simulate several diﬀerent reservoir computers
+and ask if the best performance really does come at this edge of chaos. I ﬁnd that while it is
+possible to get optimum performance at the edge of chaos, there may also be parameter values
+where the edge of chaos regime produces poor performance. This ambiguous parameter dependance
+has implications for building reservoir computers from analog physical systems, where the parameter
+range is restricted.
+A reservoir computer is a type of recurrent neu-
+ral network. Because of the recurrence, reservoir
+computers are dynamical systems, so the meth-
+ods of nonlinear dynamics should be useful for
+understanding reservoir computers. Typically a
+reservoir computer is built by connecting a num-
+ber of nonlinear nodes into a network in which
+there are feedback paths. The main requirement
+for the nodes and the network is that the net-
+work is stable, that is it should settle to a stable
+ﬁxed point. The nodes are then driven by some
+signal to be analyzed. The individual nodes pro-
+duce time series signals that are inﬂuenced by the
+input signal; if driven multiple times by the same
+input signal, the nodes should produce repeatable
+outputs. The node output signals are combined
+in a linear combination to ﬁt a training signal.
+The coeﬃcients for this ﬁt contain information
+about the relation of the training signal to the in-
+put signal, and the performance of the reservoir
+computer is measured by the error between the
+training signal and the ﬁt signal.
+The theory of computation with dynamical sys-
+tems states that as a low dimensional dynami-
+cal system follows a route to chaos, the complex-
+ity of the dynamical system increases, with the
+greatest complexity coming at the edge of chaos.
+It is at this point where the dynamical system
+is said to have its greatest computational capac-
+ity. As a result of this edge of chaos concept, it
+is believed that the optimum performance of a
+reservoir computer will come when the reservoir
+computer parameters are tuned to the edge of
+chaos. In this paper, diﬀerent reservoir comput-
+ers are simulated with a range of parameters to
+see if the edge of chaos is really the best parame-
+∗Electronic address: Thomas.Carroll@nrl.navy.mil
+ter regime to operate a reservoir computer. The
+results are ambiguous, especially if one wants to
+create a reservoir computer from analog physical
+systems.
+I. INTRODUCTION
+A reservoir computer [1, 2] is a nonlinear dynamical
+system that may be used to perform computations on
+time series signals. Typically the dynamical system is
+created by connecting a number of nonlinear nodes in a
+network that includes paths that form cycles, resulting
+in feedback. Because of the feedback, a reservoir is part
+of the class of neural networks known as recurrent neural
+networks.
+An input signal about which one wants to learn some-
+thing is used to drive the nonlinear nodes. As with other
+neural networks, before being used as a computer, a reser-
+voir computer must be trained to extract information
+from the input signal by training on a signal that con-
+tains some useful information about the input signal, but
+unique to a reservoir computer, the network of internal
+connections is not altered. Rather, the time series signals
+produced by the individual nodes are ﬁt to the training
+signal. As an example, in [3], the authors sought to re-
+produce a Lorenz z signal based on a Lorenz x signal,
+so the x signal was the input and the reservoir computer
+was trained on the z signal.
+Training the reservoir computer consists of creating a
+linear combination of the time series signals produced by
+the nonlinear nodes to ﬁt to the training signal. This
+ﬁt can be as simple as a least squares ﬁt. The training
+process, therefore, can be much faster than for a neural
+network. The coeﬃcients for this linear combination are
+the output from this training.
+To compute with a reservoir computer, a signal diﬀer-
+ent but related to the original input signal is used to drive
+the reservoir. In [3], the new input signal was the x signal
+from a Lorenz system started with diﬀerent initial con-
+arXiv:1906.03186v2  [nlin.AO]  19 Jul 2019
+2
+ditions. The new input signal drives the same network
+as used for training. A linear combination is then made
+from the node signals using the coeﬃcients found during
+the training stage. The signal produced by this linear
+combination is the output of the computation stage. In
+[3], the output of the training stage was the Lorenz z
+signal corresponding to the new Lorenz x signal.
+Because of their simplicity, reservoir computers can be
+built as analog systems. Examples of reservoir comput-
+ers so far include photonic systems [4, 5], analog circuits
+[6], mechanical systems [7] and ﬁeld programmable gate
+arrays [8]. This analog approach means that reservoir
+computers can potentially be very fast, and yet consume
+little power, while being small and light. Reservoir com-
+puters have been shown to be useful for solving a num-
+ber of problems, including reconstruction and prediction
+of chaotic attractors [3, 9–12], recognizing speech, hand-
+writing or other images [13] or controlling robotic systems
+[14].
+When reservoir computers are used, the parameters
+are usually set arbitrarily. If the reservoir computer is
+built from analog hardware, the parameter choices are
+limited by the particular implementation, but it would
+still be useful to know how to get the best performance
+from the computer. In simulations, there is some con-
+ventional wisdom based on experience; the network con-
+necting the nodes should be random, the spectral radius
+of the network should be less than 1, the network should
+be operated close to the edge of chaos, and so on [14].
+As a parameter is varied, the edge of chaos is the param-
+eter value at which the network transitions from stable
+to unstable, usually indicated by the largest Lyapunov
+exponent of the reservoir network going from below 0 to
+above 0. These rules are based on simulations of a few
+types of problems with a few types of nonlinear nodes,
+so it is not clear if these rules should apply in every sit-
+uation, and there is evidence that this edge of chaos rule
+is not universal [15, 16].
+In this paper, I vary multiple parameters in diﬀerent
+reservoir computers and ask if any measured properties of
+the signals produced by the reservoir computer correlate
+with improved performance. By improved performance, I
+mean that the diﬀerence between the linear combination
+of node time series and the training signal is minimized.
+I study how the mutual information between the training
+signal and the signal produced from a linear combination
+of reservoir signals aﬀects performance, and I also check
+to see if the best performance comes at the edge of chaos.
+A. Edge of Chaos
+The idea that a dynamical system or a celluar automa-
+ton has its greatest computational capacity at the edge
+of chaos was introduced in [17–19]. The edge of chaos is
+a phase transition between an ordered state and a disor-
+dered state. Systems in the vicinity of this phase transi-
+tion exhibit the most complex behavior of any parameter
+range, and thus have the greatest capacity for computa-
+tion. Because dynamical systems have the greatest com-
+putational capacity at the edge of chaos, it is believed
+that a reservoir computer will function best at this edge.
+In many reservoir computers, depending on the node
+type, there is no actual chaotic behavior. Instead, when
+the largest Lyapunov exponent for the reservoir becomes
+positive, the reservoir network becomes unstable; in sim-
+ulations, the reservoir signals diverge to positive or nega-
+tive inﬁnity. It would be more accurate to call the point
+where the Lyapunov exponent becomes positive the edge
+of stability, but the term ”edge of chaos” is widely used,
+so that phrase will be used here.
+II. RESERVOIR COMPUTERS
+We used a reservoir computer to estimate one time se-
+ries signal based on a diﬀerent (but related) time series
+signal. Figure 1 is a block diagram of a reservoir com-
+puter. There is an input signal s(t) from which the goal is
+to extract information, and a training signal g(t) which is
+used to train the reservoir computer. In [3] for example,
+s(t) was the x signal from a Lorenz chaotic system, while
+g(t) was the Lorenz z signal. The reservoir computer was
+trained to estimate the z signal from the x signal.
+s(t)
+least squares fit
+coefficients
+g(t)
+Input signal Fixed network
+Training signal
+FIG. 1: Block diagram of a reservoir computer. We have
+an input signal s(t) that we want to analyze, and a related
+training signal g(t). When trained, the reservoir computer
+will estimate g(t) from s(t). In the training phase, the input
+signal s(t) drives a ﬁxed network of nonlinear nodes, and the
+time varying signals from the nodes are ﬁt to the training
+signal g(t) by a least squares ﬁt. The coeﬃcients are the
+result of the training phase. To use the reservoir computer for
+computation, a diﬀerent signal s′(t) is input to the reservoir
+computer. As an example, [3], s(t) was a Lorenz x signal,
+while s′(t) was a Lorenz x signal started with diﬀerent initial
+conditions. The time varying node signals that result from
+s′(t) are multiplied by the coeﬃcients from the training phase
+to produce the output signal g′(t), which in [3] was a good ﬁt
+to the Lorenz z signal corresponding to s′(t).
+A reservoir computer may be described by
+ri (n + 1) = f
+
+ri (n) +
+M∑
+j=1
+Aij rj (n) + wis (t)
+
+ (1)
+where the reservoir computer variables are the
+ri(n),i = 1...M with M the number of nodes, A is
+3
+an adjacency matrix that described how the diﬀerent
+nodes in the network are connected to each other, W =
+[w1,w2,...wM ] describes how the input signal s(t) is cou-
+pled into the diﬀerent nodes, and f is a nonlinear func-
+tion.
+When the reservoir computer was driven with s(t), the
+ﬁrst 2000 time steps were discarded as a transient. The
+next N = 5000 time steps from each node were combined
+in a N × (M + 1) matrix
+Ω =
+
+
+r1 (1) ... rM (1) 1
+r1 (2) rM (2) 1
+... ... ...
+r1 (N) ... rM (N) 1
+
+ (2)
+The last column of Ω was set to 1 to account for any
+constant oﬀset in the ﬁt. The training signal is ﬁt by
+h (t) =
+M∑
+j=1
+cj rj (t) (3)
+or
+h(t) = ΩC (4)
+where h(t) = [h (1) ,h (2) ...h (N)] is the ﬁt to the
+training signal g(t) = [g (1) ,g (2) ...g (N)] and C =
+[c1,c2 ...cN ] is the coeﬃcient vector.
+The matrix Ω is decomposed by a singular value de-
+composition
+Ω = USV T . (5)
+where U is N × (M + 1), S is (M + 1) × (M + 1) with
+non-negative real numbers on the diagonal and zeros else-
+where, and V is (M + 1) × (M + 1).
+The pseudo-inverse of Ω is constructed as a Moore-
+Penrose pseudo-inverse [20]
+Ωinv = VS
+′
+U T (6)
+where S
+′
+is an (M + 1) × (M + 1) diagonal matrix
+constructed from S, where the diagonal element S
+′
+i,i =
+Si,i/(S2 i,i +k2), where k = 1×10−5 is a small number used
+for ridge regression [21] to prevent overﬁtting. There are
+some guidelines for choosing k [22], but in this case k
+is chosen large enough to to keep the coeﬃcients from
+becoming extremely large but small enough to keep the
+ﬁtting error from becoming too large.
+The ﬁt coeﬃcient vector is then found by
+C = Ωinv g(t) (7)
+.
+The training error may be computed from
+∆RC = ‖ΩC −g(t)‖ ‖g(t)‖ (8)
+where ‖‖ indicates a standard deviation.
+The training error tells us how well the reservoir com-
+puter can ﬁt a known training signal, but it doesn’t tell
+us anything we don’t already know. To learn new in-
+formation, we use the reservoir computer in the testing
+conﬁguration. As an example, suppose the input signal
+s(t) was an x signal from the Lorenz system, and the
+training signal g(t) was the corresponding z signal. Fit-
+ting the Lorenz z signal trains the reservoir computer to
+reproduce the Lorenz z signal from the Lorenz x signal.
+We may now use as an input signal s′(t) the Lorenz sig-
+nal x′, which comes from the Lorenz system with diﬀerent
+initial conditions. We want to get the corresponding z′
+signal. The matrix of signals from the reservoir is now
+Ω′. The coeﬃcient vector C is the same vector we found
+in the training stage. The testing error is
+∆tx = ‖Ω′C −z′‖ ‖z′‖ (9)
+The testing error measures how accurately the reservoir
+computer actually solves a problem.
+III. THE INPUT COUPLING VECTOR W
+The coupling vector W = [w1,w2,...wM ] describes how
+the input signal s(t) couples into each of the nodes. I
+want to change only speciﬁed parameters in the reservoir
+computer, so W is kept ﬁxed. It has been found that set-
+ting all the elements to +1 or -1 yields a larger reservoir
+computer testing error than setting the odd elements of
+W to +1 and the even elements of W to -1, so the second
+method (odd=+1, even=-1) was used. This choice was
+arbitrary, and other choices of W could be made.
+IV. NETWORK
+The network was kept ﬁxed so that changes in the net-
+work would not aﬀect the results of the parameter vari-
+ation. The eﬀect of diﬀerent networks on reservoir com-
+puter performance was studied in [23]. The adjacency
+matrix was initialized to a matrix where 20% of the net-
+work edges were +1 while the others were 0. All the
+diagonal entries in the adjacency matrix were 0. Of the
+edges with a value of +1, 50% were then ﬂipped to -1.
+The edges to ﬂip were chosen randomly. The adjacency
+matrix was then normalized so that the spectral radius
+ρ, deﬁned as the absolute value of the largest real part
+of the eigenvalues of the matrix, was set to a speciﬁed
+value.
+V. NODE TYPES
+There are no speciﬁc requirements on the nodes in a
+reservoir computer, other than when all nodes are con-
+nected into a network, the network should be stable; that
+4
+is, when not driven, it should settle into a stable ﬁxed
+point, and when driven, the same input signal should
+produce repeatable outputs. Several diﬀerent node types
+are used here to decrease the chance that the results de-
+pend only on the type of node used.
+The polynomial reservoir computer is described by
+dri (t)
+dt =
+λ
+
+p1ri (t) + p2r2 i (t) + p3r3 i (t) +
+M∑
+j=1
+Aij rj (t) + wis (t)
+
+.
+(10)
+The ri(t)’s are node variables, A is an adjacency matrix
+indicating how the nodes are connected to each other,
+and W = [w1,w2,...wM ] is a vector that describs how the
+input signal s(t) is coupled to each node. The constant
+λ is a time constant, and there are M = 100 nodes. This
+node type will be called the polynomial node. For the
+simulations described here, p2 = 1, p3 = −1 and λ = 1.4,
+while p1 varied. These nonlinear diﬀerential equation
+nodes were chosen because they represent a polynomial,
+which is a general way to approximate a nonlinear func-
+tion. The polynomial diﬀerential equations were numeri-
+cally integrated with a 4th order Runge-Kutta integrator
+with a time step of 0.1 s.
+Reservoir computers with nodes that implement a hy-
+perbolic tangent function are commonly used in the lit-
+erature. The tanh node computer is described as
+ri (n + 1) = α tanh
+
+r(n)i +
+M∑
+j=1
+Aij rj (n) + wis (t)
+
+.
+(11)
+Again, s(t) was normalized to have a mean of 0 and a
+standard deviation of 1. The parameter α could vary
+Another node type that was studied was the leaky tanh
+model from [24]
+ri (n + 1) =
+αri (n) + (1 −α) tanh
+
+
+M∑
+j=1
+Aij rj (n) + wis (t) + 1
+
+.
+(12)
+Tis leaky tanh map was also used in [3, 9].
+The leaky tanh node could also be implemented as a
+ﬂow:
+dri (t)
+dt =
+λ
+
+−αri (t) + (1 −α)
+
+
+M∑
+j=1
+Aij rj (t) + wis (t) + 1
+
+
+
+
+(13)
+This system was integrated with a 4’th order Runge-
+Kutta integrator with a step size of 0.1 s. The factor
+λ set the overall time scale for the diﬀerential equation.
+Initially, λ was set to 1.0.
+VI. INPUT AND TRAINING SIGNALS
+The Lorenz system was used to generate input and
+training signals [25]
+dx
+dt = c1y−c1x dy
+dt = x (c2 −z) −y dz
+dt = xy−c3z
+(14)
+with c1=10, c2=28, and c3=8/3. The equations were
+numerically integrated with a time step of ts = 0.02.
+VII. QUANTITIES TO MEASURE
+Besides the testing error ∆tx, there were a number
+of measurements that could be made on the reservoir
+computer variables. For this work, besides ∆tx, mea-
+surements were made of the maximum Lyapunov ex-
+ponent for the reservoir λmax, the mutual information
+I[g(t),h(t)] between the training signal g(t) and the sig-
+nal h(t) produced by ﬁtting the reservoir variables to g(t)
+, and the rank Γ of the covariance of reservoir matrix Ω.
+The Lyapunov exponent spectrum of the reservoir de-
+pended on the input signal s(t), which meant that these
+were conditional Lyapunov exponents, deﬁned in [26].
+The original concept of the edge of chaos was developed
+for autonomous systems, so it is ambiguous for nonau-
+tonomous systems if the edge of chaos describes the sys-
+tem with or without the driving signal. We choose to cal-
+culate the stability for the driven system, because stabil-
+ity will depend on the driving signal. Calculation of Lya-
+punov exponents from a numerical system is well known
+[27], and the other measurements will be deﬁned here.
+A. Entropy
+To compute the entropy, each signal was transformed
+into a symbolic time series using the ordinal pattern
+method [28]. Each signal was divided into windows of
+4 points, and the points within the window were sorted
+to establish their order; for example, if the points within
+a window were 0.1, 0.3, -0.1 0.2, the ordering would be
+2,4,1,3. Each possible ordering of points in a signal u(t)
+represented a symbol σu(i),i = 1...Nsu, where Nsu was
+the number of possible symbols in u(t). The probabilities
+p(σu(i)) were found for each symbol and the entropy was
+calculated as
+Hu −
+Nsu∑
+i=1
+p (σu (i))log2 [p (σu (i))] . (15)
+B. Covariance Rank
+The individual columns of the reservoir matrix Ω will
+be used as a basis to ﬁt the training signal g(t). Among
+5
+other things, the ﬁt will depend on the number of orthog-
+onal columns in Ω.
+Principal component analysis [29] states that the eigen-
+vectors of the covariance matrix of Ω, Θ = ΩT Ω, form an
+uncorrelated basis set. The rank of the covariance matrix
+tells us the number of uncorrelated vectors. Therefore,
+we will use the rank of the covariance matrix of Ω,
+Γ = rank
+(
+ΩT Ω ) (16)
+to characterize the reservoir matrix Ω. We calculate the
+rank using the MATLAB rank() function. The maximum
+covariance rank is equal to the number of nodes, M =
+100.
+VIII. VARYING PARAMETERS
+Two parameters were varied for each reservoir type.
+For each conﬁguration, the testing error ∆tx was plot-
+ted on a contour plot as a function of the the two vari-
+ables. The maximum Lyapunov exponent for the reser-
+voir, λmax, the mutual information I[g(t),h(t)] between
+the training signal g(t) and the signal h(t) produced by
+ﬁtting the reservoir variables to g(t) , and the rank Γ of
+the covariance of reservoir matrix Ω were also measured.
+The testing error was shown on the contour plot and then
+a line was drawn on the contour plot through the mini-
+mum and approximately perpendicular to the contours.
+The values of the other measurements listed here were
+plotted for locations in the parameter plane along this
+line to determine how these quantities compared to the
+testing error.
+A. Polynomial nodes
+The linear parameter p1 and the spectral radius of the
+network ρ were varied for a reservoir computer whose
+nodes were described by the polynomial ﬂow of eq. (10).
+Figure 2 is a contour plot of the testing error ∆tx for
+the polynomial ﬂow nodes when the input signal s(t) was
+the Lorenz x signal (eq. 14) and the training signal g(t)
+was the Lorenz z signal.
+The values of the maximum Lyapunov exponent for
+the reservoir, λmax, the mutual information I[g(t),h(t)]
+between the training signal g(t) and the ﬁt signal h(t) ,
+and the rank Γ of the covariance of reservoir matrix Ω
+were plotted in ﬁg. 3 for values of ρ and p1 along the line
+superimposed on ﬁg. 2
+In ﬁgure 3, the maximum of the mutual information
+between the training signal g(t) and reservoir computer
+ﬁt signal h(t) coincides with the minimum of the testing
+error ∆tx. The minimum testing error occurs near the
+maximum of the largest Lyapunov exponent in ﬁg. 3(c),
+but the Lyapunov exponent does not cross from less than
+0 to greater than 0, so the minimum testing error does not
+occur at the edge of chaos for these parameters, although
+Polynomial Nodes
+1 2 3
+-4.5
+-4
+-3.5
+-3
+-2.5
+-2
+-1.5
+-1
+p1
+-4
+-3.5
+-3
+-2.5
+log( tx)
+FIG. 2: Contour plot of the natural log of the reservoir com-
+puter testing error ∆tx as a function of the two parameters
+p1 from eq. (10) and the spectral radius ρ of the reservoir
+network. The input signal s(t) was a Lorenz x signal while
+the training signal g(t) was a Lorenz z signal. The spectral
+radius ρ is the absolute value of the largest real part of the
+set of eigenvalues for the network adjacency matrix A. Var-
+ious other measurements for the reservoir computer will be
+calculated along the black line superimposed on the ﬁgure.
+it could be that the parameter range plotted does not
+include the true edge of chaos. The minimum testing
+error also appears to coincide with the parameter values
+where the covariance rank Γ in ﬁg. 3(d) saturates at 100.
+B. Hyperbolic Tangent nodes
+The hyperbolic tangent is a diﬀerent nonlinearity than
+the polynomial nonlinearity used in the previous sec-
+tion, so the reservoir computer behavior may be diﬀerent.
+When the reservoir computer nodes were described by a
+hyperbolic tangent function, as in eq. (11), the parame-
+ters that were varied were the feedback parameter α and
+the network spectral radius ρ.
+Figure 4 is a contour plot of the testing error ∆tx for
+the hyperbolic tangent (tanh) nodes when the input sig-
+nal s(t) was the Lorenz x signal (eq. 14) and the training
+signal g(t) was the Lorenz z signal.
+The contour plot of ∆tx for the hyperbolic tangent
+nodes in ﬁg. 4 is very diﬀerent than the equivalent plot
+for the polynomial ﬂow nodes (ﬁg. 2). In the upper right
+section of ﬁg. 4, many areas have no contours because
+the reservoir becomes unstable for some parameter com-
+binations in this region.
+Figure 5 shows the values of the other measurements
+for this system calculated along the black line superim-
+posed on ﬁgure 4.
+In ﬁgure 5, the minimum for ∆tx occurs for the same
+parameter values as the maximum in the mutual infor-
+mation I[g(t),h(t)], as it did in ﬁgure 3. The covariance
+rank Γ saturates at its maximum value to the left of the
+6
+0.01
+0.1
+ΔRC
+(a)
+-7.0
+-6.0
+-5.0λmax
+(b)
+100
+75
+50
+25
+0
+Γ
+50403020100
+position along line
+(c)
+Polynomial Nodes
+FIG. 3: Plots of diﬀerent measured quantities along the
+black line superimposed on ﬁg. 2. The input signal s(t) was
+a Lorenz x signal while the training signal g(t) was a Lorenz
+z signal. The left end of the plots corresponds to [ρ,p1] =
+[0.2778, −4.733] while the right end of the plots corresponds
+to [ρ,p1] = [3.5, −1.5]. (a) is the reservoir computer testing
+error ∆tx, (b) is the maximum Lyapunov exponent for the
+reservoir λmax, and (c) is the rank Γ of the covariance of the
+reservoir computer matrix Ω.
+minimum of ∆tx, so the rank is at its maximum value
+when ∆RC is minimized, but it is not clear if the mini-
+mum of ∆tx is associated with the saturation of the rank.
+The minimum in ∆tx occurs near the maximum of the
+largest Lyapunov exponent λmax, but the Lyapunov ex-
+ponent does not cross 0 along this line, so the minimum of
+∆tx does not occur at the edge of chaos for these param-
+eters. Once again, it is possible that these parameters do
+not extend to the true edge of chaos.
+C. Leaky tanh map
+This section describes a reservoir computer whose
+nodes were described by a leaky hyperbolic tangent func-
+tion as in eq. (12). The parameters that were varied were
+the feedback parameter α and the network spectral ra-
+dius ρ. This map was described in [24] and was also used
+in [3, 9].
+The reservoir computer built from leaky tanh map
+nodes does not become unstable for the range of param-
+eters in ﬁgure 6. Equation (12) shows that the range
+of the parameter α can only be varied between 0 to 1.
+Figure 6 is a contour plot of ∆tx for the leaky tanh map.
+Figure 7 shows several diﬀerent measurements for the
+leaky tanh reservoir computer driven by the Lorenz x
+signal when α and ρ were varied along the black line
+plotted on ﬁgure 6. Once again, the minimum testing er-
+Tanh Map Nodes
+2 4 6 8
+0.5
+1
+1.5
+2
+-1.5
+-1
+-0.5
+0
+0.5
+1
+1.5
+2
+log( tx)
+FIG. 4: Contour plot of the natural log of the reservoir com-
+puter testing error ∆tx as a function of the two parameters α
+from eq. (11) and the spectral radius ρ of the reservoir net-
+work, for a reservoir computer with the hyperbolic tangent
+nodes of eq. (11). The input signal s(t) was a Lorenz x sig-
+nal while the training signal g(t) was a Lorenz z signal. The
+spectral radius is the absolute value of the largest real part
+of the set of eigenvalues for the network adjacency matrix A.
+Various other parameters for the reservoir computer will be
+calculated along the black line superimposed on the ﬁgure.
+ror ∆tx occurs where the mutual information I[g(t),h(t)]
+between g(t) and h(t) is at a maximum. The minimum
+of ∆tx occurs near where the covariance rank Γ saturates
+at 100, but the minimum of ∆tx and the saturation point
+of Γ are far enough apart that it is not possible to say if
+they are related. The minimum of ∆tx does occur when
+Γ is at its maximum value, so the minimum of ∆tx in all
+the measurements plotted in this paper does occur when
+Γ is at its maximum value.
+The plot of λmax in ﬁgure 7 shows that not only does
+the minimum of ∆tx not occur at the edge of chaos for
+this range of variables, the minimum of ∆tx is near the
+minimum of λmax.
+D. Leaky tanh ﬂow
+The leaky tanh ﬂow equation (eq. 13) looks very simi-
+lar to the leaky tanh map (eq. 12), but the performance
+as part of a reservoir computer is diﬀerent. Figure 8 is a
+contour plot of the reservoir computer testing error ∆tx
+as a function of the feedback parameter α and the net-
+work spectral radius ρ.
+The leaky tanh ﬂow network was unstable for a large
+range of the parameters in ﬁg. 8. The upper right part
+of this ﬁgure is mostly blank because the reservoir was
+unstable for these parameter values. The minimum of
+∆tx in ﬁgure 9 was seen for the feedback parameter α =
+0. Figure 9 shows several measurements calculated along
+the line superimposed on ﬁgure 8.
+As with all the other node types, in ﬁgure 9 the mini-
+mum testing error ∆tx occurs where the mutual informa-
+7
+0.1
+1
+ΔRC
+(a)
+-20
+-10
+0
+λmax
+(b)
+100
+75
+50
+25Γ
+position along line
+(c)
+Tanh Map Nodes
+FIG. 5: Plots of diﬀerent measured quantities along the black
+line superimposed on ﬁg. 4, for hyperbolic tangent nodes of
+eq. (11). The input signal s(t) was a Lorenz x signal while
+the training signal g(t) was a Lorenz z signal. The left end of
+the plots corresponds to [ρ,α] = [5, 0.089] while the right end
+of the plots corresponds to [ρ,α] = [6, 1]. (a) is the reservoir
+computer testing error ∆tx, (b) is the maximum Lyapunov
+exponent for the reservoir λmax, and (c) is the rank Γ of the
+covariance of the reservoir computer matrix Ω.
+tion I[g(t),h(t)] between g(t) and h(t) is at a maximum.
+The covariance rank Γ is saturated at 100 for most of
+the parameter range in ﬁgure 9, so it gives no useful in-
+formation. The maximum Lyapunov exponent is near
+its minimum value for the minimum in ∆tx, so this plot
+indicates that for these parameters, the optimum reser-
+voir computer performance does not come at the edge of
+chaos.
+It is possible that the edge of chaos really is the best pa-
+rameter setting to operate all these reservoir computers,
+but the ranges of parameters studied in these examples
+is too limited to see this. To further explore diﬀerent
+parameter regimes, the reservoir computers were simu-
+lated with many diﬀerent randomly selected parameter
+combinations.
+IX. RANDOM PARAMETERS
+A. Edge of Chaos?
+The minimum of the testing error ∆tx did not occur at
+the edge of chaos, where the largest Lyapunov exponent
+of the reservoir goes from negative to positive, for all the
+combinations of node type and parameter range above.
+The parameter ranges used in those simulations were re-
+stricted. If there are no restrictions on the parameters,
+is the concept of the edge of chaos useful to describe the
+Leaky Tanh Map Nodes
+0.5 1 1.5
+0.2
+0.4
+0.6
+0.8
+1
+-3
+-2.8
+-2.6
+-2.4
+-2.2
+log( tx)
+FIG. 6: Contour plot of the natural log of the reservoir com-
+puter testing error ∆tx as a function of the two parameters
+α from eq. (12) and the spectral radius ρ of the reservoir
+network, for the leaky tanh map of eq. (12). The input sig-
+nal s(t) was a Lorenz x signal while the training signal g(t)
+was a Lorenz z signal. The spectral radius is the absolute
+value of the largest real part of the set of eigenvalues for the
+network adjacency matrix A. Various other parameters for
+the reservoir computer will be calculated along the black line
+superimposed on the ﬁgure.
+optimum performance for a reservoir computer?
+To answer this question, reservoir computers with ran-
+dom parameters were simulated. For each combination of
+input signal and node type, 6000 random combinations
+of the parameter settings used in creating the contour
+plots were chosen. The same adjacency matrix A was
+used for all examples to avoid complications caused by
+diﬀerent network conﬁgurations. The adjacency matrix
+was the same as the one described in section IV above.
+Figure 10 shows the testing error ∆tx as a function
+of the maximum Lyapunov exponent for the reservoir,
+λmax, when the input signal s(t) was the Lorenz x signal
+and the training signal g(t) was the Lorenz z signal.Each
+blue dot in ﬁgure 10 shows the maximum Lyapunov ex-
+ponent and testing error for one realization of the random
+parameters.
+For the polynomial nodes, each time the reservoir was
+driven, the spectral radius for the network, ρ was ran-
+domly chosen from a uniform distribution between 0 and
+1, the parameter p1 was randomly chosen between -4 and
+1, p2 = 1, p3 was randomly chosen between -2 and 0 and
+the time factor λ was randomly chosen between 0 and 10.
+For the hyperbolic tangent nodes in ﬁgure 10, for each
+point, the network spectral radius ρ was chosen from a
+uniform random distribution between 0 and 10, while the
+constant α was chosen between 0 and 3.
+For the leaky hyperbolic tangent nodes in ﬁgure 10,
+the network spectral radius ρ was chosen from a uniform
+random distribution between 0 and 1, while the constant
+α was chosen randomly between 0 and 4.
+For the leaky hyperbolic tangent ﬂow nodes in ﬁgure
+10, the network spectral radius ρ was chosen from a uni-
+8
+0.1
+1
+ΔRC
+(a)
+-4
+-3
+-2
+-1
+0
+λmax
+(b)
+100
+75
+50
+25Γ
+50403020100
+position along line
+(c)
+Leaky Tanh Map Nodes
+FIG. 7: Plots of diﬀerent measured quantities along the
+black line superimposed on ﬁg. 6. The input signal s(t)
+was a Lorenz x signal while the training signal g(t) was a
+Lorenz z signal. The nodes were described by the leaky tanh
+map of eq. (12). The left end of the plots corresponds to
+[ρ,α] = [0.01, 0.01] while the right end of the plots corre-
+sponds to [ρ,α] = [3, 1]. (a) is the reservoir computer testing
+error ∆tx, (b) is the maximum Lyapunov exponent for the
+reservoir λmax, and (c) is the rank Γ of the covariance of the
+reservoir computer matrix Ω.
+form random distribution between 0 and 1,the constant
+α was chosen randomly between 0 and 4 and the time
+scale factor λ was between 0 and 10.
+The simulations of the four diﬀerent nodes types in
+ﬁgure 10 do not give a deﬁnitive answer to the question
+of whether it is best to operate a reservoir computer on
+the edge of chaos. One question is how close to the point
+where the reservoir network becomes unstable does one
+have to be to say that the reservoir is on the edge of
+chaos? The minimum testing error for the hyperbolic
+tangent and the leaky hyperbolic tangent maps in ﬁgure
+10 is closer to the unstable point than for the polynomial
+ﬂow or the leaky hyperbolic tangent ﬂow.
+There is the additional problem that the lowest test-
+ing error may occur near the edge of chaos, but ﬁgure 10
+shows that some of the largest testing errors also are seen
+in this region. The random parameter variations show
+that for some node types, having the reservoir computer
+parameters near the edge of chaos is necessary but not
+suﬃcient for the optimum performance. The real advan-
+tage of reservoir computing will be to construct reservoir
+computers from analog physical systems, but the choice
+of parameters in physical systems may be restricted, so
+it may not be possible to operate at the optimum param-
+eter combination.
+Leaky Tanh Flow Nodes
+2 4 6 8
+0.2
+0.4
+0.6
+0.8
+1
+-2
+-1
+0
+1
+2
+log( tx)
+FIG. 8: Contour plot of the natural log of the reservoir com-
+puter testing error ∆tx as a function of the two parameters
+α from eq. (13) and the spectral radius ρ of the reservoir
+network, for the leaky tanh ﬂow of eq. (13). The input sig-
+nal s(t) was a Lorenz x signal while the training signal g(t)
+was a Lorenz z signal. The spectral radius is the absolute
+value of the largest real part of the set of eigenvalues for the
+network adjacency matrix A. Various other parameters for
+the reservoir computer will be calculated along the black line
+superimposed on the ﬁgure.
+B. Reservoir Complexity
+The edge of chaos is where a dynamical system is said
+to have its highest complexity, and therefore its high-
+est computational capacity [17–19]. In the examples in
+[17–19], the dynamical systems cited are all one dimen-
+sional maps or cellular automata. For the diﬀerent nodes
+types here, arranged in networks to function as reservoir
+computers, does the complexity increase as the reservoir
+approaches the edge of chaos?
+Entropy is used here as a measure of complexity. With
+M nodes and N time steps, the entropy for the reservoir
+is calculated by ﬁrst mapping the time series from each of
+the reservoir variables ri(j),i = 1 ...M,j = 1 ...N into
+symbols using ordinal patterns as described in section
+VII A, with a symbol length of 4. If the ordering of points
+is [1, 3, 2, 4], the symbol is converted to an integer in base
+4, σ = 1 × 40 + 3 × 41 + 2 × 42 + 4 × 43. The 4 sample
+window was then slid one time step forward along the
+time series to ﬁnd the next symbol.
+At the i’th time step, the set of symbols for each node
+is Σ(i) = [σ1(i),σ2(i),...σM (i)]. Searching through the
+M dimensional time series, the number of occurrences of
+Σ(i) in the rest of the time series is counted. Repeating
+this procedure, the number of times that each Σ occurs
+is found and the probabilities are calculated. The ﬁrst
+symbol found is Σ1, the second is Σ2, etc. The entropy
+HR for the reservoir is then calculated as
+HR = −
+NΣ∑
+k=1
+p (Σk) log (Σk) (17)
+9
+0.1
+ 
+10
+ 
+1000ΔRC
+(a)
+-0.09
+-0.08
+-0.07
+-0.06λmax
+(b)
+100
+75
+50
+25
+0
+Γ
+50403020100
+position along line
+(c)
+Tanh Flow Nodes
+FIG. 9: Plots of diﬀerent measured quantities along the
+black line superimposed on ﬁg. 8. The input signal s(t) was
+a Lorenz x signal while the training signal g(t) was a Lorenz
+z signal. The nodes were described by the leaky tanh ﬂow
+of eq. (13). The left end of the plots corresponds to [ρ,α] =
+[2, 0.01] while the right end of the plots corresponds to [ρ,α] =
+[4.3, 0.4]. (a) is the reservoir computer testing error ∆tx, (b) is
+the maximum Lyapunov exponent for the reservoir λmax, and
+(c) is the rank Γ of the covariance of the reservoir computer
+matrix Ω.
+where NΣ is the total number of symbols.
+Figure 11 shows the entropy of the set of reservoir vari-
+ables ri(j),i = 1 ...M,j = 1 ...N as a function of the
+largest Lyapunov exponent of the reservoir.
+The reservoir entropy for the hyperbolic tangent nodes
+(tanh) in ﬁgure 11 clearly increases as the maximum Lya-
+punov exponent approaches the transition from negative
+to positive, fulﬁlling the assumptions in the edge of chaos
+work [17–19]. The minimum testing error ∆tx for the
+hyperbolic tangent nodes, plotted in ﬁgure 10 does come
+close to the edge of chaos. The hyperbolic tangent is
+probably the most commonly used node type in reservoir
+computers, so it is not surprising that conventional wis-
+dom says that the best place to operate a reservoir com-
+puter is at the edge of chaos. Still there are also large
+testing errors near the edge of chaos for the hyperbolic
+tangent nodes in ﬁgure 10, so simply having complex sig-
+nals is not suﬃcient to produce the smallest testing error.
+The pattern of reservoir entropy vs. largest Lyapunov
+exponent is more complicated for the polynomial and
+leaky hyperbolic tangent map (leaky tanh) nodes. The
+overall trend is for the reservoir entropy HR to get larger
+as the largest Lyapunov exponent λmax approaches the
+transition from negative to positive, but there is a broad
+range of entropy values near this threshold. In ﬁgure 10,
+the minimum of the testing error ∆tx still occurs near
+the edge of chaos, but once again there may also be very
+large testing errors near this boundary.
+0.01
+0.1
+1
+10Δtx
+-20 -15 -10 -5 0
+λmax
+polynomial
+0.1
+1
+10Δtx
+-30 -20 -10 0
+λmax
+tanh
+0.01
+0.1
+1
+10Δtx
+-20 -15 -10 -5 0
+λmax
+leaky tanh
+0.01
+0.1
+1
+10Δtx
+-10 -8 -6 -4 -2 0
+λmax
+leaky tanh ﬂow
+FIG. 10: The blue dots are the reservoir computer test-
+ing error ∆tx as a function of the maximum Lyapunov expo-
+nent for the reservoir, λmax. The input signal s(t) was the
+Lorenz x signal, while the training signal g(t) was the Lorenz
+z signal. The node types were the polynomial nodes, the hy-
+perbolic tangent (tahn) nodes, the leaky hyperbolic tangent
+(leaky tanh) nodes of the leaky hyperbolic tangent ﬂow (leaky
+tanh ﬂow) nodes.
+In contrast to the other node types, the reservoir en-
+tropy for the leaky hyperbolic tangent ﬂow pictured in
+ﬁgure 11 does not show any dependance on the largest
+Lyapunov exponent. In ﬁgure 10, the testing error ∆tx
+does go through a minimum as the largest Lyapunov
+exponent increases, but without a clear deﬁnition of
+what range of Lyapunov exponent constitutes the edge
+of chaos, it is not possible to say if the minimum testing
+error occurs at the edge of chaos or not.
+10
+6
+4
+2
+HR
+-35-30-25-20-15-10-5 0
+λmax
+polynomial
+log(Δtx)
+6
+4
+2
+HR
+-60 -40 -20 0
+λmax
+tanh
+6
+4
+2
+HR
+-30 -20 -10 0
+λmax
+leaky tanh
+6
+4
+2
+HR
+-10 -8 -6 -4 -2 0
+λmax
+leaky tanh ﬂow
+FIG. 11: Entropy HR of the reservoir variables ri(j),i =
+1 ...M,j = 1 ...N as a function of the largest Lyapunov of
+the reservoir, λmax, for four diﬀerent node types. The points
+are colored by the log base 10 of the testing error ∆tx, where
+purple represents the smallest testing error and red represents
+the largest.
+C. Fit Signal Entropy
+The ﬁt signal h(t) is a linear combination of node sig-
+nals, so the ﬁt signal entropy Hh may be diﬀerent than
+the reservoir entropy HR. The ﬁt signal can be more or
+less complex than the training signal g(t), but the low-
+est testing error should come when the two signals are
+equally complex.
+Figure 12 shows how the testing error changed as
+a function of the entropy of the ﬁt signal, Hh =
+−
+Nsh∑
+j=1
+p (σh (j)) log [p (σh (j))]. Also plotted in ﬁgure 12
+is a vertical red line indicating the entropy of the train-
+ing signal, or Hg = −
+Nsg∑
+i=1
+p (σg (i)) log [p (σg (i))]. The
+input signal is the same for all the reservoir computer
+types. Each plot in ﬁgure 12 was created by taking 6000
+random combinations of parameters for each of four dif-
+ferent node types, as in section IX A. As in that section,
+the network was not changed.
+0.01
+0.1
+1
+ΔRC
+tanh
+0.01
+0.1
+1
+ΔRC
+4.54.03.53.02.52.01.5
+Hh
+leaky tanh ﬂow
+0.01
+0.1
+1
+ΔRC
+leaky tanh
+0.01
+0.1
+1
+ΔRC
+polynomial 
+FIG. 12: The blue dots represent the testing error ∆tx as a
+function of the entropy Hh of the ﬁt signal h(t). The red verti-
+cal line is the entropy Hg of the training signal g(t). The four
+node types were the polynomial nodes, the hyperbolic tan-
+gent (tanh) nodes, the leaky hyperbolic tangent (leaky tanh)
+nodes, and the hyperbolic tangent ﬂow (tanh ﬂow) nodes.
+In all four plots in ﬁgure 12, the minimum testing error
+∆tx is seen when the entropy of the ﬁt signal, Hh, is
+the same as the entropy of the training signal. If the
+signals are closely matched, then the entropies should be
+approximately equal, which is another way of stating that
+their complexities are equal.
+When the entropy of the ﬁt signal is less than or greater
+than the entropy of the training signal, the testing error
+∆tx is larger. Because the ﬁt signal h(t) is a linear com-
+11
+bination of reservoir signals, and the linear combination
+is diﬀerent, there is no simple relation between the ﬁt
+signal entropy and the reservoir entropy. The reservoir
+entropy does tend to increase towards the edge of chaos
+for three of the four node types (ﬁgure 11), but extra
+complexity alone is not all that is required. Figure 12
+shows that even when the entropies of the ﬁt signal and
+training signal match, the testing error ∆tx can be large.
+D. Relation to Covariance Rank
+In ﬁgures 3, 5,7 and 9, the minimum testing error was
+seen when the covariance rank Γ was at a maximum. In-
+creasing the complexity of the reservoir signals ri(t) led
+to a larger covariance rank for the reservoir matrix Ω up
+to a point. The maximum possible covariance rank for
+Ω was equal to the number of nodes, or 100, so further
+increases in the reservoir signal complexity could not in-
+crease the covariance rank past this point. It was shown
+in [23] that larger covariance ranks were associated with
+smaller testing errors, so if increased complexity leads
+to a larger covariance rank, it decreases the testing er-
+ror. Once the covariance rank is maximized, however,
+increasing the complexity of the reservoir signals may
+not decrease the testing error, and as mentioned in the
+previous section, the increased complexity might actually
+increase the testing error.
+X. CONCLUSIONS
+It is commonly stated that a reservoir computer works
+best at the edge of chaos, the point were the maximum
+Lyapunov exponent for the reservoir goes from negative
+to positive. The simulations here certainly do not dis-
+prove this statement, but they do show that tuning a
+reservoir computer to the edge of chaos does not guar-
+antee the best performance. Some parameter combina-
+tions that leave a reservoir computer near the edge of
+chaos lead to large testing errors. In a real physical sys-
+tem, the range of parameters is limited, so it may not
+be possible to tune the system to the optimum param-
+eters. It was also shown that the assumption that un-
+derlies the edge of chaos concept does not hold for all
+reservoir types. The edge of chaos concept was based on
+well known routes to chaos such as period doubling in
+one dimensional maps. As the map approached chaos,
+it exhibited more complex behavior, leading to a larger
+computational capacity. Reservoir computers are much
+higher dimensional, and they may not actually become
+chaotic when the largest Lyapunov exponent becomes
+positive; some types of reservoir computer may simply
+become unstable, at which point the reservoir variables
+will approach ±∞ (or the power supply voltage). It has
+been pointed out in [30] that the reservoir computer has
+many Lyapunov exponents, so although the largest Lya-
+punov exponent is positive, there can be many other neg-
+ative exponents, so the edge of chaos for such a high di-
+mensional system may not have the same meaning as for
+a low dimensional system.
+The simulations in this paper do show that having
+a larger mutual information between the ﬁt signal h(t)
+and the training signal g(t) does lead to better reservoir
+computer performance. The ﬁt signal h(t) is a linear
+combination of the time series outputs of the individual
+reservoir nodes, so the job of the reservoir computer is to
+create from the input signal s(t) a set of signals that have
+the largest mutual information with the training signal
+g(t).
+It was also shown that the rank of the reservoir covari-
+ance matrix ΩT Ω was important for obtaining a small
+testing error. The lowest testing errors were seen when
+the rank of the covariance matrix was at its maximum
+value. A future question for reservoir computer studies is
+how do diﬀerent nonlinear nodes increase this covariance
+rank?
+This work was supported in part by the Oﬃce of Naval
+Research through the Naval Research Laboratory’s Basic
+Research Program.
+XI. REFERENCES
+[1] H. Jaeger, German National Research Center for In-
+formation Technology GMD Technical Report 148, 34
+(2001).
+[2] T. Natschlaeger, W. Maass, and H. Markram, Spe-
+cial Issue on Foundations of Information Processing of
+TELEMATIK 8, 39 (2002).
+[3] Z. Lu, J. Pathak, B. Hunt, M. Girvan, R. Brockett, and
+E. Ott, Chaos: An Interdisciplinary Journal of Nonlinear
+Science 27, 041102 (2017).
+[4] L. Larger, M. C. Soriano, D. Brunner, L. Appeltant, J. M.
+Gutierrez, L. Pesquera, C. R. Mirasso, and I. Fischer,
+Optics Express 20, 3241 (2012).
+[5] G. V. der Sande, D. Brunner, and M. C. Soriano,
+Nanophotonics 6, 561 (2017).
+[6] F. Schurmann, K. Meier, and J. Schemmel, in Ad-
+vances in Neural Information Processing Systems 17
+(MIT Press, 2004), pp. 1201–1208.
+[7] G. Dion, S. Mejaouri, and J. Sylvestre, Journal of Ap-
+plied Physics 124, 152132 (2018).
+[8] D. Canaday, A. Griﬃth, and D. J. Gauthier, Chaos: An
+Interdisciplinary Journal of Nonlinear Science 28, 123119
+(2018).
+[9] Z. Lu, B. R. Hunt, and E. Ott, Chaos: An Interdisci-
+plinary Journal of Nonlinear Science 28, 061104 (2018).
+[10] R. S. Zimmermann and U. Parlitz, Chaos: An Interdisci-
+plinary Journal of Nonlinear Science 28, 043118 (2018).
+12
+[11] P. Antonik, M. Gulina, J. Pauwels, and S. Massar, Phys-
+ical Review E 98, 012215 (2018).
+[12] H. Jaeger and H. Haas, Science 304, 78 (2004).
+[13] A. Jalalvand, K. Demuynck, W. D. Neve, and J.-P.
+Martens, Neurocomputing 277, 237 (2018).
+[14] M. Lukoˇseviˇcius, H. Jaeger, and B. Schrauwen, KI -
+K¨unstliche Intelligenz 26, 365 (2012).
+[15] M. Mitchell., J. P. Crutchﬁeld, and H. P. T., in Com-
+plexity: Metaphors, Models and Reality (Addison-Wesley,
+1993), vol. 19, pp. 497–513.
+[16] M. Mitchell., P. T. Haber, and J. P. Crutchﬁeld, Complex
+Systems 7, 89 (1993).
+[17] N. H. Packard, in Dynamic Patterns in Complex Systems
+(1988), pp. 293–301.
+[18] C. G. Langton, Physica D: Nonlinear Phenomena 42, 12
+(1990).
+[19] J. P. Crutchﬁeld and K. Young, in Complexity, Entropy,
+and the Physics of Information (1990), pp. 223–269.
+[20] R. Penrose, Mathematical Proceedings of the Cambridge
+Philosophical Society 51, 406 (1955).
+[21] A. N. Tikhonov, Comptes Rendus De L Academie Des
+Sciences De L Urss 39, 176 (1943).
+[22] G. H. Golub, M. Heath, and G. Wahba, Technometrics
+21, 215 (1979).
+[23] T. L. Carroll and L. M. Pecora, submitted to Chaos
+http://arxiv.org/abs/1903.12487 (2019).
+[24] H. Jaeger, M. Lukoˇseviˇcius, D. Popovici, and U. Siewert,
+Neural Networks 20, 335 (2007).
+[25] E. N. Lorenz, Journal of Atmospheric Science 20, 130
+(1963).
+[26] L. M. Pecora and T. L. Carroll, Physical Review Letters
+64, 821 (1990).
+[27] J. P. Eckmann and D. Ruelle, Reviews of Modern Physics
+57, 617 (1985).
+[28] C. Bandt and B. Pompe, Physical Review Letters 88, 4
+(2002).
+[29] I. T. Jolliﬀe, Principal component analysis (Springer,
+2011).
+[30] T. Lymburn, A. Khor, T. Stemler, D. C. Corra, M. Small,
+and T. Jngling, Chaos: An Interdisciplinary Journal of
+Nonlinear Science 29, 023118 (2019).

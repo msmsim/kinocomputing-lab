@@ -37,3 +37,5 @@ reservoirs buy nothing here.
   follow. The ridge penalty is at its grid edge for both models, a scratch check
   showed it doesn't reverse the kill. Claim `c-005` (simulated, review weakened; wording narrowed to this
   parametrisation). Seed 2 run in the repository agrees on both tasks.
+
+2026-11-27 (shift 2): e009 ran the standardised digital controls on NARMA-10 (linear 10-tap 0.33, random features 0.30, ESN 0.14 median NMSE). Pre-registered prediction for the linear control (0.5-0.9) was wrong. A measured MEMS chip's 0.6-0.8 is worse than the linear control, which has exact memory the device lacks. Next: a delay-reservoir control (single node with feedback) and a memory-matched linear control.

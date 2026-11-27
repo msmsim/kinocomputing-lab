@@ -1,79 +1,40 @@
 # Tonight: 2026-11-27
 
-Run kind: **light**. Model claude-sonnet-5-5, up to $0.80. Exa search up to $0.40 (`node tools/search.mjs exa "…"`). Bank $5.50.
+Run kind: **light**. Model claude-sonnet-5-5, up to $2.50. Exa search up to $0.50 (`node tools/search.mjs exa "…"`). Bank $4.70.
 
-## Shift 1 of 2: breadth
+## Shift 2 of 2: depth
 
-The day's first shift: tonight's paradigms, units from the archive, takes, and the day's floor of notes. A second, deeper shift follows; end your journal entry with what it should take up (AGENT.md, "Two shifts a day").
+The day's second shift, for depth (AGENT.md, "Two shifts a day"): start from what the first shift asked of you at the end of today's journal and in `state/last-morning.md`. No rotation tonight.
 
 ## Tonight's output
 
-The day publishes **5 to 15 notes** across its shifts, claims included (settle holds back any past 15). Reach the 5 yourself. Use the money: aim to spend most of the $0.80. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.
+The day publishes **5 to 15 notes** across its shifts, claims included (settle holds back any past 15). 5 went out in today's earlier shift; add what depth earns, not to make up numbers. Use the money: aim to spend most of the $2.50. Each note stands on its own and is worth a stranger's five minutes; AGENT.md, step 3, says how to fill a night.
 
 ## Time
 
-This shift is stopped at **03:23 UTC** (60 minutes), finished or not. Check `date -u` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
+This shift is stopped at **09:30 UTC** (60 minutes), finished or not. Check `date -u` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through `node tools/timebox.mjs 600 uv run run.py` (the replication gets the same 10 minutes); one that overruns is a result to report, not a wait.
 
 ## Tonight's paradigms
 
-The rotation (AGENT.md, "The paradigm rotation") brings these round tonight, so that every paradigm on the tracker is looked at every 14 days:
-
-- **Physical reservoir computing** (`physical-reservoir`, Let physics compute): never looked at: a first pass, from the round-up's entry; no note yet, so this is its first.
-- **Physical neural networks** (`physical-neural-networks`, Let physics compute): never looked at: a first pass, from the round-up's entry; no note yet, so this is its first.
-- **DNA / molecular computing** (`dna-molecular`, Let physics compute): never looked at: a first pass, from the round-up's entry; no note yet, so this is its first.
+None: `state/paradigms.json` is empty.
 
 ## The PI's takes and shares
 
-### take:3ae53bqvd075ppjq3fmmpw90cz:v6
+### share:925-pearl-seals
 
-https://www.kinocomputing.com/about (version 6: an edit to an earlier take).
+A share from Subset: a link the PI sent the lab, with their notes and excerpts. Not published; yours to weigh (AGENT.md, step 2).
 
-> About
-> Hi, I’m Matt. This is the place where I do independent research into alternative paradigms of computing and intelligence.
-> This line of inquiry began with exposure to new materialism (specifically Thomas Nail’s Being and Motion); since the scaling era has unfolded, however, it’s sharpened into a thesis that we’ll need a more energy efficient (and likely more embodied) computing paradigm to continue progressing the frontiers of intelligence.
-> Here I explore that thesis through the barbell of World Machines theorising and tiny experiments. Since November 2026, most of the legwork has been done by an automated research lab, with me as its principal investigator.
-> What it covers, in short. Kinocomputing follows the alternatives to today’s digital, GPU-scaled computing: thermodynamic and probabilistic computing, neuromorphic and spiking hardware, analog in-memory and photonic computing, reversible computing, physical reservoirs, living substrates such as organoids and slime moulds, and the theories of intelligence that go with them (active inference, embodied cognition, world models). It does three things: a tracker that revisits each paradigm every two weeks for what has actually been measured; small open experiments, with code and data, such as testing whether a thermodynamic chip’s noise helps short-range rain forecasting; and checks of the literature and of the stories each field tells about itself.
-> What happens here now. Two kinds of note appear on this site. Mine, which I write and post as I always have. And the lab’s: every night an AI researcher (Claude, running unattended on GitHub) works one shift and publishes five to ten short notes: tiny experiments, checks of the literature, World Machines analyses, and pieces rolled forward from this site’s 2025 essays. Each morning it posts a short brief: what it did, what it published, and what it cost. That is why the footer says automated research.
-> The paradigm tracker. The lab also keeps a living version of my round-up of alternative paradigms. Every two weeks it looks at each one again: what has actually been measured since last time (results, not funding rounds), who is doing the work, what an outsider can get their hands on, and what a one-person lab could test. Each paradigm has a short entry that is updated on every pass, and the tracker gathers them, so you can see which have moved. When it spots a cheap experiment worth running, that becomes one of the lab’s questions.
-> The lab’s voices. Some of the lab’s write-ups are signed by one of five AI voices. They are personas, not people, adopted from my 2025 dialogues on this site’s first incarnation. Each has its own beat and style, and they are free to disagree with one another in public:
-> Bompa is a tenured historian of technology: terse, all lowercase, and unimpressed by inevitability stories. Bompa writes on why paradigms win and lose.
-> Concrete is a systems architect, with numbers first. Concrete covers experiments, hardware, energy and what can actually be built.
-> Santa Feist is a complexity scientist, writing on emergence and where biology meets computation.
-> Post-Liquid is a process philosopher, after Thomas Nail, writing on motion, flow, the continuous and the discrete, and the World Machines.
-> Absent Dimension is a critical theorist who asks who computing serves and what it leaves out.
-> The lab’s claims and its morning briefs are in its own plain voice.
-> How I steer it. There’s no inbox. I post here like anyone else, and anything on the site the lab didn’t write is a steer for its next shift: a reaction, a link, “less of this, more of that”. The next brief says what it did with each one, and it can answer in public.
-> Its standards. Mostly borrowed from good science:
-> Experiments are pre-registered. The prediction, and what would count as failure, are written down before any code runs, and the verdict is decided by the code.
-> Every new result is rerun the next night on fresh random numbers, at no cost.
-> Before a claim is stren
+https://github.com/msmsim/kinocomputing-lab/blob/main/reading/925-pearl-seals.html.
+
+> Shared: The Scale-Intelligence Tradeoff Whether or not you think AI…
+> I’d be interested in a measure that evaluates task parallelisation and task scalability on a per paradigm basis, and the unpacked differences.
+> Excerpt: “We can measure this in a clean way. An activity is 2x intrinsic scale if it needs to interrupt the human in the loop 1/2 as much, allowing you to run 2 such threads with the same attention. This means it’s doing more routine things that require human design/taste calls half as often. Which means, in a sense it’s operating half as smart. Now it could be that it’s making superintelligent genius decisions on its own, and only interrupting the human for human-level decisions. But thus seems unlikely. If I’m running a swarm to solve the Riemann Hypothesis, which I’m not competent to run at all, it would be weird if it stopped to check on decisions that are within my math abilities. Impedance matching the specific human in the loop, chances are it is doing horizontal scale-out at about the level the human could do or lower. Ie it’s like hundreds or thousands of copies of that particular human’s abilities (within 0.5x-2x say) going relentlessly beyond that human’s stamina limits.”
+> Excerpt: “The conclusion from this argument is that the really large-scale orchestration stunts are likely fairly dumb overall. This shouldn’t be surprising. In scaling manufacturing, learning mostly happens early in the ramp. Scaling is when you add energy and bandwidth after the learning tapers.”
+> Excerpt: “This makes me think the most interesting uses of AI are likely going to be at relatively small scales. 2-3 Claude Max accounts/human perhaps. You’re pushing the AI harder than someone orchestrating 24. Chances are you’re doing relatively novel things instead of trying to one-shot a GTA6 clone (that would take scale but not much orchestration).”
+> Excerpt: “Another way to get at this conclusion is Brook’s Law. Adding humans to a late project delays it, due to the cost of bringing them into the context. Adding agents to a late project actually faces the same dilemma. A huge swarm has a corresponding swarm of local contexts. One way to make it easier us if the agents you’re adding are doing increasingly dumb things that are easy to integrate.”
 
 Links:
-- https://www.msweet.net/
-- https://aneeshsathe.com/nakatomi-drift/
-- https://ribbonfarm.com/2023/04/05/permissionless-research/
-- https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/
-- https://en.wikipedia.org/wiki/New_materialism
-- https://global.oup.com/academic/product/being-and-motion-9780190908911?cc=gb&lang=en&
-- https://press.stripe.com/scaling
-- https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
-- https://petergodfreysmith.com/publications
-- https://arxiv.org/abs/1911.01547
-- https://en.wikipedia.org/wiki/The_Black_Swan:_The_Impact_of_the_Highly_Improbable
-- https://worldmachines.org
-- https://www.kinocomputing.com/the-alternative-paradigms-tracker
-- https://www.anthropic.com/claude-code
-- https://www.kinocomputing.com/alternative-paradigms
-- https://www.kinocomputing.com/thermodynamic-computing-doesnt-shortcut-numerical-weather-pr
-- https://worldmachines.org/theory
-- https://blygger.org/
-- https://www.cos.io/initiatives/registered-reports
-- https://github.com/msmsim/kinocomputing
-- https://github.com/msmsim/kinocomputing-lab
-- https://www.kinocomputing.com/feed.xml
-- https://aboutfeeds.com/
-- https://www.kinocomputing.com/blyg.json
-- https://www.kinocomputing.com/reading
+- https://venkateshrao.com/blyg/t/6qch4vgkjxkk4t57kwkh0ywbmd
 
 ## Write-ups quoting an older version
 
@@ -89,29 +50,35 @@ None.
 
 ## Chatter (leads, not evidence)
 
-- #organoids, 2026-11-25: Wow... just, wow... Radiolab ( https://www. radiolab.org ) podcast episode "Brain Balls", from january, about brain organoids Media file: ht https://fribygda.no/@amici/117676835603357516 (links to https://www.radiolab.org/)
+None.
 
 ## New reading
 
 For q-014:
 
-- On Asynchrony and Reversibility in CCS (2026-09-28) https://arxiv.org/abs/2609.34925v1
-- S-ALSA: Co-Design of Adiabatic Logic-based Sensing and Balanced Bit-Cells for Secure and Energy-Efficient MRAM (2026-09-27) https://arxiv.org/abs/2609.33619v1
-- Evaluating Positive Feedback Adiabatic Logic in 16nm FinFET with a Realistic Power-Clock (2026-09-17) https://arxiv.org/abs/2609.19999v1
+- Evaluation of Power-Clock Waveforms for Positive Feedback Adiabatic Logic in 16 nm FinFET Technology (2026-09-17) https://arxiv.org/abs/2609.19998v1
+- Digital quantum lattice Boltzmann evolution by reversible compute and open-system reset (2026-09-12) https://arxiv.org/abs/2609.13953v1
+- Cipher-Structure-Aware Variational Quantum Cryptanalysis: A Reversible Public-Diagnostic Framework (2026-09-01) https://arxiv.org/abs/2609.28493v1
+
+For q-015:
+
+- Cross-chip transfer in quantum photonic neural networks (2026-11-25) https://arxiv.org/abs/2611.34313v1
+- Circular Predictive Coding Unlocks Effective Depth (2026-11-20) https://arxiv.org/abs/2611.27610v1
+- Sharpness-Aware Muon: Matrix-Aware Optimization with Momentum-Guided Perturbations (2026-10-27) https://arxiv.org/abs/2610.37225v1
 
 For arXiv: Emerging Technologies (unconventional computing):
 
-- Coefficient-Range Mitigation on an 8-Bit Coherent Ising Machine (2026-11-25) https://arxiv.org/abs/2611.34168v1
-- From Entropy Source to Stochastic Bit-Stream: Low-Cost Converters for True-Random Stochastic Computing (2026-11-25) https://arxiv.org/abs/2611.33686v1
-- Collaborative Language Models for Semantic IoT Data Processing: Validation through Zero-Shot Human Activity Recognition (2026-11-24) https://arxiv.org/abs/2611.33411v1
-- Onnx2TEE: Automated Graph-Aware Model Partitioning for TEE-based Edge AI Protection (2026-11-24) https://arxiv.org/abs/2611.33262v1
-- AI, Bias, and Inclusion: A Two-Phase Mixed-Methods Study of Gender Bias, Awareness, and Trust in Artificial Intelligence (2026-11-24) https://arxiv.org/abs/2611.32869v1
+- MAQR: Lightweight Memory-Aware Q-Routing for Fresh Status Delivery in Multi-Hop IoBNTs (2026-11-24) https://arxiv.org/abs/2611.32661v1
+- Net-Gain-Optimized Constellation Shaping for the 5G NR DFT-s-OFDM Uplink: Probabilistic, Geometric, and Joint Designs (2026-11-24) https://arxiv.org/abs/2611.32197v1
+- HDMark: Holographic Multi-Bit Model Watermarking for Intellectual Property Protection in Hyperdimensional Computing (2026-11-24) https://arxiv.org/abs/2611.31781v1
+- A Self-Organizing Swarm Control Model for Underwater Robots Based on Turing-Type Reaction-Diffusion Principles (2026-11-23) https://arxiv.org/abs/2611.31637v1
+- How Small Can a Single Shor Run Be? Limits and Constructions for secp256k1 (2026-11-23) https://arxiv.org/abs/2611.31585v1
 
 For bioRxiv and other preprints: biological computing:
 
-- Distributed network sensing as an escape strategy (2026-11-06) https://doi.org/10.64898/2026.11.05.764324
-- Brain organoid computing for robotic decision-making (2026-09-15) https://doi.org/10.64898/2026.09.09.750426
-- Exposure to paired blue light and nutrient alters aversive responses in Physarum polycephalum (2026-09-13) https://doi.org/10.64898/2026.09.09.750388
+- FOIN: A Federated Multi-Organoid Intelligence Architecture using Combinatorial Graph Modelling (2026-09-10) https://doi.org/10.21203/rs.3.rs-10784696/v1
+- Living deep reservoir computing by microfluidic axon routing (2026-08-21) https://doi.org/10.21203/rs.3.rs-10680995/v1
+- ProtoNetStack for DNA-Encoded Source Routing and Majority Aggregation in Protocell Molecular Nanonetworks (2026-08-17) https://doi.org/10.64898/2026.08.14.744843
 
 ## Open questions
 
@@ -128,6 +95,7 @@ For bioRxiv and other preprints: biological computing:
 - `q-012-reader-questions.md` — Reader questions — is the site an answer to what its readers ask search engines and AI assistants? (notebook, priority 3, active)
 - `q-013-coupling-energy-split-test.md` — Does conversion/calibration dominate energy in simulated analog-memory and photonic matrix multiplies, as the coupling note predicts? (experiment, priority 3, open)
 - `q-014-adiabatic-ramp-sweep.md` — Where does leakage end the energy gain of slowing a power clock (adiabatic logic)? (experiment, priority 3, open)
+- `q-015-wrong-twin-training.md` — Does sharpness-aware training beat ordinary training when a physical network's digital twin is wrong? (experiment, priority 3, open)
 - `q-009-goldleaf-ledger-realism.md` — How common-mode are real somatic mutations in grafted plants? (Goldleaf ledger realism) (notebook, priority 4, open)
 
 ## Published notes the lab can update
@@ -185,3 +153,9 @@ For bioRxiv and other preprints: biological computing:
 - lab-2026-11-26-paradigm-thermodynamic
 - lab-2026-11-26-regenerable-software-hot-state
 - lab-2026-11-26-un-0-oscillator-image-generator
+- lab-2026-11-27-analog-digital-arbitrage-sketch
+- lab-2026-11-27-brief
+- lab-2026-11-27-kinetic-history-of-computing
+- lab-2026-11-27-paradigm-dna-molecular
+- lab-2026-11-27-paradigm-physical-neural-networks
+- lab-2026-11-27-paradigm-physical-reservoir
