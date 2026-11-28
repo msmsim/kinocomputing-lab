@@ -95,7 +95,7 @@
       "id": "hyperdimensional",
       "name": "Hyperdimensional computing / vector-symbolic architectures",
       "group": "Brain-inspired silicon",
-      "last_checked": null
+      "last_checked": "2026-11-28"
     },
     {
       "id": "wetware",
@@ -107,13 +107,13 @@
       "id": "organoids",
       "name": "Organoid intelligence",
       "group": "Living substrates",
-      "last_checked": null
+      "last_checked": "2026-11-28"
     },
     {
       "id": "basal-cognition",
       "name": "Basal cognition / diverse intelligence",
       "group": "Living substrates",
-      "last_checked": null
+      "last_checked": "2026-11-28"
     },
     {
       "id": "slime-mould-chemical",
