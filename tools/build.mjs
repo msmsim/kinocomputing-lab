@@ -64,14 +64,18 @@ const attemptsOf = (path) => (existsSync(path) ? readFileSync(path, "utf8").spli
 /**
  * The item tonight's build takes: in Now, not tried yet today, not waiting
  * on the PI (a pull request is open for it), not already landed (its move to
- * Done may have failed), and tried fewer than `attempts`
- * times since it last moved to Now; the one longest in Now first. null when
- * there is none.
+ * Done may have failed), tried fewer than `most` times since it last moved
+ * to Now, and in Now for at least `wait` days: an item moved to Now is
+ * usually done in the session that moved it, so the build shift is the
+ * backstop for what's left. The one longest in Now first; null when there
+ * is none.
  */
-export function pick(items, attempts, date, { most = 3 } = {}) {
+export function pick(items, attempts, date, { most = 2, wait = 1 } = {}) {
+  const daysBefore = (day, n) => new Date(Date.parse(`${day}T00:00:00Z`) - n * 86_400_000).toISOString().slice(0, 10);
   const inNowSince = (item) => [...(item.moves ?? [])].reverse().find((m) => m.to === "now")?.on ?? item.created;
   const candidates = items.filter((item) => item.status === "now" && /^r\d+$/.test(item.id)).filter((item) => {
     const mine = attempts.filter((a) => a.id === item.id && a.date >= inNowSince(item));
+    if (inNowSince(item) > daysBefore(date, wait)) return false;
     if (mine.some((a) => a.date === date)) return false;
     if (mine.some((a) => a.outcome === "for the PI" || a.outcome === "landed")) return false;
     return mine.length < most;
@@ -105,7 +109,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
     let items = [];
     try { items = JSON.parse(readFileSync(roadmapPath, "utf8")).items ?? []; } catch { /* no roadmap, no build */ }
     const attempts = attemptsOf(attemptsPath);
-    const item = pick(items, attempts, date, { most: config.attempts });
+    const item = pick(items, attempts, date, { most: config.attempts, wait: config.wait_days });
     if (item) {
       writeFileSync(briefPath, `${briefing(item, attempts)}\n`);
       console.log(`id=${item.id}`);

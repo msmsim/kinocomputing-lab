@@ -258,11 +258,15 @@ and approve pull requests", so the night shift can open them.
 
 Each morning at 07:41 UTC, after the research shifts, the build shift takes
 one headline in **Now** on kinocomputing's roadmap and builds it
-(`.github/workflows/build.yml`; `BUILD.md` is its agent's brief). Moving a
-headline to Now is the go-ahead; nobody is asked again. It takes the one
-longest in Now, not tried yet that day, not waiting on you, and tried fewer
-than three times since it reached Now (`config/lab.json`, `build`: Opus, up
-to $3 and 60 minutes a try, counted apart from the research budget).
+(`.github/workflows/build.yml`; `BUILD.md` is its agent's brief). It's the
+backstop: a headline moved to Now is usually done in the session that moved
+it, so the build shift leaves anything alone until it has been in Now a
+full day. Moving a headline to Now is the go-ahead; nobody is asked again.
+It takes the one longest in Now, not tried yet that day, not waiting on
+you, and tried fewer than twice since it reached Now (`config/lab.json`,
+`build`: Sonnet, up to $1 and 45 minutes a try, counted apart from the
+research budget). Set the repository variable `BUILD_PAUSED` to `true` to
+stop it (`LAB_PAUSED` stops it too).
 
 Four jobs, each with only what it needs (`tools/build.mjs`, `tools/land.sh`):
 
@@ -286,7 +290,8 @@ Four jobs, each with only what it needs (`tools/build.mjs`, `tools/land.sh`):
 Every attempt is a line in `state/build.jsonl`: the item, what happened and
 why, the cost, and the commits or pull request. Moving a headline out of Now
 and back gives it a fresh start. The schedule is GitHub's; cron-job.org can
-dispatch it on time as it does the shifts (`build.yml`, `{"ref":"main"}`).
+dispatches it on time, as it does the shifts (`build.yml`, `{"ref":"main"}`,
+07:41 UTC).
 
 ## Tests
 

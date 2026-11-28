@@ -26,6 +26,12 @@ test("build pick: the item longest in Now, not tried today, not waiting on the P
   back[0].moves = [{ to: "now", on: "2026-11-20" }, { to: "next", on: "2026-11-27" }, { to: "now", on: "2026-11-29" }];
   assert.equal(pick(back, [...thrice, { id: "r4", date: "2026-11-21", outcome: "for the PI" }], "2026-11-30").id, "r4", "moved back to Now: a fresh start");
   assert.equal(pick([{ ...now("r1", "2026-11-20"), status: "done" }], [], "2026-11-29"), null);
+  // The backstop: an item moved to Now is usually done in the session that moved it.
+  assert.equal(pick([now("r1", "2026-11-29")], [], "2026-11-29"), null, "not the day it reached Now");
+  assert.equal(pick([now("r1", "2026-11-28")], [], "2026-11-29").id, "r1", "a day later");
+  assert.equal(pick([now("r1", "2026-11-28")], [], "2026-11-29", { wait: 2 }), null);
+  const twice = ["2026-11-26", "2026-11-27"].map((date) => ({ id: "r4", date, outcome: "failed" }));
+  assert.equal(pick(items, twice, "2026-11-29").id, "r5", "two tries by default");
 
   const brief = briefing({ ...now("r4", "2026-11-20"), outline: [], links: [{ title: "An idea", url: "https://example.org" }], tags: ["feature", "site"] }, [{ id: "r4", date: "2026-11-28", outcome: "failed", why: "the site's tests failed" }]);
   assert.match(brief, /^# Tonight's build: r4\n\n\*\*Headline r4\*\*\n\nType: external\. Tags: feature, site\./);

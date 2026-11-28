@@ -439,6 +439,11 @@
     "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",
     "site": "fdee5f639189"
   },
+  "the build takes what was moved to Now today": {
+    "file": "test/build.test.mjs",
+    "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",
+    "site": "73b406d1eb50"
+  },
   "the build tries an item twice a day": {
     "file": "test/build.test.mjs",
     "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",

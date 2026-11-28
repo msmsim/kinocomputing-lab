@@ -153,6 +153,7 @@ const MUTANTS = [
   ["the build tries an item twice a day", "tools/build.mjs", "if (mine.some((a) => a.date === date)) return false;", ""],
   ["the build rebuilds what's waiting on the PI or landed", "tools/build.mjs", "if (mine.some((a) => a.outcome === \"for the PI\" || a.outcome === \"landed\")) return false;", ""],
   ["the build tries forever", "tools/build.mjs", "return mine.length < most;", "return true;"],
+  ["the build takes what was moved to Now today", "tools/build.mjs", "if (inNowSince(item) > daysBefore(date, wait)) return false;", ""],
   ["the build lands what the agent says isn't done", "tools/land.sh", "elif [ \"$done\" != yes ]; then", "elif false; then"],
   ["the build lands what failed its tests", "tools/land.sh", "[ \"${OK[$r]}\" = true ] ||", "true ||"],
   ["the build lands what goes to the PI", "tools/land.sh", "[ \"$land\" = true ] || outcome=\"for the PI\"", "true"],

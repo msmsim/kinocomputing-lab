@@ -4,7 +4,8 @@ name: Build shift
 # the research shifts (README, "The build shift"; BUILD.md is the agent's
 # brief). Four jobs, each with only what it needs:
 #
-#   pick   no secrets   the item longest in Now not yet tried today
+#   pick   no secrets   the item longest in Now, there a day or more, not
+#                       yet tried today
 #   build  Anthropic key only, no push rights: the agent, in fresh checkouts
 #          of both repositories; its change leaves as patches
 #   test   no secrets   the patches on main, tested by each repository's own
@@ -55,7 +56,8 @@ jobs:
 
   build:
     needs: pick
-    if: needs.pick.outputs.id != '' && vars.LAB_PAUSED != 'true'
+    # Off with the repository variable BUILD_PAUSED (or LAB_PAUSED) set to true.
+    if: needs.pick.outputs.id != '' && vars.LAB_PAUSED != 'true' && vars.BUILD_PAUSED != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     outputs:
