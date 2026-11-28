@@ -4,6 +4,11 @@
     "test": "figure: the house rules",
     "site": "f1edffff344f"
   },
+  "a broken roadmap costs the night": {
+    "file": "test/days.test.mjs",
+    "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
+    "site": "40e4f4f6ac64"
+  },
   "a day without a picture unreported": {
     "file": "test/days.test.mjs",
     "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
@@ -63,6 +68,11 @@
     "file": "test/days.test.mjs",
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "7f6452b825e1"
+  },
+  "a shipped headline named every day": {
+    "file": "test/days.test.mjs",
+    "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
+    "site": "8ab15e1fee40"
   },
   "a short day unreported": {
     "file": "test/shares.test.mjs",
@@ -369,6 +379,11 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "dd1b60819372"
   },
+  "the brief says nothing of what shipped": {
+    "file": "test/days.test.mjs",
+    "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
+    "site": "63bd4e2cee12"
+  },
   "the brief shows the day's first links, not its picks": {
     "file": "test/shares.test.mjs",
     "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
@@ -459,6 +474,11 @@
     "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
     "site": "c82425eb0f37"
   },
+  "the second shift drops the first's shipped": {
+    "file": "test/days.test.mjs",
+    "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
+    "site": "4fa9874c9ec9"
+  },
   "the second shift needn't wait": {
     "file": "test/unit.test.mjs",
     "test": "check-shift: which shift a run is, and whether it should work it",
@@ -484,6 +504,16 @@
     "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
     "site": "3eefb2359019"
   },
+  "the week counts headlines from outside the week": {
+    "file": "test/unit.test.mjs",
+    "test": "the week's changes: people's commits to the lab and the site, not the machinery running",
+    "site": "5d31dda7a281"
+  },
+  "the week counts headlines no longer done": {
+    "file": "test/unit.test.mjs",
+    "test": "the week's changes: people's commits to the lab and the site, not the machinery running",
+    "site": "86d4dc151821"
+  },
   "the week counts the PI's attention from before it": {
     "file": "test/paradigms.test.mjs",
     "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
@@ -493,6 +523,11 @@
     "file": "test/paradigms.test.mjs",
     "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
     "site": "f55fad9b0753"
+  },
+  "the whole roadmap history named in the first brief": {
+    "file": "test/days.test.mjs",
+    "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
+    "site": "bd940a1e5afe"
   },
   "threads before the claims they quote": {
     "file": "test/claims.test.mjs",

@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { frontMatter, readJson, readJsonl } from "./lib.mjs";
+import { doneOn, itemsOf, shippedBetween } from "./shipped.mjs";
 
 // Commits that are the machinery running, not anyone changing it.
 const ROUTINE = /^(night shift |local shift |lab: |release: |blyg: record state|motes: publish|subset: )/;
@@ -34,6 +35,16 @@ export async function siteChanges(repo, since, fetchJson) {
       .filter((c) => !BOTS.test(c.commit?.author?.name ?? "") && !BOTS.test(c.author?.login ?? ""))
       .map((c) => String(c.commit?.message ?? "").split("\n")[0])
       .filter((subject) => subject && !ROUTINE.test(subject));
+  } catch {
+    return [];
+  }
+}
+
+/** The site's roadmap headlines done in the week, from the repository's public copy: [] when unreadable. */
+export async function siteShipped(repo, since, until, fetchJson) {
+  try {
+    return shippedBetween(itemsOf(await fetchJson(`https://raw.githubusercontent.com/${repo}/main/notes/_roadmap.json`)), since, until)
+      .map((i) => ({ id: i.id, headline: String(i.headline).trim(), on: doneOn(i) }));
   } catch {
     return [];
   }
@@ -77,6 +88,7 @@ export async function weekInReview(lab, today, { siteRepo = null, fetchJson = nu
     claims,
     paradigms,
     attention,
+    shipped: siteRepo && fetchJson ? await siteShipped(siteRepo, since, today, fetchJson) : [],
     changes: {
       lab: labChanges(lab, since),
       site: siteRepo && fetchJson ? await siteChanges(siteRepo, since, fetchJson) : [],

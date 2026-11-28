@@ -10,7 +10,7 @@ import { appendFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { allowance, frontMatter, KINO, LAB, regionFor, rotation, sundayPlan } from "../tools/lib.mjs";
-import { labChanges, siteChanges } from "../tools/week.mjs";
+import { labChanges, siteChanges, siteShipped } from "../tools/week.mjs";
 import * as sources from "../tools/sources.mjs";
 import { checkImage, sketch } from "../tools/figure.mjs";
 import { takeSteers } from "../tools/steers.mjs";
@@ -369,6 +369,19 @@ test("the week's changes: people's commits to the lab and the site, not the mach
     ]);
     assert.deepEqual(site, ["Previews lead with the lead"]);
     assert.deepEqual(await siteChanges("x/y", "2026-11-23", async () => { throw new Error("offline"); }), [], "unreadable is nothing, not a failure");
+    // The roadmap's headlines done in the week, from the site's public copy.
+    let asked = null;
+    const shipped = await siteShipped("msmsim/kinocomputing", "2026-11-23", "2026-11-29", async (url) => { asked = url; return { items: [
+      { id: "r1", headline: "Before the week", status: "done", moves: [{ to: "done", on: "2026-11-22" }] },
+      { id: "r3", headline: " Late in the week ", status: "done", moves: [{ to: "done", on: "2026-11-28" }] },
+      { id: "r2", headline: "Early in the week", status: "done", moves: [{ to: "now", on: "2026-11-23" }, { to: "done", on: "2026-11-24" }] },
+      { id: "r4", headline: "Still under way", status: "now", moves: [{ to: "done", on: "2026-11-25" }, { to: "now", on: "2026-11-26" }] },
+      { id: "r5", headline: "After the week", status: "done", moves: [{ to: "done", on: "2026-11-30" }] },
+      { id: "bad", headline: "Not an item", status: "done", moves: [{ to: "done", on: "2026-11-25" }] },
+    ] }; });
+    assert.equal(asked, "https://raw.githubusercontent.com/msmsim/kinocomputing/main/notes/_roadmap.json");
+    assert.deepEqual(shipped, [{ id: "r2", headline: "Early in the week", on: "2026-11-24" }, { id: "r3", headline: "Late in the week", on: "2026-11-28" }]);
+    assert.deepEqual(await siteShipped("x/y", "2026-11-23", "2026-11-29", async () => { throw new Error("offline"); }), []);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

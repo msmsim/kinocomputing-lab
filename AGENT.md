@@ -432,8 +432,11 @@ commits people made to the lab and the site. Read them, and write:
   so when they move, the review is listed as quoting an older version.
 - **What changed in how the lab works**, near the end, in plain words for a
   reader: what the lab or the site can do now that it couldn't on Monday,
-  and why it matters to someone reading. From the commits in the briefing;
-  leave out the plumbing that changes nothing a reader would notice.
+  and why it matters to someone reading. Start from the roadmap's headlines
+  shipped this week (in the briefing; link each to its place on the
+  roadmap), which say it in a sentence each, and the commits behind them;
+  sum them up rather than list them, and leave out the plumbing that
+  changes nothing a reader would notice.
 - **What the lab needed from the PI**, in a line or two: how many shifts
   asked for something, and how long the longest ask stood; what the PI sent
   in. The PI's attention is a ceiling on what the lab can do, so a week that

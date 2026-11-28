@@ -28,6 +28,7 @@ import { KINO, LAB, frontMatter, json, now, readJson, readJsonl, sundayPlan } fr
 import { labIdIn, renderNote } from "./render.mjs";
 import { checkImage } from "./figure.mjs";
 import { dueAt, hold, release } from "./release.mjs";
+import { itemsOf, shippedFor } from "./shipped.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -433,6 +434,18 @@ if (hopperItems.length || existsSync(join(KINO, "notes", "_hopper.json"))) {
   writeFileSync(join(KINO, "notes", "_hopper.json"), json({ updated: run.date, items: hopperItems }));
 }
 const addedToday = hopperItems.filter((h) => h.added === run.date);
+// The roadmap's headlines done since a brief last named them (tools/shipped.mjs):
+// the day's brief says what shipped. No roadmap on the site, nothing to say.
+const roadmapPath = join(KINO, "notes", "_roadmap.json");
+const shippedPath = join(LAB, "state/roadmap-shipped.json");
+let shippedToday = [];
+if (existsSync(roadmapPath)) {
+  // A roadmap that doesn't parse is the site's to fix; it never costs the night.
+  const roadmap = (() => { try { return JSON.parse(readFileSync(roadmapPath, "utf8")); } catch { return {}; } })();
+  const { record, today } = shippedFor(itemsOf(roadmap), readJson(shippedPath, null), run.date);
+  writeFileSync(shippedPath, json(record));
+  shippedToday = today;
+}
 // The brief names five of them: the ones the shifts marked `pick`, in the
 // order they were picked, then the day's others to make up the five.
 const picked = new Set([...hopper.values()].filter((h) => h.pick === true).map((h) => h.url));
@@ -580,6 +593,10 @@ const briefOf = (said) => {
         addedToday.length > briefReads.length
           ? `- And ${addedToday.length - briefReads.length} more made it to [Reading](${ORIGIN}reading) today.`
           : `- All of it: [Reading](${ORIGIN}reading).`].join("\n"),
+    ] : []),
+    ...(shippedToday.length ? [
+      "**Shipped**",
+      [...shippedToday.map((i) => `- [${i.headline}](${ORIGIN}roadmap#${i.id})`), `- What’s next: [the roadmap](${ORIGIN}roadmap).`].join("\n"),
     ] : []),
     "**Also today**",
     [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),

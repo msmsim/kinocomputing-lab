@@ -137,6 +137,14 @@ const MUTANTS = [
   ["the fast lane takes code with no test", "tools/fast-lane.mjs", "if (code && !tested) return", "if (false) return"],
   ["the fast lane has no size limit", "tools/fast-lane.mjs", "if (size > MOST_LINES) return", "if (false) return"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
+  // What shipped on the roadmap (tools/shipped.mjs).
+  ["the whole roadmap history named in the first brief", "tools/shipped.mjs", "if (!record) return { record: { earlier: done.map((i) => i.id) }, today: [] };", "if (!record) record = {};"],
+  ["a shipped headline named every day", "tools/shipped.mjs", "const fresh = done.filter((i) => !named.has(i.id))", "const fresh = done.filter((i) => true)"],
+  ["the second shift drops the first's shipped", "tools/shipped.mjs", "const ids = [...(record[date] ?? []), ...fresh];", "const ids = [...fresh];"],
+  ["the brief says nothing of what shipped", "tools/settle.mjs", "...(shippedToday.length ? [", "...(false ? ["],
+  ["a broken roadmap costs the night", "tools/settle.mjs", "try { return JSON.parse(readFileSync(roadmapPath, \"utf8\")); } catch { return {}; }", "return JSON.parse(readFileSync(roadmapPath, \"utf8\"));"],
+  ["the week counts headlines from outside the week", "tools/shipped.mjs", "return on && on >= since && on <= until;", "return on && on <= until;"],
+  ["the week counts headlines no longer done", "tools/shipped.mjs", "if (item?.status !== \"done\") return null;", ""],
 ];
 
 const JOBS = Math.max(1, Number(process.env.MUTANT_JOBS ?? availableParallelism()));

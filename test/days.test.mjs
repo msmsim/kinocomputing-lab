@@ -155,3 +155,41 @@ test("the day's picture: placed after the brief's lead, kept by a later shift th
     w.dispose();
   }
 });
+
+test("what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  const COMMIT = "https://github.com/msmsim/kinocomputing/commit/0123456";
+  const roadmap = (items) => writeFileSync(join(w.kino, "notes/_roadmap.json"), JSON.stringify({ items }));
+  const done = (id, headline, on) => ({ id, headline, status: "done", created: "2026-11-01", moves: [{ to: "done", on }], links: [{ title: "c", url: COMMIT }] });
+  const shift = (at, n = 1) => {
+    writeFileSync(join(w.lab, "MORNING.md"), "A quiet shift.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.1, num_turns: 3, is_error: false }));
+    w.node(w.lab, ["tools/prepare.mjs"], at, { LAB_SHIFT: String(n) });
+    writeFileSync(join(w.lab, "MORNING.md"), "A quiet shift.\n");
+    w.node(w.lab, ["tools/settle.mjs"], at.replace(/T\d\d/, (h) => `T${String(Number(h.slice(1)) + 1).padStart(2, "0")}`), { LAB_SHIFT: String(n) });
+  };
+  const brief = (date) => read(`published/lab-${date}-brief.md`);
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    roadmap([done("r1", "An old headline", "2026-11-10"), { id: "r2", headline: "Under way", status: "now", created: "2026-11-15", moves: [{ to: "now", on: "2026-11-16" }], outline: ["x"] }]);
+    shift("2026-11-21T02:23:00Z");
+    assert.ok(!/\*\*Shipped\*\*/.test(brief("2026-11-21")), "the history before the record isn't news");
+    assert.deepEqual(JSON.parse(read("state/roadmap-shipped.json")), { earlier: ["r1"] });
+
+    roadmap([done("r1", "An old headline", "2026-11-10"), done("r2", "Under way, & done", "2026-11-21")]);
+    shift("2026-11-22T02:23:00Z");
+    assert.match(brief("2026-11-22"), /\*\*Shipped\*\*\n\n- \[Under way, & done\]\(https:\/\/www\.kinocomputing\.com\/roadmap#r2\)\n- What’s next: \[the roadmap\]\(https:\/\/www\.kinocomputing\.com\/roadmap\)\.\n\n\*\*Also today\*\*/);
+    roadmap([done("r1", "An old headline", "2026-11-10"), done("r2", "Under way, & done", "2026-11-21"), done("r3", "Another", "2026-11-22")]);
+    shift("2026-11-22T05:07:00Z", 2);
+    assert.match(brief("2026-11-22"), /\*\*Shipped\*\*\n\n- \[Under way, & done\][^\n]*\n- \[Another\]\(https:\/\/www\.kinocomputing\.com\/roadmap#r3\)\n/, "the second shift keeps the first's and adds its own");
+    assert.deepEqual(JSON.parse(read("state/roadmap-shipped.json")), { earlier: ["r1"], "2026-11-22": ["r2", "r3"] });
+
+    writeFileSync(join(w.kino, "notes/_roadmap.json"), "{ not json");
+    shift("2026-11-23T02:23:00Z");
+    assert.ok(!/\*\*Shipped\*\*/.test(brief("2026-11-23")), "named once; and a roadmap that doesn't parse says nothing");
+    assert.deepEqual(JSON.parse(read("state/roadmap-shipped.json")), { earlier: ["r1"], "2026-11-22": ["r2", "r3"] });
+  } finally {
+    w.dispose();
+  }
+});

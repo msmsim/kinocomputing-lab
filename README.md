@@ -45,6 +45,12 @@ next shift's settle releases anything overdue, so a missed trigger delays
 the brief but never loses it. A shift that settles after the release updates
 the brief there and then.
 
+The brief also says what **shipped**: the headlines on kinocomputing's
+roadmap (`/roadmap`, its README "Roadmap") that moved to Done since a brief
+last named them, each linked to its place there (`tools/shipped.mjs`, with
+what's been named in `state/roadmap-shipped.json`). A roadmap that doesn't
+parse says nothing and costs nothing.
+
 The agent's step holds only the Anthropic key. It can't push, and it never sees
 kinocomputing's files: settle, which it doesn't control, renders its markdown
 through kinocomputing's own template and converter and refuses anything that
@@ -119,8 +125,9 @@ after each shift keeps `reading/` exactly as sent.
 No rotation. The first shift writes **the week in review**, which is held
 with the day's brief and goes out with it at 10:45 UTC: the week's
 themes across paradigms, regions and money, what your takes and shares
-became, and what changed in how the lab and the site work (from the week's
-commits to both repositories, the routine ones left out). The second shift,
+became, and what changed in how the lab and the site work (from the
+roadmap's headlines shipped that week, and the week's commits to both
+repositories, the routine ones left out). The second shift,
 on Opus with a 120-minute clock and up to $4 from the bank, writes a
 **deep dive** (3,000–5,000 words, one voice, the voices in turn) and a
 **roundtable** (all five voices, each turn written separately, ending in
