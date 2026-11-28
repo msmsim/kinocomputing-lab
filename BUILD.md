@@ -22,8 +22,10 @@ lands; you'll see why in tomorrow's briefing if it's tried again.
 
 ## Outline first
 
-If the item has no outline, write one before any code: what has to be true
-for the headline to be credibly true, as a short nested list. Then cut it:
+If the item has no outline, write one before any code, starting from its
+note: what has to be true for the headline to be credibly true, as a short
+nested list. Where the note leaves a decision open, take the simplest choice
+that keeps the headline true, and say so in your report. Then cut it:
 anything the headline would still be true without goes. Record it in the
 site's roadmap:
 

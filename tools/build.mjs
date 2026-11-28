@@ -94,6 +94,7 @@ export function briefing(item, attempts) {
     "",
     `Type: ${item.type ?? "external"}. Tags: ${(item.tags ?? []).join(", ") || "none"}.`,
     "",
+    ...(item.note ? [`The note (the context: what Matt meant, what it connects to, what's still to decide): ${item.note}`, ""] : []),
     ...(item.outline?.length ? ["The outline so far:", "", ...item.outline.map((l) => `${l.match(/^ */)[0]}- ${l.trim()}`), ""] : ["It has no outline yet: write one first (BUILD.md, \"Outline first\").", ""]),
     ...(item.links?.length ? ["Links Matt or an earlier session gave it:", "", ...item.links.map((l) => `- ${l.title}: ${l.url}`), ""] : []),
     ...(before.length ? ["Earlier attempts:", "", ...before.map((a) => `- ${a.date}: ${a.outcome}${a.why ? ` (${a.why})` : ""}`), ""] : []),

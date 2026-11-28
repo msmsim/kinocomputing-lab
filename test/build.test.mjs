@@ -38,6 +38,7 @@ test("build pick: the item longest in Now, not tried today, not waiting on the P
   assert.match(brief, /It has no outline yet: write one first/);
   assert.match(brief, /- An idea: https:\/\/example\.org/);
   assert.match(brief, /- 2026-11-28: failed \(the site's tests failed\)/);
+  assert.match(briefing(now("r4", "2026-11-20", { note: "Matt wants cards." }), []), /The note \(the context[^)]*\): Matt wants cards\./);
   assert.match(briefing(now("r4", "2026-11-20", { outline: ["One", "  two"] }), []), /The outline so far:\n\n- One\n  - two/);
 });
 
