@@ -45,7 +45,8 @@ export function runEnv(dir) {
   return settings;
 }
 
-const COMMAND = (process.env.REPLICATE_CMD ?? "uv run --quiet run.py").split(" ");
+// Read when it runs, not when the module loads, so a caller can set it.
+const command = () => (process.env.REPLICATE_CMD ?? "uv run --quiet run.py").split(" ");
 
 /** The line of a failed run's stderr that says what went wrong, then its tail. */
 export function why(stderr) {
@@ -94,7 +95,8 @@ export function replicateAll(lab = LAB, at = now()) {
     }
     const scratch = mkdtempSync(join(tmpdir(), "replicate-"));
     const out = join(scratch, "result.json");
-    const run = spawnSync(COMMAND[0], COMMAND.slice(1), {
+    const [cmd, ...args] = command();
+    const run = spawnSync(cmd, args, {
       cwd: exp,
       env: { ...settings, PATH: process.env.PATH, HOME: process.env.HOME, SEED: String(seed), RESULT_PATH: out, REPLICATION: "1" },
       encoding: "utf8",
