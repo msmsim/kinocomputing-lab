@@ -231,14 +231,18 @@ the packages rather than copying them. The Tests workflow runs them on every
 push that touches the machinery.
 
 `npm run mutants` breaks each rule the lab depends on, one at a time, and
-checks a test fails. Each mutant runs in its own copy of the lab, never in the
-source; it stops at the first failing file, and `test/mutants.json`
-remembers which file that was, so the next run tries it first: about five
-minutes from cold, a minute and a half after. `npm run mutants -- brief`
-runs only the mutants whose names have that word. Add a mutant with each new
-rule.
+checks a test fails. `npm run mutants -- --since origin/main` runs only the
+mutants a change could have affected: those on or beside a changed line, new
+or changed ones, and those whose killing test changed. A change to one
+function is usually a few mutants and a few seconds. The Tests workflow runs
+that on every push, and every mutant on Saturdays; all of them take about a
+minute (five from cold). Each mutant runs in its own copy of the lab, never
+in the source; `test/mutants.json` remembers the test that killed each, which
+runs first, alone; and the run stops if the tests fail with no mutant at all,
+since a kill by a failing test is none. `npm run mutants -- brief` runs the
+mutants whose names have that word. Add a mutant with each new rule.
 
-`INFLUENCES.md` is where the way the lab works comes from.
+`INFLUENCES.md`: where the lab's autonomy comes from, and the ideas it keeps faith with.
 
 ## Layout
 

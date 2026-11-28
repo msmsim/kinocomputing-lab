@@ -1,99 +1,487 @@
 {
-  "Exa spend left out of the bank": "test/shares.test.mjs",
-  "Exa unmetered": "test/unit.test.mjs",
-  "Exa's agent unmetered": "test/unit.test.mjs",
-  "Exa's slice not taken from the model's": "test/nights.test.mjs",
-  "SEC not told who is asking": "test/unit.test.mjs",
-  "Semantic Scholar gives up at once": "test/unit.test.mjs",
-  "Sunday's clock as any other": "test/shares.test.mjs",
-  "Sunday's depth on the light model": "test/shares.test.mjs",
-  "Sunday's floor as any other": "test/shares.test.mjs",
-  "Sunday's week in review out with the night": "test/shares.test.mjs",
-  "Sundays rotate too": "test/shares.test.mjs",
-  "TeX left to markdown": "test/unit.test.mjs",
-  "a Waiting on a human per shift": "test/shares.test.mjs",
-  "a background passes": "test/unit.test.mjs",
-  "a day without a picture unreported": "test/shares.test.mjs",
-  "a failed agent run costs nothing": "test/unit.test.mjs",
-  "a held brief goes out early": "test/shares.test.mjs",
-  "a later shift's bad picture throws away a good one": "test/shares.test.mjs",
-  "a note's kind can change": "test/shares.test.mjs",
-  "a settled shift runs again": "test/unit.test.mjs",
-  "a shift with no cost report costs nothing": "test/nights.test.mjs",
-  "a shift's figures renamed onto the last's": "test/shares.test.mjs",
-  "a short day unreported": "test/shares.test.mjs",
-  "an entry for any paradigm": "test/shares.test.mjs",
-  "an opaque PNG passes": "test/unit.test.mjs",
-  "an overdue release waits for its trigger": "test/claims.test.mjs",
-  "answers anywhere": "test/unit.test.mjs",
-  "any section will do": "test/shares.test.mjs",
-  "any voice will do": "test/shares.test.mjs",
-  "claims any length": "test/shares.test.mjs",
-  "claims don't count toward the daily limit": "test/shares.test.mjs",
-  "claims editable": "test/shares.test.mjs",
-  "claims in a voice": "test/unit.test.mjs",
-  "claims quote": "test/shares.test.mjs",
-  "directives in code are quotes": "test/shares.test.mjs",
-  "entries shelved as the lab's": "test/shares.test.mjs",
-  "every link new every night": "test/shares.test.mjs",
-  "experiments see the lab's secrets": "test/unit.test.mjs",
-  "images inside paragraphs": "test/shares.test.mjs",
-  "images off the palette": "test/shares.test.mjs",
-  "images published though the house rules fail": "test/shares.test.mjs",
-  "images with scripts": "test/shares.test.mjs",
-  "images without captions": "test/shares.test.mjs",
-  "lab ids in the hopper": "test/shares.test.mjs",
-  "lab ids published": "test/unit.test.mjs",
-  "last night's summary stays put": "test/nights.test.mjs",
-  "machinery not restored": "test/shares.test.mjs",
-  "no New in Reading": "test/shares.test.mjs",
-  "no account of the day to lead": "test/shares.test.mjs",
-  "no brief": "test/nights.test.mjs",
-  "no daily limit on notes": "test/shares.test.mjs",
-  "no regional lens": "test/shares.test.mjs",
-  "no tracker list for the site": "test/shares.test.mjs",
-  "notes may open with a label": "test/unit.test.mjs",
-  "paradigm entries any length": "test/shares.test.mjs",
-  "paradigm entries are threads": "test/shares.test.mjs",
-  "patents anywhere": "test/unit.test.mjs",
-  "replication ignores a changed result": "test/unit.test.mjs",
-  "run.env may set anything": "test/unit.test.mjs",
-  "searches unlogged": "test/unit.test.mjs",
-  "selections unchecked": "test/shares.test.mjs",
-  "shares edited": "test/shares.test.mjs",
-  "shares handled without the hopper": "test/shares.test.mjs",
-  "shares ignored": "test/shares.test.mjs",
-  "skipped kinds unsaid": "test/shares.test.mjs",
-  "stale write-ups unseen": "test/shares.test.mjs",
-  "the brief forgets the first shift": "test/shares.test.mjs",
-  "the brief keeps the shift's headings": "test/shares.test.mjs",
-  "the brief opens with a label": "test/shares.test.mjs",
-  "the brief out with the night's notes": "test/shares.test.mjs",
-  "the brief shows the day's first links, not its picks": "test/shares.test.mjs",
-  "the brief without its picture": "test/shares.test.mjs",
-  "the brief's name up for grabs": "test/shares.test.mjs",
-  "the byline leads": "test/unit.test.mjs",
-  "the country filter ignored": "test/unit.test.mjs",
-  "the day's limit forgets the first shift": "test/shares.test.mjs",
-  "the first look replays history": "test/unit.test.mjs",
-  "the first shift judges the day": "test/shares.test.mjs",
-  "the first shift takes the whole day": "test/nights.test.mjs",
-  "the lab's own notes count as takes": "test/unit.test.mjs",
-  "the late scheduler run stands down": "test/unit.test.mjs",
-  "the machinery counts as change": "test/unit.test.mjs",
-  "the rotation ignores the cycle": "test/unit.test.mjs",
-  "the rotation never moves on": "test/shares.test.mjs",
-  "the second shift needn't wait": "test/unit.test.mjs",
-  "the second shift pays for the first's searches": "test/shares.test.mjs",
-  "the second shift rotates too": "test/shares.test.mjs",
-  "the time limit unreported": "test/nights.test.mjs",
-  "the tracker reads published/'s folders as notes": "test/paradigms.test.mjs",
-  "the week in review reads published/'s folders as notes": "test/shares.test.mjs",
-  "threads before the claims they quote": "test/shares.test.mjs",
-  "timebox never stops": "test/shares.test.mjs",
-  "unhandled takes marked seen": "test/nights.test.mjs",
-  "updates without a change note": "test/shares.test.mjs",
-  "urls checked for ids": "test/unit.test.mjs",
-  "write-ups quotable": "test/shares.test.mjs",
-  "writes over the PI's notes": "test/shares.test.mjs"
+  "a background passes": {
+    "file": "test/unit.test.mjs",
+    "test": "figure: the house rules",
+    "site": "f1edffff344f"
+  },
+  "a day without a picture unreported": {
+    "file": "test/days.test.mjs",
+    "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
+    "site": "b2f703b10473"
+  },
+  "a failed agent run costs nothing": {
+    "file": "test/unit.test.mjs",
+    "test": "exa agent: runs, polls to the end, returns the structured answer with its sources and cost; refuses what tonight can't pay for",
+    "site": "6b1de1d7d20b"
+  },
+  "a held brief goes out early": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "b731f49ff477"
+  },
+  "a later shift's bad picture throws away a good one": {
+    "file": "test/days.test.mjs",
+    "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
+    "site": "f4b15a35d24a"
+  },
+  "a note's kind can change": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "9bb01ce23dc6"
+  },
+  "a settled shift runs again": {
+    "file": "test/unit.test.mjs",
+    "test": "a failed settle still counts its shift as worked, says so in MORNING.md, and the run goes on to commit then turns red",
+    "site": "a30f4be14121"
+  },
+  "a shift with no cost report costs nothing": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "97c1b8fbb664"
+  },
+  "a shift's figures renamed onto the last's": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "074199ee1e23"
+  },
+  "a short day unreported": {
+    "file": "test/shares.test.mjs",
+    "test": "a short day is reported by its last shift, counting both",
+    "site": "1396bfc7e460"
+  },
+  "a Waiting on a human per shift": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "d60c0ab96743"
+  },
+  "an entry for any paradigm": {
+    "file": "test/paradigms.test.mjs",
+    "test": "(the file failed)",
+    "site": "6837a1665e98"
+  },
+  "an opaque PNG passes": {
+    "file": "test/unit.test.mjs",
+    "test": "figure: the house rules",
+    "site": "36c759f7820f"
+  },
+  "an overdue release waits for its trigger": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "261a7aec47a5"
+  },
+  "answers anywhere": {
+    "file": "test/unit.test.mjs",
+    "test": "render: an answer to a take on kinocomputing ends with the source line kinocomputing reads as a stub",
+    "site": "33c01878540c"
+  },
+  "any section will do": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "609621be70d8"
+  },
+  "any voice will do": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "4a4a15ee8fbe"
+  },
+  "claims any length": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "7ed2c7b0a97f"
+  },
+  "claims don't count toward the daily limit": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "a5d66a1fde75"
+  },
+  "claims editable": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "aff66656f96b"
+  },
+  "claims in a voice": {
+    "file": "test/unit.test.mjs",
+    "test": "render: a voice signs a write-up under its title; claims and the brief stay in the house voice",
+    "site": "e8e8bd907094"
+  },
+  "claims quote": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "47d1f90f938f"
+  },
+  "directives in code are quotes": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "6577aab6df37"
+  },
+  "entries shelved as the lab's": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "c7b5d2ba482f"
+  },
+  "every link new every night": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "5ba958931612"
+  },
+  "Exa spend left out of the bank": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "2e4c3ba9b62f"
+  },
+  "Exa unmetered": {
+    "file": "test/unit.test.mjs",
+    "test": "search: Exa is metered against tonight's slice of the budget, and off without a key",
+    "site": "331c61cdda6e"
+  },
+  "Exa's agent unmetered": {
+    "file": "test/unit.test.mjs",
+    "test": "exa agent: runs, polls to the end, returns the structured answer with its sources and cost; refuses what tonight can't pay for",
+    "site": "116e4e4185ad"
+  },
+  "Exa's slice not taken from the model's": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "cb411e1da6ad"
+  },
+  "experiments see the lab's secrets": {
+    "file": "test/unit.test.mjs",
+    "test": "replicate: a new result runs again on the next seed, once, with no secrets in its environment",
+    "site": "321c7032b377"
+  },
+  "images inside paragraphs": {
+    "file": "test/claims.test.mjs",
+    "test": "images: drawn in the house style, checked, named by their contents, published beside their note; the house rules refuse what breaks them",
+    "site": "1c40fb2429e5"
+  },
+  "images off the palette": {
+    "file": "test/days.test.mjs",
+    "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
+    "site": "b34104bb2088"
+  },
+  "images published though the house rules fail": {
+    "file": "test/claims.test.mjs",
+    "test": "images: drawn in the house style, checked, named by their contents, published beside their note; the house rules refuse what breaks them",
+    "site": "220a5245d250"
+  },
+  "images with scripts": {
+    "file": "test/claims.test.mjs",
+    "test": "(the file failed)",
+    "site": "c384cb6f5f34"
+  },
+  "images without captions": {
+    "file": "test/claims.test.mjs",
+    "test": "images: drawn in the house style, checked, named by their contents, published beside their note; the house rules refuse what breaks them",
+    "site": "5e8b554b0ba0"
+  },
+  "lab ids in the hopper": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "466c3a72dcae"
+  },
+  "lab ids published": {
+    "file": "test/unit.test.mjs",
+    "test": "render: refuses what the blyg can't carry, before it reaches the site",
+    "site": "5f58a48b6db5"
+  },
+  "last night's summary stays put": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "7315af7efccf"
+  },
+  "machinery not restored": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "c3c8832d8221"
+  },
+  "no account of the day to lead": {
+    "file": "test/shares.test.mjs",
+    "test": "a short day is reported by its last shift, counting both",
+    "site": "f1815713ce7c"
+  },
+  "no brief": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "541a2a94a9c2"
+  },
+  "no daily limit on notes": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "b2d853ee1ef6"
+  },
+  "no New in Reading": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "899c9756c66e"
+  },
+  "no regional lens": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "2d35e34a8852"
+  },
+  "no tracker list for the site": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "edcb8112cf2f"
+  },
+  "notes may open with a label": {
+    "file": "test/unit.test.mjs",
+    "test": "render: a note opens with a lead, not a label, a list or nothing",
+    "site": "18ea48e4cd74"
+  },
+  "paradigm entries any length": {
+    "file": "test/paradigms.test.mjs",
+    "test": "(the file failed)",
+    "site": "36a3d00391af"
+  },
+  "paradigm entries are threads": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "23533dc4e9e3"
+  },
+  "patents anywhere": {
+    "file": "test/unit.test.mjs",
+    "test": "search: the regional lens filters OpenAlex by country; patents go through Exa's Google Patents",
+    "site": "9a2e7d5d6351"
+  },
+  "replication ignores a changed result": {
+    "file": "test/unit.test.mjs",
+    "test": "replicate: a new result runs again on the next seed, once, with no secrets in its environment",
+    "site": "2444ea162011"
+  },
+  "run.env may set anything": {
+    "file": "test/unit.test.mjs",
+    "test": "replicate: a new result runs again on the next seed, once, with no secrets in its environment",
+    "site": "c605d97ccc44"
+  },
+  "searches unlogged": {
+    "file": "test/unit.test.mjs",
+    "test": "search: every search is logged, free or paid, with the shift that ran it",
+    "site": "5cbb0f64350f"
+  },
+  "SEC not told who is asking": {
+    "file": "test/unit.test.mjs",
+    "test": "sources: Semantic Scholar waits and retries when its free pool is busy; NIH is asked by POST; SEC is told who is asking",
+    "site": "8d1251ec6a59"
+  },
+  "selections unchecked": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "f0f1aa1a8966"
+  },
+  "Semantic Scholar gives up at once": {
+    "file": "test/unit.test.mjs",
+    "test": "sources: Semantic Scholar waits and retries when its free pool is busy; NIH is asked by POST; SEC is told who is asking",
+    "site": "53413c75c8e7"
+  },
+  "shares edited": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "abe750101118"
+  },
+  "shares handled without the hopper": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "c88c07c54ad5"
+  },
+  "shares ignored": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "9fddf4ee2198"
+  },
+  "skipped kinds unsaid": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "622cb8c9c153"
+  },
+  "stale write-ups unseen": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "b37a8c341452"
+  },
+  "Sunday's clock as any other": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "f5428ab32732"
+  },
+  "Sunday's depth on the light model": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "3de5a5d92bcc"
+  },
+  "Sunday's floor as any other": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "60255297c028"
+  },
+  "Sunday's week in review out with the night": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "db0af78d2457"
+  },
+  "Sundays rotate too": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "9e9b5d1970d9"
+  },
+  "TeX left to markdown": {
+    "file": "test/unit.test.mjs",
+    "test": "(the file failed)",
+    "site": "06ef224b7c6c"
+  },
+  "the brief forgets the first shift": {
+    "file": "test/shares.test.mjs",
+    "test": "a short day is reported by its last shift, counting both",
+    "site": "32f228aee853"
+  },
+  "the brief keeps the shift's headings": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "9a6d073a1704"
+  },
+  "the brief opens with a label": {
+    "file": "test/shares.test.mjs",
+    "test": "a short day is reported by its last shift, counting both",
+    "site": "39014a2e6b50"
+  },
+  "the brief out with the night's notes": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "dd1b60819372"
+  },
+  "the brief shows the day's first links, not its picks": {
+    "file": "test/shares.test.mjs",
+    "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
+    "site": "789d3de888d4"
+  },
+  "the brief without its picture": {
+    "file": "test/days.test.mjs",
+    "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
+    "site": "1cfa335202b5"
+  },
+  "the brief's name up for grabs": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "ba6ea5c1ff5a"
+  },
+  "the byline leads": {
+    "file": "test/unit.test.mjs",
+    "test": "render: a voice signs a write-up under its title; claims and the brief stay in the house voice",
+    "site": "7b24dec71987"
+  },
+  "the country filter ignored": {
+    "file": "test/unit.test.mjs",
+    "test": "search: the regional lens filters OpenAlex by country; patents go through Exa's Google Patents",
+    "site": "3942eb348184"
+  },
+  "the day's limit forgets the first shift": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "994171e185d7"
+  },
+  "the first look replays history": {
+    "file": "test/unit.test.mjs",
+    "test": "steers: the PI's takes on kinocomputing are steers; the lab's own notes and the first look aren't",
+    "site": "23641bec2053"
+  },
+  "the first shift judges the day": {
+    "file": "test/shares.test.mjs",
+    "test": "a short day is reported by its last shift, counting both",
+    "site": "e2e0d0658bdc"
+  },
+  "the first shift takes the whole day": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "d3909f724c30"
+  },
+  "the lab's own notes count as takes": {
+    "file": "test/unit.test.mjs",
+    "test": "steers: the PI's takes on kinocomputing are steers; the lab's own notes and the first look aren't",
+    "site": "c565692ad279"
+  },
+  "the late scheduler run stands down": {
+    "file": "test/unit.test.mjs",
+    "test": "check-shift: which shift a run is, and whether it should work it",
+    "site": "a7a7479d6274"
+  },
+  "the machinery counts as change": {
+    "file": "test/unit.test.mjs",
+    "test": "the week's changes: people's commits to the lab and the site, not the machinery running",
+    "site": "b28e7da6a56a"
+  },
+  "the rotation ignores the cycle": {
+    "file": "test/unit.test.mjs",
+    "test": "rotation: enough paradigms a night to go round in the cycle, longest-unlooked first, never-looked first of all",
+    "site": "6b27ffcadbf1"
+  },
+  "the rotation never moves on": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "c82425eb0f37"
+  },
+  "the second shift needn't wait": {
+    "file": "test/unit.test.mjs",
+    "test": "check-shift: which shift a run is, and whether it should work it",
+    "site": "379de6b5e6ad"
+  },
+  "the second shift pays for the first's searches": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "4d90161f9dca"
+  },
+  "the second shift rotates too": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "ecee681eade2"
+  },
+  "the time limit unreported": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "5ec03c468b48"
+  },
+  "the tracker reads published/'s folders as notes": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "3eefb2359019"
+  },
+  "the week in review reads published/'s folders as notes": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "f55fad9b0753"
+  },
+  "threads before the claims they quote": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "6dc8dbd787e1"
+  },
+  "timebox never stops": {
+    "file": "test/unit.test.mjs",
+    "test": "timebox: stops a command past its limit with 124, passes an exit code through",
+    "site": "87ba0d2b131c"
+  },
+  "unhandled takes marked seen": {
+    "file": "test/nights.test.mjs",
+    "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
+    "site": "2b79ccbc61ad"
+  },
+  "updates without a change note": {
+    "file": "test/paradigms.test.mjs",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
+    "site": "d80723ad9b09"
+  },
+  "urls checked for ids": {
+    "file": "test/unit.test.mjs",
+    "test": "render: refuses what the blyg can't carry, before it reaches the site",
+    "site": "debc85f96d7c"
+  },
+  "write-ups quotable": {
+    "file": "test/claims.test.mjs",
+    "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
+    "site": "c8a41ba9d549"
+  },
+  "writes over the PI's notes": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "693696b33342"
+  }
 }
