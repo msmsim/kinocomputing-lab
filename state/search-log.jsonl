@@ -19,13 +19,13 @@
 {"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:47Z","source":"openalex","query":"\"Modular Composite Representations\" hyperdimensional"}
 {"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:49Z","source":"openalex","query":"\"Modular Composite Representations\" hyperdimensional"}
 {"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:57Z","source":"openalex","query":"\"Synthetic Biological Intelligence: A Survey of System-Level Abstractions\""}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:21Z","source":"openalex","query":"\"organoid intelligence\""}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:22Z","source":"openalex","query":"\"basal cognition\""}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:23Z","source":"openalex","query":"\"organoid\" computing","country":"gb,de,fr,nl,ch,se"}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:23Z","source":"openalex","query":"\"basal cognition\"","country":"gb,de,fr,nl,ch,se,fi"}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:24Z","source":"ukri","query":"organoid intelligence"}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:25Z","source":"github","query":"organoid reservoir computing"}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:08:27Z","source":"exa-agent","query":"Organoid intelligence (brain organoids on electrode arrays used for computation): since 2026-01-01 what has been measured, who is doing it (include non-US), what an outsider can use, what a one-person lab could test, and the founding claims the field leans on."}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:09:01Z","source":"exa-agent","query":"Basal cognition / diverse intelligence (learning and problem-solving in non-neural organisms, cells, tissues; Levin, slime moulds, bioelectricity): since 2026-01-01 what has been measured, who is doing it (include non-US), what an outsider can use, what a one-person lab could test, and the founding claims the field leans on."}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:11:00Z","source":"github","query":"hyperdimensional"}
-{"date":"2026-11-28","shift":1,"at":"2026-11-28T05:11:24Z","source":"openalex","query":"\"Rules for biologically inspired adaptive network design\""}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:21Z","source":"openalex","query":"\"organoid intelligence\""}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:22Z","source":"openalex","query":"\"basal cognition\""}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:23Z","source":"openalex","query":"\"organoid\" computing","country":"gb,de,fr,nl,ch,se"}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:23Z","source":"openalex","query":"\"basal cognition\"","country":"gb,de,fr,nl,ch,se,fi"}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:24Z","source":"ukri","query":"organoid intelligence"}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:25Z","source":"github","query":"organoid reservoir computing"}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:08:27Z","source":"exa-agent","query":"Organoid intelligence (brain organoids on electrode arrays used for computation): since 2026-01-01 what has been measured, who is doing it (include non-US), what an outsider can use, what a one-person lab could test, and the founding claims the field leans on."}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:09:01Z","source":"exa-agent","query":"Basal cognition / diverse intelligence (learning and problem-solving in non-neural organisms, cells, tissues; Levin, slime moulds, bioelectricity): since 2026-01-01 what has been measured, who is doing it (include non-US), what an outsider can use, what a one-person lab could test, and the founding claims the field leans on."}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:11:00Z","source":"github","query":"hyperdimensional"}
+{"date":"2026-11-28","shift":2,"at":"2026-11-28T05:11:24Z","source":"openalex","query":"\"Rules for biologically inspired adaptive network design\""}

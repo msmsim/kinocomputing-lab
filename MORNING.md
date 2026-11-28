@@ -5,3 +5,9 @@ A small University of Bristol study had human brain organoids read Braille and r
 - Not yet done: checking the slime-mould "Tokyo rail network" story against the original paper's full text.
 
 Waiting on a human: nothing.
+
+## From settle
+
+- Searches: openalex 3, openalex (regional) 2, github 2, exa-agent 2, ukri 1.
+- Paradigms were looked at without literature beyond OpenAlex and arXiv, a citation trail (AGENT.md, "Where to look").
+- Settle crashed on both of the night's shifts after publishing their notes; this brief and report come from a replay of the two settles on the 28th.

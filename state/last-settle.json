@@ -1,18 +1,23 @@
 {
-  "date": "2026-11-27",
-  "shift": 1,
+  "date": "2026-11-28",
+  "shift": 2,
   "shifts": [
-    1
+    1,
+    2
   ],
   "summary": [
-    "$0.72",
-    "$0.07 Exa",
-    "published lab-2026-11-27-paradigm-dna-molecular",
-    "published lab-2026-11-27-paradigm-physical-neural-networks",
-    "published lab-2026-11-27-paradigm-physical-reservoir",
-    "published lab-2026-11-27-analog-digital-arbitrage-sketch",
-    "published lab-2026-11-27-kinetic-history-of-computing",
-    "published the brief"
+    "$0.67",
+    "$0.05 Exa",
+    "1 claim(s)",
+    "published lab-2026-11-28-organoid-braille-stimulus-claim",
+    "published lab-2026-11-28-paradigm-basal-cognition",
+    "published lab-2026-11-28-paradigm-hyperdimensional",
+    "published lab-2026-11-28-paradigm-organoids",
+    "published lab-2026-11-28-organoid-braille-stimulus-baseline",
+    "updated the brief"
   ],
-  "report": []
+  "report": [
+    "- Searches: none logged.",
+    "- Paradigms were looked at without literature beyond OpenAlex and arXiv, a citation trail, the regional lens, money, what an outsider can use (AGENT.md, \"Where to look\")."
+  ]
 }
