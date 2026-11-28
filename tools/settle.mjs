@@ -372,7 +372,7 @@ if (looked.size) {
 // in its group, when it was last looked at, and its entry if it has one.
 if ((tracker.paradigms ?? []).length) {
   const entryOf = new Map();
-  for (const file of existsSync(join(LAB, "published")) ? readdirSync(join(LAB, "published")) : []) {
+  for (const file of existsSync(join(LAB, "published")) ? readdirSync(join(LAB, "published")).filter((f) => f.endsWith(".md")) : []) {
     const { data } = frontMatter(readFileSync(join(LAB, "published", file), "utf8"));
     if (data.kind === "paradigm" && data.paradigm) entryOf.set(data.paradigm, file.replace(/\.md$/, ""));
   }

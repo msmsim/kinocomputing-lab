@@ -644,6 +644,10 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
   const write = (p, s) => writeFileSync(join(w.lab, p), s);
   try {
     w.publish("2026-11-20T00:00:00Z");
+    // An earlier day's brief left its picture in a folder beside the notes;
+    // the tracker reads published/ and must step past it.
+    mkdirSync(join(w.lab, "published/lab-2026-11-20-brief"), { recursive: true });
+    write("published/lab-2026-11-20-brief/plate-earlier.svg", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n");
     const ids = ["photonic", "thermodynamic", "reversible", "quantum", "dna-molecular"];
     write("state/paradigms.json", JSON.stringify({ paradigms: ids.map((id, i) => ({ id, name: `Paradigm ${id}`, group: "Let physics compute", last_checked: i === 3 ? "2026-11-01" : i === 4 ? null : "2026-11-15" })) }));
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");
