@@ -89,7 +89,7 @@
       "id": "neuromorphic",
       "name": "Neuromorphic / spiking computing",
       "group": "Brain-inspired silicon",
-      "last_checked": null
+      "last_checked": "2026-11-28"
     },
     {
       "id": "hyperdimensional",
@@ -101,7 +101,7 @@
       "id": "wetware",
       "name": "Synthetic biological intelligence (wetware)",
       "group": "Living substrates",
-      "last_checked": null
+      "last_checked": "2026-11-28"
     },
     {
       "id": "organoids",

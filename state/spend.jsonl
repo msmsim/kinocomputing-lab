@@ -31,3 +31,5 @@
 {"date":"2026-11-27","usd":0.075,"source":"exa"}
 {"date":"2026-11-27","usd":0.4904883500000001,"source":"model","model":"claude-sonnet-5-5","kind":"light","turns":24,"error":false}
 {"date":"2026-11-27","usd":0.075,"source":"exa"}
+{"date":"2026-11-28","usd":0.6465711,"source":"model","model":"claude-sonnet-5-5","kind":"light","turns":29,"error":false}
+{"date":"2026-11-28","usd":0.075,"source":"exa"}

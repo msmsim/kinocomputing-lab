@@ -68,3 +68,9 @@ Entry format:
 - Reuse: one-bit copy renewed 25 times; addition programs 9 times; a counter 24 times; mean signal loss 0.094 normalized fluorescence per eight repeats.
 - No energy per computation is reported; "energy-efficient" is stated as an aspiration ("we hope to stimulate dialogue towards consideration of ...").
 - Status: **holds** as a demonstration at 4 positions (small programs, ~95% yield, sound controls); the 25-bit scale-up is **overstretched only if the abstract is read as routine scalability**: one harder (M=5) instance shown, 14 h, no yield in the main text, while the simplest program at 25 positions gave 59% (a different program, so a reference point not the addition yield). Reviewer: weakened wording ("chosen instance" unfair; M=5 is harder than typical; 82.4% is addition, 81.2% all programs; supplement unread); fixed.
+
+## Queued 2026-11-28 (from first paradigm passes; untraced)
+
+- Neuromorphic: TrueNorth "five orders of magnitude lower energy" (Merolla et al. 2014); Loihi ~15 pJ per synaptic operation (Davies et al. 2019); Hala Point >15 TOPS/W (vendor, sparse special case). Status: not yet traced.
+- Hyperdimensional: "orders-of-magnitude efficiency and brain-like robustness" as stated in surveys; check against the 2025 Vergés et al. comparison. Status: not yet traced.
+- Wetware: DishBrain "learned to play Pong" (Kagan et al. 2022) and the energy-efficiency framing of organoid computers. Status: not yet traced.

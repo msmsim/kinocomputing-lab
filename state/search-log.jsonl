@@ -6,3 +6,16 @@
 {"date":"2026-11-27","shift":2,"at":"2026-11-27T08:33:32Z","source":"openalex","query":"Real-time computation at the edge of chaos in recurrent neural networks"}
 {"date":"2026-11-27","shift":2,"at":"2026-11-27T08:33:32Z","source":"openalex","query":"Dynamics, computation, and the edge of chaos: a re-examination Crutchfield Young"}
 {"date":"2026-11-27","shift":2,"at":"2026-11-27T08:34:37Z","source":"arxiv","query":"MEMS double-drum reservoir computing NARMA-10"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:12Z","source":"openalex","query":"\"neuromorphic\" Loihi OR SpiNNaker OR \"spiking\" benchmark"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:13Z","source":"openalex","query":"\"neuromorphic computing\"","country":"gb,ie,de,fr,nl,be,ch,at,it,es,dk,se,no,fi"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:14Z","source":"exa-agent","query":"Neuromorphic / spiking computing: what has been measured since 2025-01-01 (energy, benchmarks, Loihi, SpiNNaker, Hala Point, Innatera, SynSense), who is doing it, what an outsider can use, what a one-person lab could test, and founding claims it leans on"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:54Z","source":"exa-agent","query":"Synthetic biological intelligence / wetware / organoid intelligence: what has been measured since 2025-01-01 (Cortical Labs CL1, FinalSpark, DishBrain, organoid reservoir), who is doing it (include UK/Europe), what an outsider can use, what a one-person lab could test, founding claims"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:54Z","source":"openalex","query":"\"hyperdimensional computing\""}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:54Z","source":"exa-agent","query":"Hyperdimensional computing / vector-symbolic architectures: what has been measured since 2025-01-01 (hardware, energy, accuracy vs neural nets), who is doing it (include Europe), what an outsider can use, what a one-person lab could test, founding claims"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:24:54Z","source":"europepmc","query":"\"organoid intelligence\" OR \"biological neural network\" computing"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:32Z","source":"openalex","query":"\"organoid\" reservoir computing","country":"gb,de,ch,nl,fr"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:33Z","source":"openalex","query":"\"hyperdimensional computing\" hardware energy","country":"gb,de,ch,it,se,nl,at"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:34Z","source":"ukri","query":"neuromorphic"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:47Z","source":"openalex","query":"\"Modular Composite Representations\" hyperdimensional"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:49Z","source":"openalex","query":"\"Modular Composite Representations\" hyperdimensional"}
+{"date":"2026-11-28","shift":1,"at":"2026-11-28T02:25:57Z","source":"openalex","query":"\"Synthetic Biological Intelligence: A Survey of System-Level Abstractions\""}
