@@ -132,6 +132,10 @@ const MUTANTS = [
   ["a lost claim passes settle's checks", "tools/settle.mjs", "if (committed.some((line, i) => claimsNow[i] !== line)) broken.push(", "if (false) broken.push("],
   ["what a shift asked goes unrecorded", "tools/settle.mjs", "asks: asksIn(shiftSaid),", "asks: [],"],
   ["the week counts the PI's attention from before it", "tools/week.mjs", 'readJsonl(join(lab, "state/attention.jsonl")).filter((a) => inWeek(a.date));', 'readJsonl(join(lab, "state/attention.jsonl"));'],
+  ["the fast lane lets the mutant runner change", "tools/fast-lane.mjs", "/^test\\/[a-z0-9-]+\\.test\\.mjs$/,", '"test/",'],
+  ["the fast lane lets tests be taken out", "tools/fast-lane.mjs", "if (testLinesRemoved) return", "if (false) return"],
+  ["the fast lane takes code with no test", "tools/fast-lane.mjs", "if (code && !tested) return", "if (false) return"],
+  ["the fast lane has no size limit", "tools/fast-lane.mjs", "if (size > MOST_LINES) return", "if (false) return"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
 ];
 

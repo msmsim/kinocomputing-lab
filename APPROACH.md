@@ -152,7 +152,9 @@ building. `reference/world-machines.md` is the working vocabulary.
   and converter, under its own `lab-` names only, a few a night.
 - The researcher works in the lab's checkout, so after every shift the
   machinery (tools, config, charter, agent, templates) is put back as
-  committed before anything trusts it, and you're told what it changed.
+  committed before anything trusts it. What it changed becomes a pull
+  request: small changes away from the lab's judges, tested, merge
+  themselves; the rest wait for you (`README.md`, "Proposals").
 - Experiments re-run with no secrets in their environment.
 - Locally, shell commands run in Claude Code's sandbox: writes only in the
   repo, network only to listed hosts, credentials and personal folders

@@ -754,6 +754,29 @@ didn't fit, a blocked host, a tool that failed — go in the journal, not on
 the blyg. When a later shift turns a setback into a result, it updates the
 note rather than adding one.
 
+## Changing the lab's machinery
+
+If the lab's tools get in your way (a search that gives up too soon, a
+source that's missing, a template that's wrong), you may change them. What
+you change is put back before settle runs, so tonight is judged by the
+committed tools, and it becomes a pull request the next morning
+(`README.md`, "Proposals"). To make one worth merging:
+
+- Write `PROPOSAL.md` at the top of the repository: a title line saying what
+  the change does, then why (what went wrong tonight), then how you checked
+  it. It becomes the pull request's description.
+- Add a test for the change (`test/*.test.mjs`) and run `npm test`; take no
+  test out. A change with no test isn't merged without the PI.
+- Keep it small, and to one thing.
+
+A small change to the search tools, the voices, the reference or the
+templates, with a test added, merges itself once the tests and the mutants
+pass. Anything that touches how the lab judges and publishes its work
+(settle, render, prepare, the budget, the charter, these instructions, the
+tests' own machinery) waits for the PI, however small: you have autonomy over
+the work, and none over the rules that judge it. Don't spend a shift on the
+machinery; the research comes first.
+
 ## When something needs the PI
 
 Only credentials, a new repository, money, or a judgement that's genuinely

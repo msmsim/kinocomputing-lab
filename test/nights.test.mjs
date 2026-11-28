@@ -115,7 +115,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(morning, /Not published: lab-2026-11-21-bad uses a table/);
     assert.match(morning, /Not published: 001-old-note — not a lab note name/);
     assert.match(morning, /Replication of e001-draw on seed 2: agrees/);
-    assert.match(morning, /changed the lab's machinery, which was put back: CHARTER\.md, tools\/helper\.mjs, tools\/settle\.mjs/);
+    assert.match(morning, /changed the lab's machinery, which was put back for tonight and proposed as a pull request \(README, "Proposals"\): CHARTER\.md, tools\/helper\.mjs, tools\/settle\.mjs/);
     assert.deepEqual(JSON.parse(read("state/seen.json")).takes !== undefined, true, "the baseline is recorded");
     const spends = read("state/spend.jsonl").trim().split("\n").map((l) => JSON.parse(l));
     assert.deepEqual(spends.map((s) => [s.source, s.usd]), [["model", 0.42], ["exa", 0.014]]);
@@ -163,6 +163,44 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-23T02:00:00Z");
     const run3 = JSON.parse(read("state/run.json"));
     assert.deepEqual(run3.steers.map((s) => s.id), [`take:${registry()["003-rust-bats"].id}:v1`]);
+  } finally {
+    w.dispose();
+  }
+});
+
+test("proposals: the shift's machinery changes are kept, put back, and made a branch; the fast lane judges them", () => {
+  const w = makeWorld();
+  const sh = (cmd, env = {}) => execFileSync("bash", ["-c", cmd], { cwd: w.lab, encoding: "utf8", env: { ...process.env, ...env } });
+  try {
+    mkdirSync(join(w.lab, "test"), { recursive: true });
+    writeFileSync(join(w.lab, "test/unit.test.mjs"), "// the lab's tests\n");
+    w.commit();
+    const base = sh("git rev-parse HEAD").trim();
+    const search = readFileSync(join(w.lab, "tools/search.mjs"), "utf8");
+    // The shift improves a search tool, adds a test, and says why.
+    writeFileSync(join(w.lab, "tools/search.mjs"), `${search}// a better retry\n`);
+    writeFileSync(join(w.lab, "test/unit.test.mjs"), "// the lab's tests\n// a test of the retry\n");
+    writeFileSync(join(w.lab, "PROPOSAL.md"), "# Retry Semantic Scholar once more\n\nIt gave up too soon twice tonight.\n");
+    assert.match(sh("bash tools/restore-machinery.sh"), /put back 2 machinery file/);
+    assert.equal(readFileSync(join(w.lab, "tools/search.mjs"), "utf8"), search, "put back before anything trusts it");
+    assert.ok(!existsSync(join(w.lab, "PROPOSAL.md")), "the proposal isn't committed as the lab's state");
+    const patch = readFileSync(join(w.lab, ".proposal/machinery.patch"), "utf8");
+    assert.match(patch, /\+\/\/ a better retry/);
+    assert.match(patch, /\+\/\/ a test of the retry/);
+    const made = sh("bash tools/propose.sh", { PROPOSE_DRY_RUN: "1", BASE: base, DATE: "2026-11-21", SHIFT: "1" });
+    assert.match(made, /propose: proposal\/2026-11-21-shift1: Retry Semantic Scholar once more/);
+    assert.match(sh("git log -1 --format=%B proposal/2026-11-21-shift1"), /^Retry Semantic Scholar once more\n\nIt gave up too soon twice tonight\.\n\n\*\*Changes:\*\*\n- `test\/unit\.test\.mjs`\n- `tools\/search\.mjs`/);
+    assert.match(sh(`node tools/fast-lane.mjs ${base} proposal/2026-11-21-shift1`), /^fast=true\nwhy=2 lines in /, "small, a test added, away from the judges");
+
+    // A change to how the lab judges its own work waits for the PI.
+    writeFileSync(join(w.lab, "tools/settle.mjs"), `${readFileSync(join(w.lab, "tools/settle.mjs"), "utf8")}// looser\n`);
+    sh("bash tools/restore-machinery.sh");
+    sh("bash tools/propose.sh", { PROPOSE_DRY_RUN: "1", BASE: base, DATE: "2026-11-21", SHIFT: "2" });
+    assert.match(sh(`node tools/fast-lane.mjs ${base} proposal/2026-11-21-shift2`), /^fast=false\nwhy=it changes tools\/settle\.mjs, which the fast lane doesn't cover/);
+    assert.match(sh("bash tools/propose.sh", { PROPOSE_DRY_RUN: "1", BASE: base, DATE: "x", SHIFT: "3" }), /propose: proposal\/x-shift3: The night shift's changes to the machinery/, "no PROPOSAL.md, a plain title");
+    rmSync(join(w.lab, ".proposal"), { recursive: true });
+    sh("bash tools/restore-machinery.sh");
+    assert.match(sh("bash tools/propose.sh", { BASE: base, DATE: "x", SHIFT: "4" }), /propose: nothing to propose/);
   } finally {
     w.dispose();
   }

@@ -9,3 +9,4 @@ experiments/*/data/
 state/settle.log
 **/.cc-writes/
 *.zip
+.proposal/

@@ -399,6 +399,26 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "994171e185d7"
   },
+  "the fast lane has no size limit": {
+    "file": "test/unit.test.mjs",
+    "test": "fast lane: small, away from the lab's judges, a test added and none taken out",
+    "site": "be5f346836a0"
+  },
+  "the fast lane lets tests be taken out": {
+    "file": "test/unit.test.mjs",
+    "test": "fast lane: small, away from the lab's judges, a test added and none taken out",
+    "site": "d976f715e44b"
+  },
+  "the fast lane lets the mutant runner change": {
+    "file": "test/unit.test.mjs",
+    "test": "fast lane: small, away from the lab's judges, a test added and none taken out",
+    "site": "219b86f88195"
+  },
+  "the fast lane takes code with no test": {
+    "file": "test/unit.test.mjs",
+    "test": "fast lane: small, away from the lab's judges, a test added and none taken out",
+    "site": "054002f51633"
+  },
   "the first look replays history": {
     "file": "test/unit.test.mjs",
     "test": "steers: the PI's takes on kinocomputing are steers; the lab's own notes and the first look aren't",

@@ -7,6 +7,13 @@ name: Tests
 # not machinery, so they don't trigger it. The tests render through
 # kinocomputing's real templates and build, so the site is checked out beside
 # the lab, read-only.
+#
+# The night shift's proposals (README, "Proposals") come here too: it runs
+# this workflow, main's copy, with the proposal's branch and the commit it
+# started from. The tests and the mutants run on the proposal's code with
+# read-only rights; then the fast-lane job, main's, judges the change with
+# main's tools/fast-lane.mjs and merges it, or leaves it for the PI. A
+# proposal's own copy of this file never runs.
 on:
   push:
     branches: [main]
@@ -25,9 +32,18 @@ on:
   schedule:
     - cron: "17 12 * * 6"   # Saturdays: every mutant
   workflow_dispatch:
+    inputs:
+      proposal:
+        description: "A proposal branch to test and judge (proposal/…); empty for main"
+        type: string
+        default: ""
+      since:
+        description: "The commit the proposal started from"
+        type: string
+        default: ""
 
 concurrency:
-  group: tests-${{ github.ref }}
+  group: tests-${{ github.ref }}-${{ inputs.proposal || 'main' }}
   cancel-in-progress: true
 
 permissions:
@@ -36,13 +52,20 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    outputs:
+      tested: ${{ steps.tested.outputs.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          # A proposal's code, when there is one; main's otherwise.
+          ref: ${{ inputs.proposal || '' }}
           # The history, so the mutants can see what this push changed.
           fetch-depth: 0
+
+      - id: tested
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v4
         with:
@@ -78,11 +101,12 @@ jobs:
       - name: Mutants
         env:
           KINO_DIR: ${{ github.workspace }}/kinocomputing
-          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          BASE: ${{ inputs.since || (github.event_name == 'pull_request' && github.event.pull_request.base.sha) || github.event.before }}
           EVENT: ${{ github.event_name }}
+          PROPOSAL: ${{ inputs.proposal }}
         run: |
           set -o pipefail
-          if [ "$EVENT" = schedule ] || [ "$EVENT" = workflow_dispatch ]; then
+          if [ "$EVENT" = schedule ] || { [ "$EVENT" = workflow_dispatch ] && [ -z "$PROPOSAL" ]; }; then
             scope=()
           else
             if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE=HEAD~1; fi
@@ -90,3 +114,49 @@ jobs:
           fi
           node test/mutants.mjs "${scope[@]}" | tee mutants.log
           { echo '### Mutants'; echo '```'; grep -vE '^✓  killed' mutants.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+  # A proposal the tests and mutants passed: main's own judge decides whether
+  # it may merge itself (tools/fast-lane.mjs), and merges exactly the commit
+  # that was tested; anything else is labelled for the PI, with why.
+  fast-lane:
+    needs: test
+    if: ${{ inputs.proposal != '' && startsWith(inputs.proposal, 'proposal/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Judge
+        id: judge
+        env:
+          SINCE: ${{ inputs.since }}
+          TESTED: ${{ needs.test.outputs.tested }}
+        run: |
+          git fetch -q origin "$TESTED"
+          node tools/fast-lane.mjs "$SINCE" "$TESTED" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Merge, or leave for the PI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ inputs.proposal }}
+          TESTED: ${{ needs.test.outputs.tested }}
+          FAST: ${{ steps.judge.outputs.fast }}
+          WHY: ${{ steps.judge.outputs.why }}
+        run: |
+          if [ "$FAST" = true ]; then
+            gh pr merge "$BRANCH" --repo "$REPO" --squash --delete-branch --match-head-commit "$TESTED"
+            echo "Merged by the fast lane: $WHY" >> "$GITHUB_STEP_SUMMARY"
+          else
+            gh label create "for the PI" --repo "$REPO" --color d93f0b --description "A night-shift proposal the fast lane leaves for the PI" --force
+            gh pr edit "$BRANCH" --repo "$REPO" --add-label "for the PI"
+            gh pr comment "$BRANCH" --repo "$REPO" --body "Tests and mutants passed. Left for the PI: $WHY."
+            echo "Left for the PI: $WHY" >> "$GITHUB_STEP_SUMMARY"
+          fi

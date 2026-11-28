@@ -17,6 +17,7 @@ import { takeSteers } from "../tools/steers.mjs";
 import { renderNote } from "../tools/render.mjs";
 import { arxivQuery, exaAgent, exaBody, exaLeft, parseArxiv, parseExa, parseOpenAlex, search, unInvert } from "../tools/search.mjs";
 import { replicateAll } from "../tools/replicate.mjs";
+import { judge, MOST_LINES } from "../tools/fast-lane.mjs";
 import { BUDGET, KINO_ORIGIN, EXPERIMENT, ARGS, makeWorld } from "./helpers.mjs";
 
 test("night shift: what settle writes into kinocomputing is what the workflow publishes", () => {
@@ -493,4 +494,18 @@ test("timebox: stops a command past its limit with 124, passes an exit code thro
   assert.ok(Date.now() - started < 6000, "stopped at the limit, not left to finish");
   const quick = spawnSync(process.execPath, [join(LAB, "tools/timebox.mjs"), "5", "sh", "-c", "exit 3"], { encoding: "utf8" });
   assert.equal(quick.status, 3);
+});
+
+test("fast lane: small, away from the lab's judges, a test added and none taken out", () => {
+  const f = (path, added, removed = 0) => ({ path, added, removed });
+  assert.equal(judge([f("tools/search.mjs", 6, 2), f("test/unit.test.mjs", 12)], 0).fast, true);
+  assert.equal(judge([f("voices/bompa.md", 3, 1)], 0).fast, true, "no code, no test needed");
+  assert.match(judge([f("tools/settle.mjs", 1, 1), f("test/unit.test.mjs", 5)], 0).why, /tools\/settle\.mjs, which the fast lane doesn't cover/);
+  for (const judgeOfJudges of ["test/mutants.mjs", "test/helpers.mjs", "test/mutants.json", "tools/fast-lane.mjs", ".github/workflows/tests.yml", "config/lab.json", "AGENT.md", "package.json"]) {
+    assert.equal(judge([f(judgeOfJudges, 1)], 0).fast, false, judgeOfJudges);
+  }
+  assert.match(judge([f("tools/search.mjs", 2), f("test/unit.test.mjs", 3, 1)], 1).why, /takes 1 line\(s\) out of the tests/);
+  assert.match(judge([f("tools/search.mjs", 2)], 0).why, /changes code without adding a test/);
+  assert.match(judge([f("tools/search.mjs", MOST_LINES), f("test/unit.test.mjs", 5)], 0).why, /more than the fast lane's/);
+  assert.equal(judge([], 0).fast, false);
 });

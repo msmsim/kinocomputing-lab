@@ -44,6 +44,10 @@ concurrency:
 
 permissions:
   contents: write
+  # The shift's machinery changes become a pull request, and main's Tests
+  # workflow is started on it (tools/propose.sh).
+  pull-requests: write
+  actions: write
 
 jobs:
   # Each shift once a day. A scheduled run, or the nightly scheduler's
@@ -220,6 +224,21 @@ jobs:
             git pull --rebase "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" main
           done
           echo "could not publish after 3 attempts"; exit 1
+
+      # What the shift changed in the machinery was put back before settle;
+      # here it becomes a pull request, judged by main's Tests workflow, and
+      # merged by its fast lane if it's small and away from the lab's judges
+      # (README, "Proposals"). A failure here doesn't cost the night.
+      - name: Propose the machinery changes
+        if: ${{ !cancelled() && hashFiles('.proposal/machinery.patch') != '' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: ${{ github.sha }}
+          DATE: ${{ steps.prep.outputs.date }}
+          SHIFT: ${{ needs.check.outputs.shift }}
+        run: bash tools/propose.sh
 
       # A night that couldn't be committed (a step failed, the job timed out
       # or was cancelled, a push was refused) is kept as a download on the

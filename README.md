@@ -221,6 +221,30 @@ sandbox (`config/local-sandbox.json`), billed to your Claude login and kept
 out of the lab's bank. Point `KINO_DIR` at a scratch copy of kinocomputing,
 never one you push from. The pilot ran this way.
 
+## Proposals
+
+The shift may change the lab's machinery when it gets in the way (`AGENT.md`,
+"Changing the lab's machinery"). The change is put back before settle runs,
+so a night is always judged by committed tools, and kept in `.proposal/`
+with the shift's `PROPOSAL.md`. After the night is committed,
+`tools/propose.sh` makes it a branch (`proposal/<date>-shift<n>`) and a pull
+request, and starts the Tests workflow on it: main's copy of the workflow,
+never the proposal's, with the proposal's code checked out read-only. The
+tests run, then the mutants the change could reach. If both pass, main's
+`tools/fast-lane.mjs` judges the change:
+
+- **Merged by itself** if it's at most 80 lines, only in the search tools,
+  the voices, the reference, the templates or the test files, adds a test
+  if it changes code, and takes no test out.
+- **Left for you**, labelled "for the PI" with a comment saying why,
+  otherwise: anything touching settle, render, prepare, the budget, the
+  release, the charter, `AGENT.md`, the config, the workflows, the packages,
+  or the tests' own machinery (the mutants and the test lab).
+
+A failing proposal stays open with its failing checks. Once, in the
+repository's settings: Actions → General → "Allow GitHub Actions to create
+and approve pull requests", so the night shift can open them.
+
 ## Tests
 
 `npm test` runs the lab's tests, including whole nights end to end against

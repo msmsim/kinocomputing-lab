@@ -144,7 +144,7 @@ if (!existsSync(today) || readFileSync(today, "utf8").length === 0) report.push(
 const machinery = existsSync(join(LAB, "state/machinery-changes.txt"))
   ? readFileSync(join(LAB, "state/machinery-changes.txt"), "utf8").split("\n").filter(Boolean) : [];
 if (machinery.length) {
-  report.push(`- The shift changed the lab's machinery, which was put back: ${machinery.join(", ")}. If a change was worth making, it's the PI's to make.`);
+  report.push(`- The shift changed the lab's machinery, which was put back for tonight and proposed as a pull request (README, "Proposals"): ${machinery.join(", ")}.`);
   told.push("The researcher edited the lab's own tools or rules; they were put back as they were.");
 }
 
