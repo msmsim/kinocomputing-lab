@@ -770,6 +770,40 @@ test("check-shift: which shift a run is, and whether it should work it", () => {
   }
 });
 
+test("a failed settle still counts its shift as worked, says so in MORNING.md, and the run goes on to commit then turns red", () => {
+  const dir = mkdtempSync(join(tmpdir(), "settle-failed-"));
+  const lab = (p) => join(dir, p);
+  const env = { PATH: process.env.PATH };
+  const failed = () => spawnSync("bash", [join(LAB, "tools/settle-failed.sh"), "1", dir], { encoding: "utf8", env }).stdout.trim();
+  const check = (asked) => spawnSync("bash", [join(LAB, "tools/check-shift.sh"), lab("state/last-settle.json"), "2026-11-28"], {
+    encoding: "utf8", env: { ...env, EVENT: "workflow_dispatch", NIGHTLY: "true", ASKED: asked },
+  }).stdout.trim().replace(/\n/g, " ");
+  try {
+    mkdirSync(lab("state"), { recursive: true });
+    // Yesterday's settle is the last one recorded, as on the 28th.
+    writeFileSync(lab("state/last-settle.json"), JSON.stringify({ date: "2026-11-27", shift: 1, shifts: [1] }));
+    writeFileSync(lab("state/run.json"), JSON.stringify({ date: "2026-11-28", shift: 1 }));
+    writeFileSync(lab("MORNING.md"), "The shift's own summary.\n");
+    assert.equal(failed(), "settle failed (exit 1); published as far as it got");
+    const settled = JSON.parse(readFileSync(lab("state/last-settle.json"), "utf8"));
+    assert.deepEqual([settled.date, settled.shifts, settled.settle_failed], ["2026-11-28", [1], true]);
+    assert.equal(check("1"), "shift=2 go=true", "the 05:07 run works the second shift, not the first again");
+    assert.match(readFileSync(lab("MORNING.md"), "utf8"), /^The shift's own summary\.\n\n## From settle\n\n- Settle failed \(exit 1\)/);
+
+    writeFileSync(lab("state/run.json"), JSON.stringify({ date: "2026-11-28", shift: 2 }));
+    failed();
+    assert.deepEqual(JSON.parse(readFileSync(lab("state/last-settle.json"), "utf8")).shifts, [1, 2]);
+    assert.equal(check("2"), "shift=2 go=false");
+
+    const workflow = readFileSync(join(LAB, ".github/workflows/night-shift.yml"), "utf8");
+    assert.match(workflow, /code=\$\{PIPESTATUS\[0\]\}/, "settle's own exit code, not tee's");
+    assert.match(workflow, /bash tools\/settle-failed\.sh "\$code"/);
+    assert.ok(workflow.indexOf("name: Settle failed") > workflow.indexOf("name: Publish to kinocomputing"), "red only after the night is committed and published");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent", async () => {
   const w = makeWorld();
   const read = (p) => readFileSync(join(w.lab, p), "utf8");

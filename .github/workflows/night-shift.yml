@@ -168,9 +168,19 @@ jobs:
         id: settle
         env:
           KINO_DIR: kinocomputing
+        # A settle that fails still lets the night be committed and published
+        # as far as it got; the run turns red at the end ("Settle failed").
         run: |
+          set +e
           node tools/settle.mjs | tee settle.log
-          echo "summary=$(tail -1 settle.log | sed 's/^settle: //')" >> "$GITHUB_OUTPUT"
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "SETTLE_EXIT=$code" >> "$GITHUB_ENV"
+          if [ "$code" = 0 ]; then
+            echo "summary=$(tail -1 settle.log | sed 's/^settle: //')" >> "$GITHUB_OUTPUT"
+          else
+            echo "summary=$(bash tools/settle-failed.sh "$code")" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Commit the lab
         env:
@@ -231,3 +241,11 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
           include-hidden-files: false
+
+      # Last, after the night is committed and published: a failed settle
+      # turns the run red, so it's seen.
+      - name: Settle failed
+        if: ${{ !cancelled() && env.SETTLE_EXIT != '' && env.SETTLE_EXIT != '0' }}
+        run: |
+          echo "settle exited $SETTLE_EXIT; the night was committed and published as far as it got"
+          exit 1
