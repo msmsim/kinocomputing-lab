@@ -59,9 +59,13 @@ jobs:
 
       # The spec report in the log; a TAP copy, from which each failing test
       # becomes an annotation on the run's page, readable without the log.
+      # The lab's oracle (test/oracle.test.mjs): a few generated histories on
+      # a fixed seed on a push; sixty on a fresh seed on Saturdays.
       - name: Test
         env:
           KINO_DIR: ${{ github.workspace }}/kinocomputing
+          LAB_ORACLE_RUNS: ${{ github.event_name == 'schedule' && '60' || '3' }}
+          LAB_ORACLE_SEED: ${{ github.event_name == 'schedule' && github.run_id || '1' }}
         run: node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=tap.txt test/*.test.mjs
 
       - name: Say which tests failed
