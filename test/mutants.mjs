@@ -1,12 +1,23 @@
 // Mutants: each breaks one rule the lab depends on, in a copy of the source,
 // and the tests must fail. A mutant that survives is a rule nothing checks.
 //
-//   npm run mutants
+//   npm run mutants                   every mutant
+//   npm run mutants -- picture brief  those whose names have any of these words
+//
+// Each mutant runs in its own copy of the lab, never in the source itself, so
+// an interrupted run can't leave a rule broken. The test files run side by
+// side, and a mutant stops at the first file that fails, which is all a kill
+// needs. test/mutants.json remembers which file killed each mutant; that file
+// runs first, alone, next time, and only if it passes do the rest run. Kept
+// in git, so a fresh checkout starts fast too. A run is capped at
+// MUTANT_TIMEOUT_MS (default 120 s); one that hits the cap counts as survived.
+// MUTANT_JOBS mutants at once (default: one per core).
 
-import { spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { availableParallelism, tmpdir } from "node:os";
 import { join } from "node:path";
-import { LAB } from "../tools/lib.mjs";
+import { KINO, LAB } from "../tools/lib.mjs";
 
 const MUTANTS = [
   ["the brief without its picture", "tools/settle.mjs", "...(picture ? [`![", "...(false ? [`!["],
@@ -108,22 +119,94 @@ const MUTANTS = [
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
 ];
 
-let survived = 0;
-for (const [name, file, from, to] of MUTANTS) {
-  const path = join(LAB, file);
-  const original = readFileSync(path, "utf8");
-  if (!original.includes(from)) {
-    console.log(`?  ${name}: mutation site not found in ${file}`);
-    survived += 1;
-    continue;
+const JOBS = Math.max(1, Number(process.env.MUTANT_JOBS ?? availableParallelism()));
+const TIMEOUT_MS = Number(process.env.MUTANT_TIMEOUT_MS ?? 120_000);
+const KILLERS_PATH = join(LAB, "test/mutants.json");
+const killers = existsSync(KILLERS_PATH) ? JSON.parse(readFileSync(KILLERS_PATH, "utf8")) : {};
+const words = process.argv.slice(2).map((w) => w.toLowerCase());
+const chosen = words.length ? MUTANTS.filter(([name]) => words.some((w) => name.toLowerCase().includes(w))) : MUTANTS;
+
+// What a copy of the lab needs to run its tests: not its history, not its
+// state (the tests build their own), and its packages linked, not copied.
+const SKIP = new Set([".git", "node_modules", "state", "published", "journal", "held", "outbox", "experiments", "reading"]);
+function copyLab() {
+  const root = mkdtempSync(join(tmpdir(), "mutant-"));
+  for (const entry of readdirSync(LAB)) {
+    if (!SKIP.has(entry)) cpSync(join(LAB, entry), join(root, entry), { recursive: true });
   }
-  writeFileSync(path, original.replace(from, to));
+  symlinkSync(join(LAB, "node_modules"), join(root, "node_modules"), "dir");
+  return root;
+}
+
+/** One test file in `lab`: resolves true if it passes. `stop` ends it early. */
+function runFile(lab, file, stops) {
+  return new Promise((resolve) => {
+    // Its own process group, so a stop takes the processes it started with it.
+    const child = spawn(process.execPath, ["--test", "--test-reporter=tap", file], {
+      cwd: lab, detached: true, stdio: ["ignore", "pipe", "ignore"], env: { ...process.env, KINO_DIR: KINO },
+    });
+    const stop = () => { try { process.kill(-child.pid, "SIGKILL"); } catch {} };
+    stops.push(stop);
+    let failed = false;
+    let tail = "";
+    child.stdout.on("data", (chunk) => {
+      tail = (tail + chunk).slice(-400);
+      if (!failed && /^\s*not ok /m.test(tail)) { failed = true; stop(); }
+    });
+    child.on("close", (code) => resolve(!failed && code === 0));
+  });
+}
+
+/** Files side by side until one fails: the file that failed, null if all passed, or "timed out". */
+function firstFailure(lab, files) {
+  return new Promise((resolve) => {
+    const stops = [];
+    let done = false;
+    let left = files.length;
+    const finish = (value) => { if (done) return; done = true; clearTimeout(timer); stops.forEach((s) => s()); resolve(value); };
+    const timer = setTimeout(() => finish("timed out"), TIMEOUT_MS);
+    for (const file of files) {
+      runFile(lab, file, stops).then((passed) => {
+        if (!passed) finish(file);
+        else if (--left === 0) finish(null);
+      });
+    }
+  });
+}
+
+async function worker(queue, results) {
+  const lab = copyLab();
+  const files = readdirSync(join(lab, "test")).filter((f) => f.endsWith(".test.mjs")).map((f) => `test/${f}`).sort();
   try {
-    const r = spawnSync(process.execPath, ["--test", "test/lab.test.mjs"], { cwd: LAB, encoding: "utf8" });
-    if (r.status === 0) { survived += 1; console.log(`✗  survived: ${name}`); } else console.log(`✓  killed: ${name}`);
+    for (let next = queue.shift(); next; next = queue.shift()) {
+      const [name, file, from, to] = next;
+      const path = join(lab, file);
+      const original = readFileSync(path, "utf8");
+      if (!original.includes(from)) { results.push([name, "site not found"]); console.log(`?  ${name}: mutation site not found in ${file}`); continue; }
+      writeFileSync(path, original.replace(from, to));
+      const started = Date.now();
+      // The file that killed it last time, alone; then, if need be, the rest.
+      const known = files.includes(killers[name]) ? killers[name] : null;
+      let killer = known ? await firstFailure(lab, [known]) : null;
+      if (!killer) killer = await firstFailure(lab, files.filter((f) => f !== known));
+      writeFileSync(path, original);
+      const verdict = killer === "timed out" ? "timed out" : killer ? "killed" : "survived";
+      if (verdict === "killed") killers[name] = killer;
+      results.push([name, verdict]);
+      console.log(`${verdict === "killed" ? "✓  killed" : `✗  ${verdict}`}: ${name} (${((Date.now() - started) / 1000).toFixed(1)}s${verdict === "killed" ? `, ${killer.slice(5)}` : ""})`);
+    }
   } finally {
-    writeFileSync(path, original);
+    rmSync(lab, { recursive: true, force: true });
   }
 }
-console.log(survived ? `${survived} mutant(s) survived` : "all mutants killed");
-process.exit(survived ? 1 : 0);
+
+const started = Date.now();
+const queue = [...chosen];
+const results = [];
+await Promise.all(Array.from({ length: Math.min(JOBS, queue.length) }, () => worker(queue, results)));
+// Only mutants still in the list are remembered.
+const names = new Set(MUTANTS.map(([name]) => name));
+writeFileSync(KILLERS_PATH, `${JSON.stringify(Object.fromEntries(Object.entries(killers).filter(([n]) => names.has(n)).sort()), null, 2)}\n`);
+const survived = results.filter(([, verdict]) => verdict !== "killed");
+console.log(`${survived.length ? `${survived.length} of ${results.length} mutant(s) survived` : `all ${results.length} mutants killed`} in ${((Date.now() - started) / 1000).toFixed(0)}s`);
+process.exit(survived.length ? 1 : 0);

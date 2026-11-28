@@ -1,0 +1,57 @@
+name: Tests
+
+# Every change to the lab's machinery runs the tests (npm test: about ten
+# seconds of tests, a minute or so in all). The nights' own commits change
+# state, not machinery, so they don't trigger it. The tests render through
+# kinocomputing's real templates and build, so the site is checked out beside
+# the lab, read-only.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tools/**"
+      - "test/**"
+      - "config/**"
+      - "voices/**"
+      - "AGENT.md"
+      - "CHARTER.md"
+      - "package.json"
+      - "package-lock.json"
+      - ".nvmrc"
+      - ".github/workflows/**"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/checkout@v4
+        with:
+          repository: msmsim/kinocomputing
+          path: kinocomputing
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Test
+        env:
+          KINO_DIR: ${{ github.workspace }}/kinocomputing
+        run: npm test

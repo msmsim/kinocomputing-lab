@@ -221,6 +221,25 @@ sandbox (`config/local-sandbox.json`), billed to your Claude login and kept
 out of the lab's bank. Point `KINO_DIR` at a scratch copy of kinocomputing,
 never one you push from. The pilot ran this way.
 
+## Tests
+
+`npm test` runs the lab's tests, including whole nights end to end against
+kinocomputing's real build (`KINO_DIR`, default `../kinocomputing`). About
+ten seconds: the test files (`test/*.test.mjs`) run side by side, one process
+each, with the whole-night tests spread across them, and each test lab links
+the packages rather than copying them. The Tests workflow runs them on every
+push that touches the machinery.
+
+`npm run mutants` breaks each rule the lab depends on, one at a time, and
+checks a test fails. Each mutant runs in its own copy of the lab, never in the
+source; it stops at the first failing file, and `test/mutants.json`
+remembers which file that was, so the next run tries it first: about five
+minutes from cold, a minute and a half after. `npm run mutants -- brief`
+runs only the mutants whose names have that word. Add a mutant with each new
+rule.
+
+`INFLUENCES.md` is where the way the lab works comes from.
+
 ## Layout
 
 | Path | What |
@@ -243,8 +262,6 @@ never one you push from. The pilot ran this way.
 | `tools/` | prepare, settle, render, steers, search, replicate, timebox, restore-machinery, local-shift — deterministic, tested, no tokens |
 | `.claude/agents/reviewer.md` | The hostile reviewer, Sonnet, for claims above `conjecture` |
 
-`npm test` runs the lab's tests, including two whole nights end to end against
-kinocomputing's real build (`KINO_DIR`, default `../kinocomputing`).
 
 An experiment that outgrows this repo gets its own: the shift asks under
 "Waiting on a human" in the brief, and you create it.
