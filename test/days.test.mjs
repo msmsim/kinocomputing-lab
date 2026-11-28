@@ -193,3 +193,58 @@ test("what shipped: the brief names a roadmap headline the day it's first seen d
     w.dispose();
   }
 });
+
+test("emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  const emphasis = (id, title, order, until, from = "2026-11-20") => writeFileSync(join(w.lab, "emphases", `${id}.md`),
+    `---\ntitle: ${title}\nfrom: ${from}\nuntil: ${until}\norder: ${order}\n---\n\nWhy ${title} matters, for a reader.\n\n- [A note](https://www.kinocomputing.com/a-note)\n`);
+  const note = (date, name, emph) => writeFileSync(join(w.lab, `outbox/lab-${date}-${name}.md`), `---\nkind: notebook\n${emph ? `emphasis: ${emph}\n` : ""}---\n\n**${name}**\n\nA short note called ${name}.\n`);
+  const shift = (at, n, write = () => {}) => {
+    const prep = w.node(w.lab, ["tools/prepare.mjs"], at, { LAB_SHIFT: String(n) });
+    write();
+    writeFileSync(join(w.lab, "MORNING.md"), "A shift.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.1, num_turns: 3, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], at.replace(/T(\d\d)/, (m, h) => `T${String(Number(h) + 1).padStart(2, "0")}`), { LAB_SHIFT: String(n) });
+    return prep;
+  };
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    mkdirSync(join(w.lab, "emphases"));
+    emphasis("seam", "Where the discrete meets the continuous", 2, "2026-12-31");
+    emphasis("weather", "The regimes of weather forecasting", 1, "2026-12-31");
+    emphasis("older", "Something finished", 1, "2026-11-10", "2026-10-01");
+    writeFileSync(join(w.lab, "emphases", "README.md"), "# Emphases\n");
+
+    shift("2026-11-21T02:23:00Z", 1, () => { note("2026-11-21", "on-the-seam", "seam"); note("2026-11-21", "astray", "nope"); });
+    const tonight = read("state/tonight.md");
+    assert.match(tonight, /## The emphases\n\n[^\n]*\n\n### The regimes of weather forecasting \(`weather`, until 2026-12-31\)\n\nWhy The regimes of weather forecasting matters, for a reader\.\n\n- A note: https:\/\/www\.kinocomputing\.com\/a-note\n\nNotes in the last seven days: 0; last served never\.\n\n### Where the discrete meets/, "Matt's order, and what each is for");
+    assert.ok(!/Something finished/.test(tonight), "an ended emphasis steers nothing");
+    assert.match(tonight, /Lean towards them/);
+    assert.ok(!/Tonight's lead/.test(tonight), "the breadth shift has no lead");
+    assert.match(tonight, /Behind \(fewer than 2 notes in seven days\): The regimes of weather forecasting; Where the discrete meets the continuous\./);
+    assert.equal(JSON.parse(read("state/run.json")).emphasis, null);
+    assert.match(read("published/lab-2026-11-21-brief.md"), /- On the lab's current emphases: 1 note on where the discrete meets the continuous\./);
+    assert.match(read("MORNING.md"), /lab-2026-11-21-astray\.md names the emphasis "nope", which isn't a current one/);
+    assert.ok(existsSync(join(w.lab, "published/lab-2026-11-21-astray.md")), "and it's published all the same");
+    const site = JSON.parse(readFileSync(join(w.kino, "notes/_emphases.json"), "utf8"));
+    assert.deepEqual(site.current.map((e) => e.id), ["weather", "seam"]);
+    assert.deepEqual(site.past.map((e) => [e.id, e.until]), [["older", "2026-11-10"]]);
+    assert.equal(site.kept, "https://github.com/msmsim/kinocomputing-lab/tree/main/emphases");
+    assert.deepEqual(site.current[0].links, [{ title: "A note", url: "https://www.kinocomputing.com/a-note" }]);
+
+    const depth = shift("2026-11-21T05:07:00Z", 2);
+    assert.equal(JSON.parse(read("state/run.json")).emphasis, "weather", "never served goes first");
+    assert.match(read("state/tonight.md"), /\*\*Tonight's lead: The regimes of weather forecasting\*\* \(`weather`\)/);
+    assert.match(read("state/tonight.md"), /### Where the discrete meets the continuous \(`seam`, until 2026-12-31\)\n\n[^\n]*\n\n[^\n]*\n\nNotes in the last seven days: 1; last served 2026-11-21\./);
+    assert.ok(depth);
+
+    shift("2026-11-22T02:23:00Z", 1, () => note("2026-11-22", "weather-one", "weather"));
+    shift("2026-11-22T05:07:00Z", 2);
+    assert.equal(JSON.parse(read("state/run.json")).emphasis, "seam", "then the one served longest ago");
+    shift("2026-11-23T02:23:00Z", 1);
+    assert.match(read("published/lab-2026-11-23-brief.md"), /- None of today's notes took up one of the lab's current emphases\./);
+  } finally {
+    w.dispose();
+  }
+});

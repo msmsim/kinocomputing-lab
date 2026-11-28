@@ -12,6 +12,7 @@ import { readdirSync, readFileSync, renameSync, writeFileSync, existsSync } from
 import { join } from "node:path";
 import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, regionFor, rotation, sundayPlan } from "./lib.mjs";
 import { weekInReview } from "./week.mjs";
+import { briefingSection, coverage, currentOn, leading, readEmphases } from "./emphases.mjs";
 import { searchMore } from "./sources.mjs";
 import { readingShares, takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
@@ -178,6 +179,10 @@ const week = SUNDAY && SHIFT === 1
   ? await weekInReview(LAB, today, { siteRepo: config.kinocomputing.repo, fetchJson: offline || process.env.LAB_NO_READING === "1" ? null : fetchJson })
   : null;
 const voiceName = (id) => readFileSync(join(LAB, "voices", `${id}.md`), "utf8").match(/^# (.+)$/m)?.[1] ?? id;
+// Matt's emphases (tools/emphases.mjs): the depth shift leads with the one
+// served least recently; every shift's briefing has them.
+const emphases = currentOn(readEmphases(LAB).all, today);
+const emphasisCounts = coverage(LAB, emphases, today);
 const run = {
   date: today,
   at,
@@ -197,6 +202,7 @@ const run = {
   reading: [...reading.flatMap((r) => r.results.map((x) => x.url)), ...chatter.map((p) => p.url)],
   region: region?.name ?? null,
   paradigms: tonightParadigms.map((p) => p.id),
+  emphasis: SHIFT === 2 && !SUNDAY ? leading(emphases, emphasisCounts)?.id ?? null : null,
 };
 // A paradigm's note, if the lab has published one: the published note whose
 // front matter names it.
@@ -245,6 +251,12 @@ const lines = [
     `What the lab needed from the PI: ${week.attention.asking} of the week's ${week.attention.shifts} shift${week.attention.shifts === 1 ? "" : "s"} asked for something; the PI sent ${week.attention.takes} take${week.attention.takes === 1 ? "" : "s"} and ${week.attention.shares} share${week.attention.shares === 1 ? "" : "s"}.${week.attention.asks.length ? " The asks, with how many shifts each stood:" : ""}`,
     ...(week.attention.asks.length ? ["", ...week.attention.asks.map((a) => `- ${a.text} (${a.shifts} shift${a.shifts === 1 ? "" : "s"})`)] : []),
     "",
+    ...(week.emphases.length ? [
+      "The emphases this week, each with the notes that served it:",
+      "",
+      ...week.emphases.flatMap((e) => [`- ${e.title} (\`${e.id}\`, until ${e.until ?? "Matt ends it"}): ${e.notes.length ? e.notes.join("; ") : "nothing this week"}`]),
+      "",
+    ] : []),
     `Shipped on the roadmap this week (${config.kinocomputing.origin}roadmap), the headlines that moved to Done:`,
     "",
     ...(week.shipped.length ? week.shipped.map((s) => `- ${s.headline} (${s.on}; ${config.kinocomputing.origin}roadmap#${s.id})`) : ["- None."]),
@@ -276,6 +288,7 @@ const lines = [
   "",
   `This shift is stopped at **${deadline} UTC** (${MINUTES} minutes), finished or not. Check \`date -u\` as you go. Publish as you go (AGENT.md, step 7): a finished note goes into the outbox at once, with its line in the journal and MORNING.md, so a stop loses only the piece in hand. Stop starting new pieces 10 minutes before the deadline. Run experiments through \`node tools/timebox.mjs ${config.shift.experiment_seconds} uv run run.py\` (the replication gets the same ${config.shift.experiment_seconds / 60} minutes); one that overruns is a result to report, not a wait.`,
   "",
+  ...briefingSection(emphases, emphasisCounts, SUNDAY ? 0 : SHIFT),
   "## Tonight's paradigms",
   "",
   ...(tonightParadigms.length ? [

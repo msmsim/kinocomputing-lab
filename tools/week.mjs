@@ -9,6 +9,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { frontMatter, readJson, readJsonl } from "./lib.mjs";
 import { doneOn, itemsOf, shippedBetween } from "./shipped.mjs";
+import { currentOn, readEmphases } from "./emphases.mjs";
 
 // Commits that are the machinery running, not anyone changing it.
 const ROUTINE = /^(night shift |local shift |lab: |release: |build: |roadmap: |blyg: record state|motes: publish|subset: )/;
@@ -63,7 +64,7 @@ export async function weekInReview(lab, today, { siteRepo = null, fetchJson = nu
     const name = file.replace(/\.md$/, "");
     if (name.endsWith("-brief")) { briefs.push(name); continue; }
     const { data, body } = frontMatter(readFileSync(join(lab, "published", file), "utf8"));
-    notes.push({ name, kind: data.kind ?? "notebook", title: body.match(/^\*\*(.+)\*\*\s*$/m)?.[1] ?? name });
+    notes.push({ name, kind: data.kind ?? "notebook", title: body.match(/^\*\*(.+)\*\*\s*$/m)?.[1] ?? name, emphasis: data.emphasis ?? null });
   }
   const claims = readJsonl(join(lab, "state/claims.jsonl")).filter((c) => inWeek(String(c.at ?? "").slice(0, 10)))
     .map((c) => ({ id: c.id, stage: c.stage, statement: c.statement }));
@@ -88,6 +89,8 @@ export async function weekInReview(lab, today, { siteRepo = null, fetchJson = nu
     claims,
     paradigms,
     attention,
+    // Each current emphasis, with the week's notes that served it.
+    emphases: currentOn(readEmphases(lab).all, today).map((e) => ({ id: e.id, title: e.title, until: e.until, notes: notes.filter((n) => n.emphasis === e.id).map((n) => n.title) })),
     shipped: siteRepo && fetchJson ? await siteShipped(siteRepo, since, today, fetchJson) : [],
     changes: {
       lab: labChanges(lab, since),

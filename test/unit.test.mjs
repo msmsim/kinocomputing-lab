@@ -522,3 +522,35 @@ test("fast lane: small, away from the lab's judges, a test added and none taken 
   assert.match(judge([f("tools/search.mjs", MOST_LINES), f("test/unit.test.mjs", 5)], 0).why, /more than the fast lane's/);
   assert.equal(judge([], 0).fast, false);
 });
+
+test("emphases: a malformed file is named, not used; Matt's order; the week is seven days; the lead is the one served longest ago", async () => {
+  const { readEmphases, currentOn, pastOn, coverage, leading } = await import("../tools/emphases.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "emph-"));
+  try {
+    mkdirSync(join(dir, "emphases"));
+    mkdirSync(join(dir, "published"));
+    const e = (id, fm, body = "Why.") => writeFileSync(join(dir, "emphases", `${id}.md`), `---\n${fm}\n---\n\n${body}\n`);
+    e("b", "title: B\nfrom: 2026-11-01\nuntil: 2026-12-31\norder: 1");
+    e("a", "title: A\nfrom: 2026-11-01");
+    e("done", "title: Done\nfrom: 2026-10-01\nuntil: 2026-10-31");
+    e("later", "title: Later\nfrom: 2026-12-01");
+    e("Bad Name", "title: X\nfrom: 2026-11-01");
+    e("nodate", "title: X");
+    e("nowhy", "title: X\nfrom: 2026-11-01", "- [only a link](https://example.org)");
+    const { all, errors } = readEmphases(dir);
+    assert.equal(errors.length, 3);
+    assert.deepEqual(currentOn(all, "2026-11-20").map((x) => x.id), ["b", "a"], "Matt's order first, then by name; not ended, not yet begun");
+    assert.deepEqual(pastOn(all, "2026-11-20").map((x) => x.id), ["done"]);
+    const note = (name, emph) => writeFileSync(join(dir, "published", `${name}.md`), `---\nemphasis: ${emph}\n---\n\n**x**\n`);
+    note("lab-2026-11-13-old", "a");
+    note("lab-2026-11-14-edge", "a");
+    note("lab-2026-11-19-b", "b");
+    note("lab-2026-11-21-tomorrow", "b");
+    const counts = coverage(dir, currentOn(all, "2026-11-20"), "2026-11-20");
+    assert.deepEqual(counts, { b: { week: 1, last: "2026-11-19" }, a: { week: 1, last: "2026-11-14" } }, "seven days to the day: the 14th in, the 13th out; nothing from after");
+    assert.equal(leading(currentOn(all, "2026-11-20"), counts).id, "a");
+    assert.equal(leading([], {}), null);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

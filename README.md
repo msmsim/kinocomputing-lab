@@ -122,6 +122,23 @@ Subset for each share `https://www.kinocomputing.com/reading/<share>`, which
 the site redirects to that share's place on the Reading page. The restore step
 after each shift keeps `reading/` exactly as sent.
 
+## Emphases
+
+Two to five areas or questions you want the lab to concentrate on for a
+few weeks: one file each in `emphases/` (a title, `from` and `until`
+dates, an `order`, and a paragraph saying what you want and why, with any
+links). They're yours, like the charter: put back before settle, and out
+of the build shift's reach. Ended ones stay, so the folder is their
+history.
+
+The briefing lists the current ones. The depth shift leads with the one
+served least recently; the breadth shift leans towards them; each should
+have two notes a week, and the briefing says which is behind. A note names
+the emphasis it serves (`emphasis:`); the brief counts the day's, the week
+in review takes each in turn, and settle sends the list to the site
+(`notes/_emphases.json`), whose About page gives the current ones a nod
+and links here (`tools/emphases.mjs`).
+
 ## Sundays
 
 No rotation. The first shift writes **the week in review**, which is held

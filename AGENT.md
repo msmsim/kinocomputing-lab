@@ -272,6 +272,7 @@ question: q-NNN
 paradigm: <id from state/paradigms.json> (paradigm entries only)
 section: lab | tracker | audits (write-ups only; optional, lab if left out. Today the site uses it only to put a note under its Tracker menu item: the tracker's running account takes tracker. Audit write-ups take audits, for when the site groups them. Entries and briefs are placed for you.)
 pin: false
+emphasis: <id from emphases/> (optional: the current emphasis this note serves, if it serves one)
 answers: https://www.kinocomputing.com/... (new notes only: the PI's take this answers)
 change_note: what changed, in plain words (required on every update: an update without one is held back; omit for a new note)
 voice: bompa | concrete | santa-feist | post-liquid | absent-dimension (write-ups only; optional)
@@ -437,6 +438,10 @@ commits people made to the lab and the site. Read them, and write:
   roadmap), which say it in a sentence each, and the commits behind them;
   sum them up rather than list them, and leave out the plumbing that
   changes nothing a reader would notice.
+- **The emphases**, one at a time: what the week did for each, what it
+  still lacks, and whether it seems to have run its course, so Matt can
+  decide what comes next. Plain words: "the lab spent the week on…", not
+  the file names.
 - **What the lab needed from the PI**, in a line or two: how many shifts
   asked for something, and how long the longest ask stood; what the PI sent
   in. The PI's attention is a ceiling on what the lab can do, so a week that
@@ -517,6 +522,27 @@ Settle checks the lines (a link, a title, no lab ids, a short `why`) and
 publishes the list to the site's Reading page; the brief lists five of the
 day's additions, the picked ones first, and says how many more there are.
 
+## Emphases
+
+Matt sets two to five **emphases**: areas or questions to concentrate on
+for a few weeks (`emphases/`, one file each, with what he wants and why;
+the briefing lists the current ones). They're his, like the charter: don't
+edit them. They steer, they don't replace: takes come first, the rotation
+still runs, and a note doesn't have to serve one.
+
+- **The depth shift leads with one.** The briefing names tonight's lead, the
+  emphasis served least recently: make it the shift's main piece of work,
+  after the PI's takes. Go for depth: a historical account, a real argument,
+  an experiment, a theory built and tested, not a round-up.
+- **The breadth shift leans towards them.** Where tonight's paradigms or
+  reading touch an emphasis, take that angle.
+- **Each gets at least two notes a week.** The briefing says which is behind.
+- **Say which one a note serves**, with `emphasis:` in its front matter.
+  The brief counts them, the week in review takes each in turn, and the
+  site shows the current ones on About.
+- **Write for readers.** A note on an emphasis is a note like any other:
+  it doesn't mention emphases, the lab or its plans; it says what it found.
+
 ## Two shifts a day
 
 The lab works two shifts a day; the briefing says which this is.
@@ -528,8 +554,9 @@ shift`: what deserves a deeper look — a paper whose full text should be
 read before an entry says more, an experiment a finding suggests, a
 founding story to trace, a take that needs more than a reply.
 
-**Shift 2, depth** (from 05:07, with the rest of the day's money): start
-from the first shift's `Next shift` list (today's journal) and its summary
+**Shift 2, depth** (from 05:07, with the rest of the day's money): lead
+with tonight's emphasis ("Emphases"), then work from the first shift's
+`Next shift` list (today's journal) and its summary
 (`state/last-morning.md`). No rotation. Read the full texts behind the
 day's entries and update them where the full text changes what they say;
 run the experiment; work an entry of the foundations ledger; do the

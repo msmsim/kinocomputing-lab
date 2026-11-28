@@ -205,3 +205,23 @@ test("proposals: the shift's machinery changes are kept, put back, and made a br
     w.dispose();
   }
 });
+
+test("emphases are Matt's: a shift's edits to them are put back before settle, a new one taken out; a build's change to them goes to the PI", async () => {
+  const w = makeWorld();
+  try {
+    mkdirSync(join(w.lab, "emphases"));
+    const mine = "---\ntitle: Matt's\nfrom: 2026-11-20\n---\n\nWhy.\n";
+    writeFileSync(join(w.lab, "emphases/mine.md"), mine);
+    w.commit();
+    writeFileSync(join(w.lab, "emphases/mine.md"), "---\ntitle: The shift's own\nfrom: 2026-11-20\n---\n\nWhy not.\n");
+    writeFileSync(join(w.lab, "emphases/extra.md"), "---\ntitle: Another\nfrom: 2026-11-20\n---\n\nMore.\n");
+    const out = execFileSync("bash", ["tools/restore-machinery.sh"], { cwd: w.lab, encoding: "utf8" });
+    assert.match(out, /put back 2 machinery file/);
+    assert.equal(readFileSync(join(w.lab, "emphases/mine.md"), "utf8"), mine);
+    assert.ok(!existsSync(join(w.lab, "emphases/extra.md")));
+    const { judge } = await import("../tools/build.mjs");
+    assert.match(judge("lab", [{ path: "emphases/mine.md", added: 1, removed: 1 }, { path: "test/unit.test.mjs", added: 1, removed: 0 }], 0).why, /it changes emphases\/mine\.md/);
+  } finally {
+    w.dispose();
+  }
+});

@@ -157,6 +157,17 @@ const MUTANTS = [
   ["the build lands what the agent says isn't done", "tools/land.sh", "elif [ \"$done\" != yes ]; then", "elif false; then"],
   ["the build lands what failed its tests", "tools/land.sh", "[ \"${OK[$r]}\" = true ] ||", "true ||"],
   ["the build lands what goes to the PI", "tools/land.sh", "[ \"$land\" = true ] || outcome=\"for the PI\"", "true"],
+  // The emphases (tools/emphases.mjs).
+  ["the depth shift leads with any emphasis", "tools/emphases.mjs", "return [...current].sort((a, b) => (counts[a.id]?.last ?? \"\") .localeCompare(counts[b.id]?.last ?? \"\"))[0] ?? null;", "return current[0] ?? null;"],
+  ["ended emphases still steer", "tools/emphases.mjs", "(!e.until || date <= e.until)", "true"],
+  ["the week has no edge", "tools/emphases.mjs", "if (day > daysBefore(date, 7)) c.week += 1;", "c.week += 1;"],
+  ["an emphasis behind goes unsaid", "tools/emphases.mjs", "...(behind.length ? [", "...(false ? ["],
+  ["Matt's order ignored", "tools/emphases.mjs", "all.sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));", ""],
+  ["a stray emphasis unreported", "tools/settle.mjs", "if (data.emphasis && !currentOn(emphasisList, run.date).some((e) => e.id === data.emphasis)) {", "if (false) {"],
+  ["the brief says nothing of the emphases", "tools/settle.mjs", "...(emphasisToday ? [emphasisToday] : []), ", ""],
+  ["the site never hears of the emphases", "tools/settle.mjs", "writeFileSync(join(KINO, \"notes\", \"_emphases.json\")", "(() => {})(join(KINO, \"notes\", \"_emphases.json\")"],
+  ["a shift may rewrite the emphases", "tools/restore-machinery.sh", "AGENT.md CHARTER.md emphases BUILD.md", "AGENT.md CHARTER.md BUILD.md"],
+  ["a build may rewrite the emphases", "tools/build.mjs", "\"config/\", \"emphases/\",", "\"config/\","],
 ];
 
 const JOBS = Math.max(1, Number(process.env.MUTANT_JOBS ?? availableParallelism()));

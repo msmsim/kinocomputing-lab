@@ -9,6 +9,11 @@
     "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
     "site": "40e4f4f6ac64"
   },
+  "a build may rewrite the emphases": {
+    "file": "test/nights.test.mjs",
+    "test": "emphases are Matt's: a shift's edits to them are put back before settle, a new one taken out; a build's change to them goes to the PI",
+    "site": "318e3f5575cf"
+  },
   "a day without a picture unreported": {
     "file": "test/days.test.mjs",
     "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
@@ -49,6 +54,11 @@
     "test": "a failed settle still counts its shift as worked, says so in MORNING.md, and the run goes on to commit then turns red",
     "site": "a30f4be14121"
   },
+  "a shift may rewrite the emphases": {
+    "file": "test/nights.test.mjs",
+    "test": "emphases are Matt's: a shift's edits to them are put back before settle, a new one taken out; a build's change to them goes to the PI",
+    "site": "bd317a684000"
+  },
   "a shift with no cost report costs nothing": {
     "file": "test/nights.test.mjs",
     "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
@@ -78,6 +88,16 @@
     "file": "test/shares.test.mjs",
     "test": "a short day is reported by its last shift, counting both",
     "site": "1396bfc7e460"
+  },
+  "a stray emphasis unreported": {
+    "file": "test/days.test.mjs",
+    "test": "emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none",
+    "site": "f338d77e704b"
+  },
+  "an emphasis behind goes unsaid": {
+    "file": "test/days.test.mjs",
+    "test": "emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none",
+    "site": "29163fc7649d"
   },
   "an entry for any paradigm": {
     "file": "test/paradigms.test.mjs",
@@ -138,6 +158,11 @@
     "file": "test/claims.test.mjs",
     "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
     "site": "6577aab6df37"
+  },
+  "ended emphases still steer": {
+    "file": "test/unit.test.mjs",
+    "test": "emphases: a malformed file is named, not used; Matt's order; the week is seven days; the lead is the one served longest ago",
+    "site": "1efca4311fe8"
   },
   "entries shelved as the lab's": {
     "file": "test/paradigms.test.mjs",
@@ -218,6 +243,11 @@
     "file": "test/nights.test.mjs",
     "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
     "site": "c3c8832d8221"
+  },
+  "Matt's order ignored": {
+    "file": "test/unit.test.mjs",
+    "test": "emphases: a malformed file is named, not used; Matt's order; the week is seven days; the lead is the one served longest ago",
+    "site": "1d7ac84d5eed"
   },
   "no account of the day to lead": {
     "file": "test/shares.test.mjs",
@@ -379,6 +409,11 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "dd1b60819372"
   },
+  "the brief says nothing of the emphases": {
+    "file": "test/days.test.mjs",
+    "test": "emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none",
+    "site": "91f269cf0c9c"
+  },
   "the brief says nothing of what shipped": {
     "file": "test/days.test.mjs",
     "test": "what shipped: the brief names a roadmap headline the day it's first seen done, both shifts keep it, a later day doesn't repeat it; the history before the record is never named; a broken roadmap costs nothing",
@@ -469,6 +504,11 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "994171e185d7"
   },
+  "the depth shift leads with any emphasis": {
+    "file": "test/unit.test.mjs",
+    "test": "emphases: a malformed file is named, not used; Matt's order; the week is seven days; the lead is the one served longest ago",
+    "site": "616adaab3f7b"
+  },
   "the fast lane has no size limit": {
     "file": "test/unit.test.mjs",
     "test": "fast lane: small, away from the lab's judges, a test added and none taken out",
@@ -549,6 +589,11 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "ecee681eade2"
   },
+  "the site never hears of the emphases": {
+    "file": "test/days.test.mjs",
+    "test": "emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none",
+    "site": "5892769c7593"
+  },
   "the time limit unreported": {
     "file": "test/nights.test.mjs",
     "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
@@ -573,6 +618,11 @@
     "file": "test/paradigms.test.mjs",
     "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
     "site": "0d6a47c915f3"
+  },
+  "the week has no edge": {
+    "file": "test/unit.test.mjs",
+    "test": "emphases: a malformed file is named, not used; Matt's order; the week is seven days; the lead is the one served longest ago",
+    "site": "05458eb1ca50"
   },
   "the week in review reads published/'s folders as notes": {
     "file": "test/paradigms.test.mjs",

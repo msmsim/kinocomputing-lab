@@ -29,6 +29,7 @@ import { labIdIn, renderNote } from "./render.mjs";
 import { checkImage } from "./figure.mjs";
 import { dueAt, hold, release } from "./release.mjs";
 import { itemsOf, shippedFor } from "./shipped.mjs";
+import { currentOn, forSite, readEmphases } from "./emphases.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -52,6 +53,9 @@ function experimentTold(dir) {
 const args = process.argv.slice(2);
 const outputPath = args.includes("--claude-output") ? args[args.indexOf("--claude-output") + 1] : join(LAB, "state/claude-output.json");
 const config = readJson(join(LAB, "config/lab.json"));
+// Matt's emphases (emphases/): committed, and put back with the machinery
+// before settle, so these are his, not the shift's.
+const emphasisList = readEmphases(LAB).all;
 const run = readJson(join(LAB, "state/run.json"), null);
 const report = [];
 const summary = [];
@@ -327,6 +331,10 @@ for (const { file, name, data, body } of parsed) {
     reject(file, "— an update needs a change note (`change_note:`) saying what changed");
     continue;
   }
+  // An emphasis that isn't running doesn't cost the note; it counts for none.
+  if (data.emphasis && !currentOn(emphasisList, run.date).some((e) => e.id === data.emphasis)) {
+    report.push(`- ${file} names the emphasis "${data.emphasis}", which isn't a current one (emphases/), so it counts for none.`);
+  }
   if (data.kind === "paradigm" && !(tracker.paradigms ?? []).some((p) => p.id === data.paradigm)) {
     reject(file, `— a paradigm entry names its paradigm, and "${data.paradigm ?? ""}" isn't one on the tracker's list`);
     continue;
@@ -415,6 +423,25 @@ if ((tracker.paradigms ?? []).length) {
   }
   writeFileSync(join(KINO, "notes", "_tracker.json"), json({ updated: run.date, source: tracker.source ?? null, groups }));
 }
+// The emphases, for the site's About page: the current ones, the past, and
+// where they're kept.
+if (emphasisList.length || existsSync(join(KINO, "notes", "_emphases.json"))) {
+  writeFileSync(join(KINO, "notes", "_emphases.json"), json(forSite(emphasisList, run.date, `https://github.com/${config.lab.repo}/tree/main/emphases`)));
+}
+// What the day's notes did for them, for the brief.
+const emphasisToday = (() => {
+  const current = currentOn(emphasisList, run.date);
+  if (!current.length) return null;
+  const counts = new Map(current.map((e) => [e.id, 0]));
+  for (const file of readdirSync(join(LAB, "published")).filter((f) => f.startsWith(`lab-${run.date}-`) && f.endsWith(".md"))) {
+    const { emphasis } = frontMatter(readFileSync(join(LAB, "published", file), "utf8")).data;
+    if (counts.has(emphasis)) counts.set(emphasis, counts.get(emphasis) + 1);
+  }
+  const served = current.filter((e) => counts.get(e.id));
+  return served.length
+    ? `On the lab's current emphases: ${served.map((e) => `${counts.get(e.id)} note${counts.get(e.id) === 1 ? "" : "s"} on ${e.title.charAt(0).toLowerCase()}${e.title.slice(1)}`).join("; ")}.`
+    : "None of today's notes took up one of the lab's current emphases.";
+})();
 // The hopper, for the site's Reading page: every link, newest first, with the
 // lab's line on it and the notes that used it. Each has an anchor: a share's
 // is the file Subset's receiver gave it, which is the address it told
@@ -599,7 +626,7 @@ const briefOf = (said) => {
       [...shippedToday.map((i) => `- [${i.headline}](${ORIGIN}roadmap#${i.id})`), `- What’s next: [the roadmap](${ORIGIN}roadmap).`].join("\n"),
     ] : []),
     "**Also today**",
-    [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
+    [...shifts.flatMap((s) => s.told ?? []), ...(emphasisToday ? [emphasisToday] : []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
   ].join("\n\n");
 };
 // An update only to a brief readers have seen; a held one is still its first.

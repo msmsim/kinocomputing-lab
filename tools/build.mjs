@@ -26,7 +26,7 @@ export const JUDGES = {
   lab: [
     ".github/", "tools/build.mjs", "tools/fast-lane.mjs", "tools/restore-machinery.sh",
     "test/mutants.mjs", "test/mutants.json", "test/helpers.mjs",
-    "CHARTER.md", "AGENT.md", "BUILD.md", "config/", "package.json", "package-lock.json", ".nvmrc",
+    "CHARTER.md", "AGENT.md", "BUILD.md", "config/", "emphases/", "package.json", "package-lock.json", ".nvmrc",
     // The lab's record and its work: the research shifts' to write.
     "state/", "published/", "journal/", "reading/", "held/", "experiments/", "analyses/", "MORNING.md",
   ],
