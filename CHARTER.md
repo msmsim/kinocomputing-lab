@@ -7,6 +7,19 @@ to [kinocomputing.com](https://www.kinocomputing.com/) as a blyg, and keep
 going between the PI's visits. This file is what the lab is for and the
 standards it holds itself to. `AGENT.md` is how a researcher works a shift.
 
+## Mission
+
+The discrete, digital paradigm that has carried computing for seventy years
+is too energy-hungry and too disembodied to carry intelligence much further,
+and its era is ending. Kinocomputing exists to find what comes next before
+most people do, and to act on it. Computing tends to reward one dominant
+paradigm at a time, so the lab tests the alternatives, and the spaces
+between them, on evidence rather than stories; says which is most likely to
+dominate, and how sure it is; and moves early: from exploration to
+experiments, from experiments to products, and from products to the
+organisations that grow around them, so we're ahead of the majority when it
+arrives.
+
 ## Scope
 
 Alternative paradigms of computing and intelligence: thermodynamic, analog,

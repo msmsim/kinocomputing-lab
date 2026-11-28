@@ -248,3 +248,27 @@ test("emphases: in every briefing with how each has been served; the depth shift
     w.dispose();
   }
 });
+
+test("the mission: every briefing opens with it, as the charter has it; settle sends it to the site; a charter without one, neither", async () => {
+  const w = makeWorld();
+  const read = (p) => readFileSync(join(w.lab, p), "utf8");
+  try {
+    w.publish("2026-11-20T00:00:00Z");
+    const charter = read("CHARTER.md");
+    assert.match(charter, /^## Mission\n\n/m, "the real charter has one");
+    writeFileSync(join(w.lab, "CHARTER.md"), "# Charter\n\nIntro.\n\n## Mission\n\nFind what comes next,\nbefore most people do.\n\n## Scope\n\nComputing.\n");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:23:00Z");
+    assert.match(read("state/tonight.md"), /^# Tonight: 2026-11-21\n\n## The mission\n\nFind what comes next, before most people do\.\n\nRun kind:/);
+    writeFileSync(join(w.lab, "MORNING.md"), "A shift.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.1, num_turns: 3, is_error: false }));
+    w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:20:00Z");
+    const site = JSON.parse(readFileSync(join(w.kino, "notes/_mission.json"), "utf8"));
+    assert.equal(site.mission, "Find what comes next, before most people do.");
+    assert.equal(site.source, "https://github.com/msmsim/kinocomputing-lab/blob/main/CHARTER.md#mission");
+    writeFileSync(join(w.lab, "CHARTER.md"), "# Charter\n\n## Scope\n\nComputing.\n");
+    w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T02:23:00Z");
+    assert.ok(!/## The mission/.test(read("state/tonight.md")));
+  } finally {
+    w.dispose();
+  }
+});

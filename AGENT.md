@@ -524,8 +524,10 @@ day's additions, the picked ones first, and says how many more there are.
 
 ## Emphases
 
-Matt sets two to five **emphases**: areas or questions to concentrate on
-for a few weeks (`emphases/`, one file each, with what he wants and why;
+Everything the lab does serves its **mission** (`CHARTER.md`, "Mission";
+every briefing opens with it): find what comes next after the digital era,
+before most people do, and act on it. Under it, Matt sets two to five
+**emphases**: areas or questions to concentrate on for a few weeks (`emphases/`, one file each, with what he wants and why;
 the briefing lists the current ones). They're his, like the charter: don't
 edit them. They steer, they don't replace: takes come first, the rotation
 still runs, and a note doesn't have to serve one.

@@ -168,6 +168,10 @@ const MUTANTS = [
   ["the site never hears of the emphases", "tools/settle.mjs", "writeFileSync(join(KINO, \"notes\", \"_emphases.json\")", "(() => {})(join(KINO, \"notes\", \"_emphases.json\")"],
   ["a shift may rewrite the emphases", "tools/restore-machinery.sh", "AGENT.md CHARTER.md emphases BUILD.md", "AGENT.md CHARTER.md BUILD.md"],
   ["a build may rewrite the emphases", "tools/build.mjs", "\"config/\", \"emphases/\",", "\"config/\","],
+  // The mission (tools/mission.mjs).
+  ["briefings without the mission", "tools/prepare.mjs", "...(mission ? [\"## The mission\", \"\", mission, \"\"] : []),", ""],
+  ["the site never hears the mission", "tools/settle.mjs", "writeFileSync(join(KINO, \"notes\", \"_mission.json\")", "(() => {})(join(KINO, \"notes\", \"_mission.json\")"],
+  ["the mission runs on into the next section", "tools/mission.mjs", "(?=^## |(?![\\s\\S]))", "(?![\\s\\S])"],
 ];
 
 const JOBS = Math.max(1, Number(process.env.MUTANT_JOBS ?? availableParallelism()));

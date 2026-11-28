@@ -129,6 +129,11 @@
     "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
     "site": "4a4a15ee8fbe"
   },
+  "briefings without the mission": {
+    "file": "test/days.test.mjs",
+    "test": "the mission: every briefing opens with it, as the charter has it; settle sends it to the site; a charter without one, neither",
+    "site": "2862f230a48e"
+  },
   "claims any length": {
     "file": "test/claims.test.mjs",
     "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
@@ -559,6 +564,11 @@
     "test": "the week's changes: people's commits to the lab and the site, not the machinery running",
     "site": "b28e7da6a56a"
   },
+  "the mission runs on into the next section": {
+    "file": "test/days.test.mjs",
+    "test": "the mission: every briefing opens with it, as the charter has it; settle sends it to the site; a charter without one, neither",
+    "site": "3767528f11cb"
+  },
   "the rotation ignores the cycle": {
     "file": "test/unit.test.mjs",
     "test": "rotation: enough paradigms a night to go round in the cycle, longest-unlooked first, never-looked first of all",
@@ -593,6 +603,11 @@
     "file": "test/days.test.mjs",
     "test": "emphases: in every briefing with how each has been served; the depth shift leads with the one served least recently; the brief counts the day's; the site gets current and past; one that isn't running counts for none",
     "site": "5892769c7593"
+  },
+  "the site never hears the mission": {
+    "file": "test/days.test.mjs",
+    "test": "the mission: every briefing opens with it, as the charter has it; settle sends it to the site; a charter without one, neither",
+    "site": "733e7269943b"
   },
   "the time limit unreported": {
     "file": "test/nights.test.mjs",

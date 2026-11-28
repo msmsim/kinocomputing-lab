@@ -30,6 +30,7 @@ import { checkImage } from "./figure.mjs";
 import { dueAt, hold, release } from "./release.mjs";
 import { itemsOf, shippedFor } from "./shipped.mjs";
 import { currentOn, forSite, readEmphases } from "./emphases.mjs";
+import { missionOf } from "./mission.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -427,6 +428,11 @@ if ((tracker.paradigms ?? []).length) {
 // where they're kept.
 if (emphasisList.length || existsSync(join(KINO, "notes", "_emphases.json"))) {
   writeFileSync(join(KINO, "notes", "_emphases.json"), json(forSite(emphasisList, run.date, `https://github.com/${config.lab.repo}/tree/main/emphases`)));
+}
+// The mission, for About: Matt's words from the charter, as committed.
+const mission = missionOf(LAB);
+if (mission || existsSync(join(KINO, "notes", "_mission.json"))) {
+  writeFileSync(join(KINO, "notes", "_mission.json"), json({ updated: run.date, mission, source: `https://github.com/${config.lab.repo}/blob/main/CHARTER.md#mission` }));
 }
 // What the day's notes did for them, for the brief.
 const emphasisToday = (() => {

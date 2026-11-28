@@ -13,6 +13,7 @@ import { join } from "node:path";
 import { LAB, allowance, dayOf, frontMatter, json, now, readJson, readJsonl, regionFor, rotation, sundayPlan } from "./lib.mjs";
 import { weekInReview } from "./week.mjs";
 import { briefingSection, coverage, currentOn, leading, readEmphases } from "./emphases.mjs";
+import { missionOf } from "./mission.mjs";
 import { searchMore } from "./sources.mjs";
 import { readingShares, takeSteers, staleThreads, fetchJson } from "./steers.mjs";
 import { search } from "./search.mjs";
@@ -215,9 +216,12 @@ writeFileSync(join(LAB, "state/run.json"), json(run));
 const dayBefore = readJson(join(LAB, "state/brief-day.json"), null);
 const earlierToday = dayBefore?.date === today ? (dayBefore.shifts ?? []).filter((s) => s.shift !== SHIFT).reduce((n, s) => n + (s.out ?? []).length, 0) : 0;
 const quote = (text) => (text ? text.split("\n").map((l) => `> ${l}`).join("\n") : "> (no text)");
+const mission = missionOf(LAB);
 const lines = [
   `# Tonight: ${today}`,
   "",
+  // The mission first: every shift works under it (CHARTER.md, "Mission").
+  ...(mission ? ["## The mission", "", mission, ""] : []),
   `Run kind: **${money.kind}**. Model ${model}, up to $${modelUsd.toFixed(2)}.` +
     (exaUsd ? ` Exa search up to $${exaUsd.toFixed(2)} (\`node tools/search.mjs exa "…"\`).` : " Exa search is off tonight; arXiv and OpenAlex are free.") +
     ` Bank $${money.bank.toFixed(2)}.`,
