@@ -65,8 +65,10 @@ if (!run) {
 // 1. Spend. Recorded whatever happened: a failed run still cost money. The
 // model's cost and tonight's Exa searches come out of the same bank.
 const output = existsSync(outputPath) ? JSON.parse(readFileSync(outputPath, "utf8")) : null;
+// This shift's searches only: since it began, so the day's second shift
+// doesn't count the first's again. (A line with no time is the day's.)
 const exaUsd = Math.round(readJsonl(join(LAB, "state/search-spend.jsonl"))
-  .filter((l) => l.date === run.date).reduce((sum, l) => sum + l.usd, 0) * 10000) / 10000;
+  .filter((l) => l.date === run.date && (!run.at || !l.at || l.at >= run.at)).reduce((sum, l) => sum + l.usd, 0) * 10000) / 10000;
 if (output) {
   const usd = Number(output.total_cost_usd ?? 0);
   appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);

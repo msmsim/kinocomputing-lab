@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { allowance, frontMatter, KINO, LAB, regionFor, rotation, sundayPlan } from "../tools/lib.mjs";
@@ -532,12 +532,14 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     for (const c of ["a", "b"]) note(`claim-${c}`, "claim");
     writeFileSync(join(w.lab, "MORNING.md"), "The first shift went wide.\n\n## Waiting on a human\n\nNothing tonight.\n");
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.5, num_turns: 30, is_error: false }));
+    const exa = (at, usd) => appendFileSync(join(w.lab, "state/search-spend.jsonl"), `${JSON.stringify({ date: "2026-11-21", at, query: "q", usd })}\n`);
+    exa("2026-11-21T02:40:00Z", 0.075);
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:20:00Z");
     assert.deepEqual(JSON.parse(read("state/last-settle.json")).shifts, [1]);
 
     // Shift 2: depth, with what's left of the day and no rotation.
     const prep = w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:07:00Z", { LAB_SHIFT: "2" });
-    assert.match(prep, /shift 2, light run, \$1\.00/, "the rest of the day's money");
+    assert.match(prep, /shift 2, light run, \$0\.93/, "the rest of the day's money: $1.00 less the first shift's $0.075 of Exa");
     assert.deepEqual(JSON.parse(read("state/run.json")).paradigms, [], "the rotation is the first shift's");
     assert.match(read("state/tonight.md"), /## Shift 2 of 2: depth[\s\S]*12 went out in today's earlier shift/);
     assert.match(read("state/last-morning.md"), /The first shift went wide/, "the second shift reads what the first said");
@@ -545,7 +547,10 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     for (let i = 1; i <= 3; i++) note(`second-${i}`);
     writeFileSync(join(w.lab, "MORNING.md"), "The second shift went deep.\n\n## Waiting on a human\n\n- A paywalled paper only the PI can get.\n");
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.8, num_turns: 40, is_error: false }));
+    exa("2026-11-21T05:20:00Z", 0.05);
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T06:00:00Z", { LAB_SHIFT: "2" });
+    assert.deepEqual(read("state/spend.jsonl").trim().split("\n").map((l) => JSON.parse(l)).filter((l) => l.source === "exa").map((l) => l.usd), [0.075, 0.05],
+      "each shift's own Exa searches, not the day's so far");
 
     const published = readdirSync(join(w.lab, "published")).filter((f) => /(?:first|second|claim)-/.test(f));
     assert.equal(published.length, 15, "fifteen a day, claims included");
@@ -557,7 +562,7 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     assert.match(briefMd, /\*\*Lab brief: 21 November 2026\*\*\n\nThe first shift went wide\.\n\n\*\*Second shift\*\*\n\nThe second shift went deep\.\n\n\*\*Waiting on a human\*\*\n\n- A paywalled paper only the PI can get\.\n\n\*\*Published today\*\*/, "both shifts' own words, in order, then one Waiting on a human");
     assert.equal(briefMd.match(/Waiting on a human/g).length, 1, "once, not per shift; a 'nothing' says nothing");
     assert.match(briefMd, /\[first-01\][\s\S]*\[claim-d\][\s\S]*\[second-1\]/, "everything the day published");
-    assert.match(briefMd, /The day's 2 shifts cost \$1\.30, on Claude Sonnet 5\.5\./);
+    assert.match(briefMd, /The day's 2 shifts cost \$1\.43, on Claude Sonnet 5\.5\./);
     assert.ok(!/short of the lab/.test(briefMd), "fifteen is no shortfall");
     assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /<meta name="blyg:note" content="Updated with the day's second shift/);
   } finally {
