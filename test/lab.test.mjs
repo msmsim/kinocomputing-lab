@@ -386,6 +386,14 @@ function makeWorld() {
   cpSync(join(LAB, "node_modules"), join(lab, "node_modules"), { recursive: true });
   for (const dir of ["state/questions", "outbox", "published", "journal", "experiments"]) mkdirSync(join(lab, dir), { recursive: true });
   writeFileSync(join(lab, "state/questions/q-001-test.md"), "---\nid: q-001\ntitle: A test question\nkind: experiment\nstatus: open\npriority: 1\n---\n\nWhy.\n");
+  // As in the real lab: folders beside the notes in published/, an earlier
+  // brief's picture and a note's own figures (with a folder of their own).
+  // Every tool that reads published/ meets them, the week in review included.
+  mkdirSync(join(lab, "published/lab-2026-11-01-brief"), { recursive: true });
+  writeFileSync(join(lab, "published/lab-2026-11-01-brief/picture.json"), JSON.stringify({ file: "plate-old.svg", alt: "An older day's plate.", caption: "Old." }));
+  writeFileSync(join(lab, "published/lab-2026-11-01-brief/plate-old.svg"), "<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n");
+  mkdirSync(join(lab, "published/lab-2026-11-25-figures/data"), { recursive: true });
+  writeFileSync(join(lab, "published/lab-2026-11-25-figures/data/points.csv"), "x,y\n1,2\n");
   for (const path of ["tools", "notes/_note.html", "notes/_stream.html", "note.css", "favicon.svg", "favicon.ico", "apple-touch-icon.png", "kinocomputing-basic-og.jpg", "fonts"]) {
     if (existsSync(join(KINO, path))) cpSync(join(KINO, path), join(kino, path), { recursive: true });
   }
@@ -534,6 +542,12 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.5, num_turns: 30, is_error: false }));
     const exa = (at, usd) => appendFileSync(join(w.lab, "state/search-spend.jsonl"), `${JSON.stringify({ date: "2026-11-21", at, query: "q", usd })}\n`);
     exa("2026-11-21T02:40:00Z", 0.075);
+    // Each shift leaves the day's picture working files, in a folder of their own.
+    const sketch = (who) => {
+      mkdirSync(join(w.lab, "outbox/brief/parts"), { recursive: true });
+      writeFileSync(join(w.lab, "outbox/brief/parts/sketch.txt"), who);
+    };
+    sketch("first");
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:20:00Z");
     assert.deepEqual(JSON.parse(read("state/last-settle.json")).shifts, [1]);
 
@@ -548,9 +562,12 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     writeFileSync(join(w.lab, "MORNING.md"), "The second shift went deep.\n\n## Waiting on a human\n\n- A paywalled paper only the PI can get.\n");
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.8, num_turns: 40, is_error: false }));
     exa("2026-11-21T05:20:00Z", 0.05);
+    sketch("second");
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T06:00:00Z", { LAB_SHIFT: "2" });
     assert.deepEqual(read("state/spend.jsonl").trim().split("\n").map((l) => JSON.parse(l)).filter((l) => l.source === "exa").map((l) => l.usd), [0.075, 0.05],
       "each shift's own Exa searches, not the day's so far");
+    assert.equal(read("published/lab-2026-11-21-brief/parts/sketch.txt"), "second", "the second shift's picture files over the first's");
+    assert.ok(!existsSync(join(w.lab, "outbox/brief")));
 
     const published = readdirSync(join(w.lab, "published")).filter((f) => /(?:first|second|claim)-/.test(f));
     assert.equal(published.length, 15, "fifteen a day, claims included");
@@ -649,10 +666,6 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
   const write = (p, s) => writeFileSync(join(w.lab, p), s);
   try {
     w.publish("2026-11-20T00:00:00Z");
-    // An earlier day's brief left its picture in a folder beside the notes;
-    // the tracker reads published/ and must step past it.
-    mkdirSync(join(w.lab, "published/lab-2026-11-20-brief"), { recursive: true });
-    write("published/lab-2026-11-20-brief/plate-earlier.svg", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n");
     const ids = ["photonic", "thermodynamic", "reversible", "quantum", "dna-molecular"];
     write("state/paradigms.json", JSON.stringify({ paradigms: ids.map((id, i) => ({ id, name: `Paradigm ${id}`, group: "Let physics compute", last_checked: i === 3 ? "2026-11-01" : i === 4 ? null : "2026-11-15" })) }));
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:00:00Z");

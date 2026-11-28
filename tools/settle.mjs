@@ -21,7 +21,7 @@
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { KINO, LAB, frontMatter, json, now, readJson, readJsonl, sundayPlan } from "./lib.mjs";
 import { labIdIn, renderNote } from "./render.mjs";
@@ -352,7 +352,9 @@ for (const { file, name, data, body } of parsed) {
   }
   if (existsSync(join(outbox, name))) {
     mkdirSync(join(LAB, "published", name), { recursive: true });
-    for (const f of readdirSync(join(outbox, name))) renameSync(join(outbox, name, f), join(LAB, "published", name, f));
+    // Copied over what's there, not renamed: a folder can't be renamed onto
+    // one that already has files (an update's figures, say).
+    cpSync(join(outbox, name), join(LAB, "published", name), { recursive: true, force: true });
     rmSync(join(outbox, name), { recursive: true, force: true });
   }
   writeFileSync(join(KINO, "notes", `${name}.html`), page);
@@ -474,7 +476,8 @@ if (existsSync(pictureDir)) {
     report.push(`- The day's picture wasn't used: it ${error.message}.`);
   }
   mkdirSync(join(LAB, "published", BRIEF), { recursive: true });
-  for (const f of readdirSync(pictureDir)) renameSync(join(pictureDir, f), join(LAB, "published", BRIEF, f));
+  // Over the first shift's, if it left one: copied, as a note's figures are.
+  cpSync(pictureDir, join(LAB, "published", BRIEF), { recursive: true, force: true });
   rmSync(pictureDir, { recursive: true, force: true });
 }
 if (!picture && SHIFT >= (config.shifts?.per_day ?? 1)) report.push("- Today's brief has no picture: every brief opens with one (AGENT.md, \"The brief\").");
