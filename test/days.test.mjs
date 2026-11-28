@@ -72,6 +72,9 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     assert.match(briefMd, /\*\*Lab brief: 21 November 2026\*\*\n\nThe first shift went wide\.\n\n\*\*Second shift\*\*\n\nThe second shift went deep\.\n\n\*\*Published today\*\*/, "both shifts' own words, in order, then what went out");
     assert.ok(!/Waiting on a human|paywalled/.test(briefMd), "what's left for the PI stays in the lab's log, not the brief");
     assert.match(read("MORNING.md"), /A paywalled paper only the PI can get/, "where it is");
+    const attention = read("state/attention.jsonl").trim().split("\n").map((l) => JSON.parse(l));
+    assert.deepEqual(attention.map((a) => [a.shift, a.asks]), [[1, []], [2, ["A paywalled paper only the PI can get."]]],
+      "each shift's asks recorded for the week in review; a 'nothing' is none");
     assert.match(briefMd, /\[first-01\][\s\S]*\[claim-d\][\s\S]*\[second-1\]/, "everything the day published");
     assert.match(briefMd, /The day's 2 shifts cost \$1\.43, on Claude Sonnet 5\.5\./);
     assert.ok(!/short of the lab/.test(briefMd), "fifteen is no shortfall");

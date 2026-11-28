@@ -24,6 +24,16 @@
     "test": "the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported",
     "site": "f4b15a35d24a"
   },
+  "a lost claim passes settle's checks": {
+    "file": "test/claims.test.mjs",
+    "test": "settle checks its own work: a broken promise is reported in MORNING.md and fails the run",
+    "site": "a181dad27650"
+  },
+  "a lost page passes settle's checks": {
+    "file": "test/claims.test.mjs",
+    "test": "settle checks its own work: a broken promise is reported in MORNING.md and fails the run",
+    "site": "41b83ebf6417"
+  },
   "a note's kind can change": {
     "file": "test/claims.test.mjs",
     "test": "claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale",
@@ -37,7 +47,7 @@
   "a shift with no cost report costs nothing": {
     "file": "test/nights.test.mjs",
     "test": "a shift stopped at its time limit, with no cost report, is counted at its cap and still settled",
-    "site": "97c1b8fbb664"
+    "site": "0ce0eca558d8"
   },
   "a shift's figures renamed onto the last's": {
     "file": "test/days.test.mjs",
@@ -50,8 +60,8 @@
     "site": "b5e49051a7b2"
   },
   "a shift's Waiting on a human section in the brief": {
-    "file": "test/nights.test.mjs",
-    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "7f6452b825e1"
   },
   "a short day unreported": {
@@ -279,6 +289,11 @@
     "test": "sources: Semantic Scholar waits and retries when its free pool is busy; NIH is asked by POST; SEC is told who is asking",
     "site": "53413c75c8e7"
   },
+  "settle doesn't check its own work": {
+    "file": "test/claims.test.mjs",
+    "test": "settle checks its own work: a broken promise is reported in MORNING.md and fails the run",
+    "site": "b26e7b72541a"
+  },
   "shares edited": {
     "file": "test/shares.test.mjs",
     "test": "shares from Subset: waiting in reading/, briefed like takes, offered again until handled, kept as sent",
@@ -449,6 +464,11 @@
     "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
     "site": "3eefb2359019"
   },
+  "the week counts the PI's attention from before it": {
+    "file": "test/paradigms.test.mjs",
+    "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
+    "site": "0d6a47c915f3"
+  },
   "the week in review reads published/'s folders as notes": {
     "file": "test/paradigms.test.mjs",
     "test": "a Sunday: the week in review first, then the deep dive or roundtable on the deep model, with a longer clock, from the bank; a floor of two",
@@ -478,6 +498,11 @@
     "file": "test/unit.test.mjs",
     "test": "render: refuses what the blyg can't carry, before it reaches the site",
     "site": "debc85f96d7c"
+  },
+  "what a shift asked goes unrecorded": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "a893987d1dcb"
   },
   "write-ups quotable": {
     "file": "test/claims.test.mjs",

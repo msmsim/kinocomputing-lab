@@ -58,12 +58,25 @@ export async function weekInReview(lab, today, { siteRepo = null, fetchJson = nu
     .map((c) => ({ id: c.id, stage: c.stage, statement: c.statement }));
   const paradigms = (readJson(join(lab, "state/paradigms.json"), { paradigms: [] }).paradigms ?? [])
     .filter((p) => p.last_checked && inWeek(p.last_checked)).map((p) => p.name);
+  // The PI's attention (INFLUENCES.md, "The attention ceiling"): how often a
+  // shift needed the PI, for how long each ask stood, and what the PI sent.
+  const shifts = readJsonl(join(lab, "state/attention.jsonl")).filter((a) => inWeek(a.date));
+  const standing = new Map();
+  for (const a of shifts) for (const ask of a.asks ?? []) standing.set(ask, (standing.get(ask) ?? 0) + 1);
+  const attention = {
+    shifts: shifts.length,
+    asking: shifts.filter((a) => (a.asks ?? []).length).length,
+    asks: [...standing].map(([text, times]) => ({ text, shifts: times })).sort((a, b) => b.shifts - a.shifts || a.text.localeCompare(b.text)),
+    takes: shifts.reduce((n, a) => n + (a.takes ?? 0), 0),
+    shares: shifts.reduce((n, a) => n + (a.shares ?? 0), 0),
+  };
   return {
     since,
     briefs,
     notes,
     claims,
     paradigms,
+    attention,
     changes: {
       lab: labChanges(lab, since),
       site: siteRepo && fetchJson ? await siteChanges(siteRepo, since, fetchJson) : [],

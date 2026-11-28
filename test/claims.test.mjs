@@ -124,3 +124,27 @@ test("images: drawn in the house style, checked, named by their contents, publis
     w.dispose();
   }
 });
+
+test("settle checks its own work: a broken promise is reported in MORNING.md and fails the run", () => {
+  const faults = [
+    ["lose-a-page", /went out but is neither on kinocomputing nor held for it/],
+    ["lose-a-claim", /a committed claim was lost or changed/],
+    ["leave-a-note", /notes left in the outbox, neither published nor refused/],
+  ];
+  for (const [fault, says] of faults) {
+    const w = makeWorld();
+    try {
+      w.publish("2026-11-20T00:00:00Z");
+      writeFileSync(join(w.lab, "state/claims.jsonl"), `${JSON.stringify({ id: "c-001", stage: "conjecture", statement: "x", at: "2026-11-20T03:00:00Z" })}\n`);
+      w.commit();
+      w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T02:23:00Z");
+      writeFileSync(join(w.lab, "outbox/lab-2026-11-21-a-note.md"), "---\nkind: notebook\n---\n\n**A note**\n\nIts lead.\n");
+      writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.1, num_turns: 2, is_error: false }));
+      writeFileSync(join(w.lab, "MORNING.md"), "A night.\n");
+      assert.throws(() => w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:00:00Z", { LAB_FAULT: fault }), says, fault);
+      assert.match(readFileSync(join(w.lab, "MORNING.md"), "utf8"), /## Settle's own checks failed\n\n- /, fault);
+    } finally {
+      w.dispose();
+    }
+  }
+});

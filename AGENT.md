@@ -434,6 +434,12 @@ commits people made to the lab and the site. Read them, and write:
   reader: what the lab or the site can do now that it couldn't on Monday,
   and why it matters to someone reading. From the commits in the briefing;
   leave out the plumbing that changes nothing a reader would notice.
+- **What the lab needed from the PI**, in a line or two: how many shifts
+  asked for something, and how long the longest ask stood; what the PI sent
+  in. The PI's attention is a ceiling on what the lab can do, so a week that
+  asked less and stood still less is a better week (`INFLUENCES.md`, "The
+  attention ceiling, and the merge step"). Not the asks themselves; they're
+  the PI's to handle elsewhere.
 - **The lead, as always**, is what the week found, not that a week passed.
 
 End the journal entry with the week's themes in a line or two: the second

@@ -58,6 +58,11 @@ const summary = [];
 // who can't see the lab (no ids, no file names).
 const told = [];
 let spent = 0;
+// What settle appends to the spend record, checked against it at the end.
+const spendPath = join(LAB, "state/spend.jsonl");
+const spendBefore = readJsonl(spendPath).length;
+let spendAppended = 0;
+const recordSpend = (line) => { appendFileSync(spendPath, `${JSON.stringify(line)}\n`); spendAppended += 1; };
 
 // 0. Held pages whose time has come go out first (tools/release.mjs): a
 // release whose trigger never came goes out with the next shift.
@@ -78,7 +83,7 @@ const exaUsd = Math.round(readJsonl(join(LAB, "state/search-spend.jsonl"))
   .filter((l) => l.date === run.date && (!run.at || !l.at || l.at >= run.at)).reduce((sum, l) => sum + l.usd, 0) * 10000) / 10000;
 if (output) {
   const usd = Number(output.total_cost_usd ?? 0);
-  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error })}\n`);
+  recordSpend({ date: run.date, usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, turns: output.num_turns ?? null, error: !!output.is_error });
   summary.push(`$${usd.toFixed(2)}`);
   spent += usd;
   if (output.is_error) {
@@ -87,7 +92,7 @@ if (output) {
   }
 }
 if (exaUsd > 0) {
-  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: exaUsd, source: "exa" })}\n`);
+  recordSpend({ date: run.date, usd: exaUsd, source: "exa" });
   summary.push(`$${exaUsd.toFixed(2)} Exa`);
   spent += exaUsd;
 }
@@ -117,7 +122,7 @@ if (run.skip) {
 // A shift that left no account of itself (killed hard, or crashed) is
 // counted at its cap: the bank must never think it's richer than it is.
 if (!output) {
-  appendFileSync(join(LAB, "state/spend.jsonl"), `${JSON.stringify({ date: run.date, usd: run.max_usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, estimated: true })}\n`);
+  recordSpend({ date: run.date, usd: run.max_usd, source: "model", ...(process.env.LAB_LOCAL === "1" ? { account: "local" } : {}), model: run.model, kind: run.kind, estimated: true });
   summary.push(`~$${run.max_usd.toFixed(2)} (no cost report; counted at the cap)`);
   spent += run.max_usd;
   report.push("- The shift left no cost report, so it is counted at its cap.");
@@ -519,6 +524,19 @@ const shiftsWith = (said) => [...earlierShifts.map((s) => ({ ...s, picture: null
 // heading, or as a line of its own ("Waiting on a human: nothing.").
 const WAITING = /^\*\*Waiting on a human\*\*\s*$/im;
 const WAITING_LINE = /^\s*(?:\*\*)?Waiting on a human(?:\*\*)?\s*:.*$/gim;
+/** What a shift's summary asks of the PI, one item each; "nothing" is none. */
+function asksIn(said) {
+  const text = said ?? "";
+  const items = [...text.matchAll(WAITING_LINE)].map((m) => m[0].replace(/^\s*(?:\*\*)?Waiting on a human(?:\*\*)?\s*:\s*/i, ""));
+  const at = text.search(WAITING);
+  if (at !== -1) {
+    const rest = text.slice(at).replace(WAITING, "").trim();
+    const next = rest.search(/^\*\*[^*\n]+\*\*\s*$/m);
+    const section = next === -1 ? rest : rest.slice(0, next);
+    items.push(...section.split(/\n(?=\s*[-*] )/).map((l) => l.replace(/^\s*[-*]\s+/, "").replace(/\s+/g, " ").trim()));
+  }
+  return items.map((i) => i.trim()).filter((i) => i && !/^nothing(?:\s+(?:tonight|today|yet|new))?\.?$/i.test(i));
+}
 function withoutWaiting(said) {
   const text = (said ?? "").replace(WAITING_LINE, "");
   const at = text.search(WAITING);
@@ -612,4 +630,44 @@ if (report.length) {
 const settledBefore = readJson(join(LAB, "state/last-settle.json"), {});
 const shiftsSettled = [...new Set([...(settledBefore.date === run.date ? settledBefore.shifts ?? [] : []), SHIFT])].sort();
 writeFileSync(join(LAB, "state/last-settle.json"), json({ date: run.date, shift: SHIFT, shifts: shiftsSettled, summary, report }));
+
+// 7. What the shift needed from the PI, and what the PI sent it: the week in
+// review counts both (tools/week.mjs), since the PI's attention is a ceiling
+// on how much the lab can do (INFLUENCES.md, "The attention ceiling").
+appendFileSync(join(LAB, "state/attention.jsonl"), `${JSON.stringify({
+  date: run.date, shift: SHIFT, asks: asksIn(shiftSaid),
+  takes: run.steers.filter((st) => !st.share).length, shares: run.steers.filter((st) => st.share).length,
+})}\n`);
+
+// 8. Settle checks its own work before it calls the night done: a program
+// that finds it has broken a promise says so and stops (INFLUENCES.md,
+// TigerStyle). A failure turns the run red, after the night is committed.
+// LAB_FAULT breaks one promise on purpose, for the tests of these checks.
+if (process.env.LAB_FAULT === "lose-a-page" && out[0]) rmSync(notePath(out[0].name), { force: true });
+if (process.env.LAB_FAULT === "lose-a-claim" && committed.length) writeFileSync(claimsPath, committed.slice(1).map((l) => `${l}\n`).join(""));
+if (process.env.LAB_FAULT === "leave-a-note") writeFileSync(join(outbox, "lab-0000-00-00-left.md"), "left\n");
+const broken = [];
+const leftInOutbox = existsSync(outbox) ? readdirSync(outbox).filter((f) => f.endsWith(".md")) : [];
+if (leftInOutbox.length) broken.push(`notes left in the outbox, neither published nor refused: ${leftInOutbox.join(", ")}`);
+for (const n of out) {
+  if (!isPublished(n.name)) broken.push(`${n.name} went out but isn't in published/`);
+  if (!notePath(n.name)) broken.push(`${n.name} went out but is neither on kinocomputing nor held for it`);
+}
+if (briefPage && !notePath(BRIEF)) broken.push("the brief was written but is neither on kinocomputing nor held for it");
+if (existsSync(pictureDir)) broken.push("the day's picture is still in outbox/brief/");
+const claimsNow = existsSync(claimsPath) ? readFileSync(claimsPath, "utf8").split("\n").filter((l) => l.trim()) : [];
+if (committed.some((line, i) => claimsNow[i] !== line)) broken.push("a committed claim was lost or changed in state/claims.jsonl");
+if (readJsonl(spendPath).length !== spendBefore + spendAppended) broken.push(`state/spend.jsonl has ${readJsonl(spendPath).length} lines, not the ${spendBefore + spendAppended} settle left`);
+const settledNow = readJson(join(LAB, "state/last-settle.json"), {});
+if (settledNow.date !== run.date || !(settledNow.shifts ?? []).includes(SHIFT)) broken.push("state/last-settle.json doesn't record this shift");
+for (const path of readJson(join(LAB, "held/manifest.json"), { files: [] }).files) {
+  if (!existsSync(join(LAB, "held", path))) broken.push(`held/manifest.json lists ${path}, which isn't held`);
+}
 console.log(`settle: ${summary.join(", ") || "nothing published"}`);
+if (broken.length) {
+  const morning = join(LAB, "MORNING.md");
+  const prior = existsSync(morning) ? readFileSync(morning, "utf8").trimEnd() : `# ${run.date}`;
+  writeFileSync(morning, `${prior}\n\n## Settle's own checks failed\n\n${broken.map((b) => `- ${b}`).join("\n")}\n`);
+  for (const b of broken) console.error(`settle: broken: ${b}`);
+  process.exit(1);
+}

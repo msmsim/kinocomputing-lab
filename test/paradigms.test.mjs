@@ -113,6 +113,12 @@ test("a Sunday: the week in review first, then the deep dive or roundtable on th
     writeFileSync(join(w.lab, "published/lab-2026-11-26-photonic-note.md"), "---\nkind: notebook\n---\n\n**A photonic note**\n\nIts lead.\n");
     writeFileSync(join(w.lab, "published/lab-2026-11-20-too-old.md"), "---\nkind: notebook\n---\n\n**Too old**\n\nLast week.\n");
     writeFileSync(join(w.lab, "state/claims.jsonl"), `${JSON.stringify({ id: "c-009", stage: "simulated", statement: "Converters dominate small arrays.", at: "2026-11-25T05:00:00Z" })}\n`);
+    writeFileSync(join(w.lab, "state/attention.jsonl"), [
+      { date: "2026-11-20", shift: 1, asks: ["Last week's ask"], takes: 9, shares: 9 },
+      { date: "2026-11-25", shift: 1, asks: ["A login for the archive"], takes: 1, shares: 2 },
+      { date: "2026-11-25", shift: 2, asks: ["A login for the archive"], takes: 0, shares: 0 },
+      { date: "2026-11-26", shift: 1, asks: [], takes: 0, shares: 1 },
+    ].map((l) => JSON.stringify(l)).join("\n") + "\n");
     w.commit();
 
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-29T02:23:00Z");
@@ -125,6 +131,8 @@ test("a Sunday: the week in review first, then the deep dive or roundtable on th
     assert.ok(!first.includes("(notebook): Too old"), "the week, not before");
     assert.match(first, /- c-009 → simulated: Converters dominate small arrays\./);
     assert.match(first, /Paradigms looked at this week: Photonic\./);
+    assert.match(first, /What the lab needed from the PI: 2 of the week's 3 shifts asked for something; the PI sent 1 take and 3 shares\. The asks, with how many shifts each stood:\n\n- A login for the archive \(2 shifts\)/,
+      "the week's, not before");
     assert.match(first, /What changed in how the lab works[^\n]*\n\n- night\n- seed/, "people's commits to the lab");
     assert.match(first, /The second shift writes a deep dive in Bompa's voice/);
     assert.ok(!first.includes("## Tonight's paradigms\n\nThe rotation"), "no paradigms tonight");

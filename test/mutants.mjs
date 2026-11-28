@@ -61,7 +61,7 @@ const MUTANTS = [
   ["selections unchecked", "tools/render.mjs", "if (q.lines.length && !textContent(target.html).includes(", "if (false && !textContent(target.html).includes("],
   ["directives in code are quotes", "tools/render.mjs", "const d = !fence && line.match(DIRECTIVE);", "const d = line.match(DIRECTIVE);"],
   ["machinery not restored", "tools/restore-machinery.sh", 'then git checkout HEAD -- "$path"; fi', "then :; fi"],
-  ["a shift with no cost report costs nothing", "tools/settle.mjs", "if (!output) {\n  appendFileSync(", "if (false) {\n  appendFileSync("],
+  ["a shift with no cost report costs nothing", "tools/settle.mjs", "if (!output) {\n  recordSpend(", "if (false) {\n  recordSpend("],
   ["the time limit unreported", "tools/settle.mjs", "if (exit === 124) {", "if (false) {"],
   ["no brief", "tools/settle.mjs", "if (briefPage) {", "if (false) {"],
   ["claims in a voice", "tools/render.mjs", "if (voice && (fragment || kind === \"brief\")) throw", "if (false) throw"],
@@ -127,6 +127,11 @@ const MUTANTS = [
   ["Sunday's week in review out with the night", "tools/settle.mjs", 'const holdNotes = holding && run.sunday?.job === "week-in-review";', "const holdNotes = false;"],
   ["an overdue release waits for its trigger", "tools/settle.mjs", "const releasedFirst = release(LAB, KINO, now());", "const releasedFirst = [];"],
   ["a held brief goes out early", "tools/release.mjs", "if (!manifest || manifest.due > at) return [];", "if (!manifest) return [];"],
+  ["settle doesn't check its own work", "tools/settle.mjs", "if (broken.length) {", "if (false) {"],
+  ["a lost page passes settle's checks", "tools/settle.mjs", "  if (!notePath(n.name)) broken.push(", "  if (false) broken.push("],
+  ["a lost claim passes settle's checks", "tools/settle.mjs", "if (committed.some((line, i) => claimsNow[i] !== line)) broken.push(", "if (false) broken.push("],
+  ["what a shift asked goes unrecorded", "tools/settle.mjs", "asks: asksIn(shiftSaid),", "asks: [],"],
+  ["the week counts the PI's attention from before it", "tools/week.mjs", 'readJsonl(join(lab, "state/attention.jsonl")).filter((a) => inWeek(a.date));', 'readJsonl(join(lab, "state/attention.jsonl"));'],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
 ];
 
