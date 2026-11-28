@@ -44,19 +44,24 @@
     "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
     "site": "074199ee1e23"
   },
+  "a shift's Waiting on a human line in the brief": {
+    "file": "test/days.test.mjs",
+    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
+    "site": "b5e49051a7b2"
+  },
+  "a shift's Waiting on a human section in the brief": {
+    "file": "test/nights.test.mjs",
+    "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
+    "site": "7f6452b825e1"
+  },
   "a short day unreported": {
     "file": "test/shares.test.mjs",
     "test": "a short day is reported by its last shift, counting both",
     "site": "1396bfc7e460"
   },
-  "a Waiting on a human per shift": {
-    "file": "test/days.test.mjs",
-    "test": "a day of two shifts: the first takes its share, the second has the rest and no rotation; fifteen notes a day, claims included; one brief, updated with both",
-    "site": "d60c0ab96743"
-  },
   "an entry for any paradigm": {
     "file": "test/paradigms.test.mjs",
-    "test": "(the file failed)",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
     "site": "6837a1665e98"
   },
   "an opaque PNG passes": {
@@ -166,7 +171,7 @@
   },
   "images with scripts": {
     "file": "test/claims.test.mjs",
-    "test": "(the file failed)",
+    "test": "images: drawn in the house style, checked, named by their contents, published beside their note; the house rules refuse what breaks them",
     "site": "c384cb6f5f34"
   },
   "images without captions": {
@@ -231,7 +236,7 @@
   },
   "paradigm entries any length": {
     "file": "test/paradigms.test.mjs",
-    "test": "(the file failed)",
+    "test": "paradigm rotation: tonight's paradigms in the briefing; entries publish as quotable fragments; the tracker quotes them; the rotation moves on only for those published",
     "site": "36a3d00391af"
   },
   "paradigm entries are threads": {
@@ -326,7 +331,7 @@
   },
   "TeX left to markdown": {
     "file": "test/unit.test.mjs",
-    "test": "(the file failed)",
+    "test": "render: maths as kinocomputing draws it — TeX safe from markdown, MathML with the TeX kept, prices and code left alone, unreadable TeX refused",
     "site": "06ef224b7c6c"
   },
   "the brief forgets the first shift": {

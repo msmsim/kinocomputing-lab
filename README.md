@@ -268,4 +268,4 @@ mutants whose names have that word. Add a mutant with each new rule.
 
 
 An experiment that outgrows this repo gets its own: the shift asks under
-"Waiting on a human" in the brief, and you create it.
+"Waiting on a human" in `MORNING.md`, and you create it.

@@ -224,7 +224,8 @@ says.
    is the day's brief's preview) —
    what you did and found tonight, what each of the PI's takes became, and,
    under "Waiting on a human", anything only the PI can do. Nothing else.
-   It is published as tonight's brief on kinocomputing, under a list of
+   It is published as tonight's brief on kinocomputing, without the
+   "Waiting on a human" part (that stays in the lab's log), under a list of
    what went out (settle adds that, and what it saw), so it follows
    "Writing for the site": no lab ids, things named by what they are, a
    note linked as `https://www.kinocomputing.com/<its lab name>`. A

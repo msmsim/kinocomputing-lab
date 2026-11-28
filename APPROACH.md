@@ -64,7 +64,8 @@ left no cost report it is counted at its cap.
   `CHARTER.md` (the standards). Or run a shift by hand with a focus:
   `tools/local-shift.sh --focus q-003`.
 - **The lab asks you** only for credentials, a new repo, money, or a
-  judgement that is genuinely yours, under "Waiting on a human" in the brief.
+  judgement that is genuinely yours, under "Waiting on a human" in
+  `MORNING.md`, the lab's log (not in the brief).
   How to run an experiment, and its pre-registered thresholds, are the
   researcher's calls; it says which reading of your words it used, and
   you can answer in a take.

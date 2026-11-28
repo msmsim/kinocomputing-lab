@@ -93,7 +93,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
     assert.match(brief, /<strong>Lab brief: 21 November 2026<\/strong>/);
     assert.match(brief, /Published a first look\./);
-    assert.match(brief, /<p><strong>Waiting on a human<\/strong><\/p>/, "the shift's headings read like the brief's own");
+    assert.ok(!/Waiting on a human/.test(brief), "what's left for the PI isn't in the brief");
     assert.ok(!/<h[1-6]>Waiting/.test(brief));
     assert.match(brief, /<a href="https:\/\/www\.kinocomputing\.com\/lab-2026-11-21-first-look">First look<\/a>/);
     assert.match(brief, /The automatic rerun of the draw experiment on fresh random numbers reached the same verdict as the original/);

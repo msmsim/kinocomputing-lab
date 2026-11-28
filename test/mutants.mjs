@@ -88,7 +88,8 @@ const MUTANTS = [
   ["the first shift judges the day", "tools/settle.mjs", "if (SHIFT >= (config.shifts?.per_day ?? 1) && dayTotal < floor) {", "if (dayTotal < floor) {"],
   ["the second shift needn't wait", "tools/check-shift.sh", 'elif [ "$shift_no" = 2 ] && ! has 1; then', 'elif false; then'],
   ["a settled shift runs again", "tools/check-shift.sh", "  if has \"$shift_no\"; then", "  if false; then"],
-  ["a Waiting on a human per shift", "tools/settle.mjs", "const at = (said ?? \"\").search(WAITING);", "const at = -1;"],
+  ["a shift's Waiting on a human section in the brief", "tools/settle.mjs", "  const at = text.search(WAITING);", "  const at = -1;"],
+  ["a shift's Waiting on a human line in the brief", "tools/settle.mjs", 'const text = (said ?? "").replace(WAITING_LINE, "");', 'const text = said ?? "";'],
   ["shares ignored", "tools/prepare.mjs", 'steers.push(...readingShares(join(LAB, "reading"),', 'steers.push(...readingShares(join(LAB, "elsewhere"),'],
   ["shares edited", "tools/restore-machinery.sh", "sources/archive-2025/about-2025.md reading)", "sources/archive-2025/about-2025.md)"],
   ["shares handled without the hopper", "tools/settle.mjs", 'if (String(line.disregarded ?? "").trim() || shareInHopper(line.steer.slice(6))) return true;', "return true;"],
@@ -221,9 +222,11 @@ function runFile(lab, file, test, stops) {
     let failed = null;
     let tail = "";
     child.stdout.on("data", (chunk) => {
-      tail = (tail + chunk).slice(-2000);
-      const m = !failed && tail.match(/^not ok \d+ - (.+)$/m);
+      // Matched before trimming: a big chunk can carry the line well back.
+      const seen = tail + chunk;
+      const m = !failed && seen.match(/^not ok \d+ - (.+)$/m);
       if (m) { failed = m[1].trim(); stop(); }
+      tail = seen.slice(-2000);
     });
     child.on("close", (code) => resolve(failed ?? (code === 0 ? null : "(the file failed)")));
   });
@@ -261,12 +264,18 @@ async function worker(queue, results) {
       const known = killers[name] && files.includes(killers[name].file) ? killers[name] : null;
       let killer = known ? await firstFailure(lab, [known.file], known.test) : null;
       let verdict = null;
-      if (!killer) {
-        killer = await firstFailure(lab, files);
-        // A kill found with every file running at once is confirmed with that
-        // test alone: a test that fails only under load is no kill.
-        if (killer && killer !== "timed out" && !(await firstFailure(lab, [killer.file], killer.test))) verdict = "killed only under load";
+      // Then every file at once. A kill found that way is confirmed with that
+      // test alone: a test that fails only under load is no kill, and is
+      // named so it can be fixed; the search goes on, twice at most.
+      const flaky = [];
+      for (let tries = 0; !killer && tries < 2; tries++) {
+        const found = await firstFailure(lab, files);
+        if (!found || found === "timed out") { killer = found; break; }
+        if (await firstFailure(lab, [found.file], found.test)) killer = found;
+        else flaky.push(found.test);
       }
+      if (!killer && flaky.length) verdict = `killed only under load, by ${[...new Set(flaky)].join("; ")}`;
+      else if (flaky.length) console.log(`   (flaky under load: ${[...new Set(flaky)].join("; ")})`);
       writeFileSync(path, original);
       verdict ??= killer === "timed out" ? "timed out" : killer ? "killed" : "survived";
       if (verdict === "killed") killers[name] = { file: killer.file, test: killer.test, site: siteOf(from, to) };

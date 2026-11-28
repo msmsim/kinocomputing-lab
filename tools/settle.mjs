@@ -514,26 +514,23 @@ const modelWords = (run.model ?? "").replace(/^claude-/, "Claude ").replace(/-(\
 const SHIFT_NAMES = { 1: "First shift", 2: "Second shift" };
 const shiftsWith = (said) => [...earlierShifts.map((s) => ({ ...s, picture: null })), { shift: SHIFT, said, out, told, spent, model: modelWords, picture }]
   .sort((a, b) => a.shift - b.shift);
-// A shift's summary and what it left for the PI, apart: the brief gathers
-// every shift's "Waiting on a human" into one section after the summaries,
-// rather than one per shift, and a "nothing" says nothing.
+// What a shift left for the PI ("Waiting on a human") stays in MORNING.md,
+// the lab's log, and is kept out of the brief: as a section under its own
+// heading, or as a line of its own ("Waiting on a human: nothing.").
 const WAITING = /^\*\*Waiting on a human\*\*\s*$/im;
-function splitWaiting(said) {
-  const at = (said ?? "").search(WAITING);
-  if (at === -1) return { body: (said ?? "").trim(), waiting: "" };
-  const rest = said.slice(at).replace(WAITING, "").trim();
+const WAITING_LINE = /^\s*(?:\*\*)?Waiting on a human(?:\*\*)?\s*:.*$/gim;
+function withoutWaiting(said) {
+  const text = (said ?? "").replace(WAITING_LINE, "");
+  const at = text.search(WAITING);
+  if (at === -1) return text.replace(/\n{3,}/g, "\n\n").trim();
+  const rest = text.slice(at).replace(WAITING, "").trim();
   const next = rest.search(/^\*\*[^*\n]+\*\*\s*$/m);
-  const waiting = (next === -1 ? rest : rest.slice(0, next)).trim();
   const after = next === -1 ? "" : rest.slice(next).trim();
-  return {
-    body: [said.slice(0, at).trim(), after].filter(Boolean).join("\n\n"),
-    waiting: /^(?:-\s*)?nothing(?:\s+(?:tonight|today|yet))?\.?$/i.test(waiting) ? "" : waiting,
-  };
+  return [text.slice(0, at).trim(), after].filter(Boolean).join("\n\n").replace(/\n{3,}/g, "\n\n");
 }
 const briefOf = (said) => {
   const shifts = shiftsWith(said);
-  const parts = shifts.map((s) => ({ ...s, ...splitWaiting(s.said) }));
-  const waiting = parts.map((p) => p.waiting).filter(Boolean);
+  const parts = shifts.map((s) => ({ ...s, body: withoutWaiting(s.said) }));
   const several = shifts.length > 1;
   // Everything the day published, once each, in the order it went out.
   const published = new Map();
@@ -558,8 +555,6 @@ const briefOf = (said) => {
     opening[0],
     ...(picture ? [`![${picture.alt.replace(/[\[\]]/g, "")}](${picture.file} "${picture.caption.replace(/"/g, "”")}")`] : []),
     ...opening.slice(1),
-    "**Waiting on a human**",
-    waiting.length ? waiting.join("\n\n") : "Nothing today.",
     ...(published.size ? ["**Published today**", [...published.values()].map((n) => `- [${n.title}](${ORIGIN}${n.name})${n.update ? " (updated)" : ""}${n.claim ? ", a claim" : n.paradigm ? ", a paradigm entry" : ""}`).join("\n")] : []),
     ...(addedToday.length ? [
       "**New in Reading**",
