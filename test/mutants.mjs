@@ -101,6 +101,10 @@ const MUTANTS = [
   ["the week in review reads published/'s folders as notes", "tools/week.mjs", 'readdirSync(join(lab, "published")).filter((f) => f.endsWith(".md")).sort()', 'readdirSync(join(lab, "published")).sort()'],
   ["a shift's figures renamed onto the last's", "tools/settle.mjs", 'cpSync(pictureDir, join(LAB, "published", BRIEF), { recursive: true, force: true });', 'for (const f of readdirSync(pictureDir)) renameSync(join(pictureDir, f), join(LAB, "published", BRIEF, f));'],
   ["the second shift pays for the first's searches", "tools/settle.mjs", "(!run.at || !l.at || l.at >= run.at)", "true"],
+  ["the brief out with the night's notes", "tools/settle.mjs", "const briefHeld = holding && !briefLive;", "const briefHeld = false;"],
+  ["Sunday's week in review out with the night", "tools/settle.mjs", 'const holdNotes = holding && run.sunday?.job === "week-in-review";', "const holdNotes = false;"],
+  ["an overdue release waits for its trigger", "tools/settle.mjs", "const releasedFirst = release(LAB, KINO, now());", "const releasedFirst = [];"],
+  ["a held brief goes out early", "tools/release.mjs", "if (!manifest || manifest.due > at) return [];", "if (!manifest) return [];"],
   ["stale write-ups unseen", "tools/steers.mjs", "&& (live.get(t.id)?.version ?? 0) > t.version);", "&& false);"],
 ];
 

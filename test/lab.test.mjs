@@ -24,15 +24,20 @@ const KINO_ORIGIN = "https://www.kinocomputing.com/";
 
 test("night shift: what settle writes into kinocomputing is what the workflow publishes", () => {
   const settle = readFileSync(join(LAB, "tools/settle.mjs"), "utf8");
-  const written = new Set([...settle.matchAll(/join\(KINO, "([^"/]+)/g)].map((m) => m[1]));
+  // Straight to kinocomputing, or by way of held/ (tools/release.mjs).
+  const written = new Set([...settle.matchAll(/join\(KINO, "([^"/]+)|place\(`([a-z]+)\//g)].map((m) => m[1] ?? m[2]));
   for (const dir of ["notes", "media"]) assert.ok(written.has(dir), `settle writes ${dir}/`);
-  const flow = readFileSync(join(LAB, ".github/workflows/night-shift.yml"), "utf8");
-  const publish = flow.slice(flow.indexOf("- name: Publish to kinocomputing"));
-  const status = publish.match(/git status --porcelain ([^)]+)\)/)[1].split(/\s+/);
-  const added = publish.match(/git add ([^\n]+)/)[1].split(/\s+/);
   const read = new Set(["blyg"]); // read for quotes, never written
-  for (const dir of [...written].filter((d) => !read.has(d))) {
-    assert.ok(status.includes(dir) && added.includes(dir), `${dir}/ is written by settle but never published`);
+  // The night's workflow publishes what settle writes; the release workflow,
+  // what it held.
+  for (const workflow of ["night-shift.yml", "release.yml"]) {
+    const flow = readFileSync(join(LAB, ".github/workflows", workflow), "utf8");
+    const publish = flow.slice(flow.indexOf("- name: Publish to kinocomputing"));
+    const status = publish.match(/git status --porcelain ([^)]+)\)/)[1].split(/\s+/);
+    const added = publish.match(/git add ([^\n]+)/)[1].split(/\s+/);
+    for (const dir of [...written].filter((d) => !read.has(d))) {
+      assert.ok(status.includes(dir) && added.includes(dir), `${dir}/ is written by settle but ${workflow} never publishes it`);
+    }
   }
 });
 
@@ -426,7 +431,9 @@ function makeWorld() {
       .replace(/ *<meta name="blyg:(generated|kind)"[^>]*>\n/g, "");
     writeFileSync(join(kino, "notes", `${slug}.html`), page);
   };
-  return { root, lab, kino, node, commit, publish, take, dispose: () => rmSync(root, { recursive: true, force: true }) };
+  // The release workflow: held pages that are due go to kinocomputing.
+  const release = (at) => node(lab, ["tools/release.mjs"], at);
+  return { root, lab, kino, node, commit, publish, take, release, dispose: () => rmSync(root, { recursive: true, force: true }) };
 }
 
 test("claims are fragments, write-ups are threads that quote them and the PI, and a moved claim makes its write-up stale", async () => {
@@ -517,6 +524,7 @@ test("a shift stopped at its time limit, with no cost report, is counted at its 
     const morning = read("MORNING.md");
     assert.match(morning, /hit its time limit and was stopped/);
     assert.match(morning, /No journal entry was written tonight/);
+    w.release("2026-11-21T08:45:00Z");
     const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
     assert.match(brief, /The researcher left no summary\./);
     assert.ok(!brief.includes("Last night"), "a shift that wrote no summary doesn't republish last night's");
@@ -581,7 +589,22 @@ test("a day of two shifts: the first takes its share, the second has the rest an
     assert.match(briefMd, /\[first-01\][\s\S]*\[claim-d\][\s\S]*\[second-1\]/, "everything the day published");
     assert.match(briefMd, /The day's 2 shifts cost \$1\.43, on Claude Sonnet 5\.5\./);
     assert.ok(!/short of the lab/.test(briefMd), "fifteen is no shortfall");
-    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /<meta name="blyg:note" content="Updated with the day's second shift/);
+    // Held until a few hours after the night, then out once, with both shifts.
+    const briefPage = () => readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+    assert.ok(!existsSync(join(w.kino, "notes/lab-2026-11-21-brief.html")), "not out with the night's notes");
+    assert.ok(existsSync(join(w.kino, "notes/lab-2026-11-21-second-1.html")), "which are");
+    assert.match(w.release("2026-11-21T08:44:59Z"), /release: nothing due; held until 2026-11-21T08:45:00Z/);
+    assert.match(w.release("2026-11-21T08:45:00Z"), /release: released lab-2026-11-21-brief/);
+    assert.ok(!existsSync(join(w.lab, "held")), "nothing left held");
+    assert.ok(!/<meta name="blyg:note"/.test(briefPage()), "its first version has both shifts: not an update");
+    assert.match(briefPage(), /<meta property="article:published_time" content="2026-11-21T08:45:00Z">/, "dated for when it went out");
+    assert.match(w.release("2026-11-21T10:45:00Z"), /release: nothing held/);
+    // A shift that settles after the release updates the brief there and then.
+    writeFileSync(join(w.lab, "MORNING.md"), "A late second shift.\n");
+    writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.1, num_turns: 4, is_error: false }));
+    assert.match(w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T09:30:00Z", { LAB_SHIFT: "2" }), /updated the brief/);
+    assert.match(briefPage(), /<meta name="blyg:note" content="Updated with the day's second shift/);
+    assert.ok(!existsSync(join(w.lab, "held")));
   } finally {
     w.dispose();
   }
@@ -590,7 +613,8 @@ test("a day of two shifts: the first takes its share, the second has the rest an
 test("the day's picture: placed after the brief's lead, kept by a later shift that has none, replaced by one that has; a bad one left out and reported; a day without one reported", async () => {
   const w = makeWorld();
   const brief = () => readFileSync(join(w.lab, "published/lab-2026-11-21-brief.md"), "utf8");
-  const page = () => readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
+  // Held for its release until then (tools/release.mjs).
+  const page = () => readFileSync([join(w.kino, "notes/lab-2026-11-21-brief.html"), join(w.lab, "held/notes/lab-2026-11-21-brief.html")].find((p) => existsSync(p)), "utf8");
   const picture = (file, svg, meta) => {
     mkdirSync(join(w.lab, "outbox/brief"), { recursive: true });
     writeFileSync(join(w.lab, `outbox/brief/${file}`), svg);
@@ -611,7 +635,8 @@ test("the day's picture: placed after the brief's lead, kept by a later shift th
     const hash = (svg) => createHash("sha256").update(svg).digest("hex").slice(0, 16);
     assert.match(brief(), new RegExp(`\\*\\*Lab brief: 21 November 2026\\*\\*\\n\\nTonight the lab looked at the memory wall, and found it taller than expected\\.\\n\\n!\\[A cross-hatched wall with a red arrow stopped against it\\]\\(${hash(wall)}\\.svg "The memory wall, taller than we thought\\."\\)\\n\\n`), "the picture straight after the lead");
     assert.match(page(), new RegExp(`<figure class="plate"><img src="https://www\\.kinocomputing\\.com/media/${hash(wall)}\\.svg"`));
-    assert.ok(existsSync(join(w.kino, `media/${hash(wall)}.svg`)) && existsSync(join(w.lab, "published/lab-2026-11-21-brief/plate-wall.svg")) && !existsSync(join(w.lab, "outbox/brief")));
+    assert.ok(existsSync(join(w.lab, `held/media/${hash(wall)}.svg`)) && existsSync(join(w.lab, "published/lab-2026-11-21-brief/plate-wall.svg")) && !existsSync(join(w.lab, "outbox/brief")));
+    assert.ok(!existsSync(join(w.kino, `media/${hash(wall)}.svg`)), "the picture is held with its brief");
 
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-21T05:07:00Z", { LAB_SHIFT: "2" });
     picture("plate-bad.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><path stroke="#ff00ff" d="M0 0L9 9"/></svg>', { file: "plate-bad.svg", alt: "A magenta line that breaks the palette", caption: "Off-palette on purpose." });
@@ -629,6 +654,9 @@ test("the day's picture: placed after the brief's lead, kept by a later shift th
 
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T02:23:00Z");
     shift(1, "2026-11-22T03:00:00Z");
+    assert.ok(existsSync(join(w.kino, "notes/lab-2026-11-21-brief.html")) && existsSync(join(w.kino, `media/${hash(pond)}.svg`)),
+      "a release whose trigger never came goes out with the next shift");
+    assert.deepEqual(JSON.parse(readFileSync(join(w.lab, "held/manifest.json"), "utf8")).due, "2026-11-22T08:45:00Z", "and the day's own is held");
     assert.ok(!/has no picture/.test(readFileSync(join(w.lab, "MORNING.md"), "utf8")), "not yet: a shift is still to come");
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-22T05:07:00Z", { LAB_SHIFT: "2" });
     shift(2, "2026-11-22T06:00:00Z");
@@ -705,6 +733,7 @@ test("paradigm rotation: tonight's paradigms in the briefing; entries publish as
     assert.match(tracker, /<blockquote class="kino-quote" data-note="lab-2026-11-21-paradigm-photonic">/, "the tracker quotes it the same night");
     assert.match(entry, /<meta name="kino:section" content="tracker">/, "an entry is the tracker's");
     assert.match(tracker, /<meta name="kino:section" content="tracker">/, "and so is the tracker, because it asked");
+    w.release("2026-11-21T08:45:00Z");
     assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8"), /<meta name="kino:section" content="briefs">/);
     const listed = JSON.parse(readFileSync(join(w.kino, "notes/_tracker.json"), "utf8"));
     assert.equal(listed.updated, "2026-11-21");
@@ -947,6 +976,8 @@ test("a Sunday: the week in review first, then the deep dive or roundtable on th
     writeFileSync(join(w.lab, "outbox/lab-2026-11-29-the-week.md"), "---\nkind: notebook\n---\n\n**The week the converters won**\n\nThe week's lead.\n");
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 0.5, num_turns: 9, is_error: false }));
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-29T03:00:00Z");
+    assert.ok(!existsSync(join(w.kino, "notes/lab-2026-11-29-the-week.html")) && existsSync(join(w.lab, "held/notes/lab-2026-11-29-the-week.html")),
+      "the week in review is held, like the brief");
     w.commit();
 
     w.node(w.lab, ["tools/prepare.mjs"], "2026-11-29T05:07:00Z", { LAB_SHIFT: "2" });
@@ -961,6 +992,10 @@ test("a Sunday: the week in review first, then the deep dive or roundtable on th
     writeFileSync(join(w.lab, "state/claude-output.json"), JSON.stringify({ total_cost_usd: 2.9, num_turns: 40, is_error: false }));
     w.node(w.lab, ["tools/settle.mjs"], "2026-11-29T07:00:00Z", { LAB_SHIFT: "2" });
     assert.ok(!/short of the lab/.test(read("published/lab-2026-11-29-brief.md")), "two is Sunday's floor");
+    assert.ok(existsSync(join(w.kino, "notes/lab-2026-11-29-deep-dive.html")), "the deep dive goes out with the night");
+    assert.match(w.release("2026-11-29T08:47:00Z"), /nothing due; held until 2026-11-29T10:45:00Z/, "Sunday's release is later: its second shift runs longer");
+    assert.match(w.release("2026-11-29T10:47:00Z"), /released lab-2026-11-29-brief, lab-2026-11-29-the-week/);
+    assert.match(readFileSync(join(w.kino, "notes/lab-2026-11-29-the-week.html"), "utf8"), /<meta property="article:published_time" content="2026-11-29T10:45:00Z">/);
     w.commit();
 
     w.node(w.lab, ["tools/prepare.mjs"], "2026-12-06T05:07:00Z", { LAB_SHIFT: "2" });
@@ -1089,8 +1124,9 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.ok(!existsSync(join(w.lab, "tools/helper.mjs")), "added files go too");
     assert.match(w.node(w.lab, ["tools/replicate.mjs"], "2026-11-21T03:20:00Z"), /e001-draw agrees/);
     const settled = w.node(w.lab, ["tools/settle.mjs"], "2026-11-21T03:30:00Z");
-    assert.match(settled, /\$0\.42, \$0\.01 Exa, 1 claim\(s\), published lab-2026-11-21-first-look, published the brief/);
+    assert.match(settled, /\$0\.42, \$0\.01 Exa, 1 claim\(s\), published lab-2026-11-21-first-look, held the brief for 08:45/);
     // The brief: the shift's own words, what went out, and what settle saw, for anyone.
+    w.release("2026-11-21T08:45:00Z");
     const brief = readFileSync(join(w.kino, "notes/lab-2026-11-21-brief.html"), "utf8");
     assert.match(brief, /<strong>Lab brief: 21 November 2026<\/strong>/);
     assert.match(brief, /Published a first look\./);
@@ -1147,6 +1183,7 @@ test("three nights, end to end: takes handled or re-offered, claims kept, experi
     assert.match(read("MORNING.md"), /Takes not handled, offered again tomorrow: take:/);
     // A summary that leans on lab ids is kept out of the brief; settle's part still goes.
     assert.match(read("MORNING.md"), /MORNING\.md couldn.t go in the brief: it says "c-001"/);
+    w.release("2026-11-22T08:45:00Z");
     const brief2 = readFileSync(join(w.kino, "notes/lab-2026-11-22-brief.html"), "utf8");
     assert.match(brief2, /didn.t pass the publishing checks; it/);
     assert.match(brief2, /offered again tomorrow: <a href="https:\/\/www\.kinocomputing\.com\/read-this">/);

@@ -23,15 +23,27 @@ steers from its principal investigator (PI).
                      of five notes, under a dollar cap and a 60-minute clock
            restore   the lab's machinery put back as committed              (no tokens)
            replicate new experiment results re-run on another seed        (no tokens)
-           settle    record spend; check takes and claims; publish outbox  (no tokens)
-                     and the day's brief
+           settle    record spend; check takes and claims; publish outbox; (no tokens)
+                     hold the day's brief for its release
            commit    lab state → this repo; notes → kinocomputing
 05:07 UTC  the same again, shift 2 of 2: depth — full texts, experiments, audits,
            from what shift 1 asked; the rest of the day's money; no rotation.
-           Settle updates the day's brief with both shifts. 5–15 notes a day.
+           Settle updates the held brief with both shifts. 5–15 notes a day.
+08:45 UTC  release   the day's brief → kinocomputing, a few hours after   (no tokens)
+                     the night's notes (Sundays 10:45, with the week in review)
            ↓
 kinocomputing's own Action registers the notes as blyg items; Cloudflare deploys.
 ```
+
+The brief is held so it lands out of phase with the notes it reports on:
+settle renders it, dated for its release, into `held/`, and the release
+workflow (`.github/workflows/release.yml`, `tools/release.mjs`) puts it on
+kinocomputing when it's due. Times are `config/lab.json`, `release`. The
+outside scheduler dispatches the release at 08:47 and 10:47 UTC daily (a run
+with nothing due does nothing); GitHub's own schedule is the backup, and the
+next shift's settle releases anything overdue, so a missed trigger delays
+the brief but never loses it. A shift that settles after the release updates
+the brief there and then.
 
 The agent's step holds only the Anthropic key. It can't push, and it never sees
 kinocomputing's files: settle, which it doesn't control, renders its markdown
@@ -104,7 +116,8 @@ after each shift keeps `reading/` exactly as sent.
 
 ## Sundays
 
-No rotation. The first shift writes **the week in review**: the week's
+No rotation. The first shift writes **the week in review**, which is held
+with the day's brief and goes out with it at 10:45 UTC: the week's
 themes across paradigms, regions and money, what your takes and shares
 became, and what changed in how the lab and the site work (from the week's
 commits to both repositories, the routine ones left out). The second shift,

@@ -63,6 +63,10 @@
     "per_day": 2,
     "first_share": 0.4
   },
+  "release": {
+    "daily": "08:45",
+    "sunday": "10:45"
+  },
   "regions": [
     {
       "name": "the UK and Europe",

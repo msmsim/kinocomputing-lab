@@ -4,9 +4,10 @@
 //
 //   node tools/settle.mjs [--claude-output state/claude-output.json]
 //
-// Then publishes tonight's brief to kinocomputing (lab-YYYY-MM-DD-brief):
-// the shift's own MORNING.md, written for anyone, and what settle saw, in
-// words a reader outside the lab can follow. The PI reads it on the blyg.
+// Then writes the day's brief (lab-YYYY-MM-DD-brief): the shift's own
+// MORNING.md, written for anyone, and what settle saw, in words a reader
+// outside the lab can follow. It is held for its release, a few hours after
+// the night's notes (tools/release.mjs); the PI reads it on the blyg.
 //
 // Checks, each reported in MORNING.md (and, in plain words, in the brief)
 // rather than failing the night:
@@ -22,10 +23,11 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { appendFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { KINO, LAB, frontMatter, json, now, readJson, readJsonl, sundayPlan } from "./lib.mjs";
 import { labIdIn, renderNote } from "./render.mjs";
 import { checkImage } from "./figure.mjs";
+import { dueAt, hold, release } from "./release.mjs";
 
 const ORIGIN = readJson(join(LAB, "config/lab.json")).kinocomputing.origin;
 
@@ -56,6 +58,11 @@ const summary = [];
 // who can't see the lab (no ids, no file names).
 const told = [];
 let spent = 0;
+
+// 0. Held pages whose time has come go out first (tools/release.mjs): a
+// release whose trigger never came goes out with the next shift.
+const releasedFirst = release(LAB, KINO, now());
+if (releasedFirst.length) summary.push(`released ${releasedFirst.filter((p) => p.startsWith("notes/")).map((p) => p.slice(6, -5)).join(", ")}`);
 
 if (!run) {
   console.log("settle: no run.json; nothing to settle");
@@ -239,12 +246,15 @@ if (valid.length) summary.push(`${valid.length} claim(s)`);
 // tonight's push is registered, a live fragment. Claims written tonight are
 // already in KINO/notes when the threads quoting them render.
 const registry = readJson(join(KINO, "blyg/_registry.json"), { items: {} }).items;
+// A note held for release (a Sunday's week in review) can be quoted too: it
+// is on kinocomputing by the time anyone reads the note quoting it.
+const notePath = (slug) => [join(KINO, "notes", `${slug}.html`), join(LAB, "held", "notes", `${slug}.html`)].find((p) => existsSync(p));
 function quoteResolver(name) {
-  const slug = existsSync(join(KINO, "notes", `${name}.html`)) ? name
+  const slug = notePath(name) ? name
     : Object.keys(registry).find((s) => registry[s].page === name);
-  if (!slug || !existsSync(join(KINO, "notes", `${slug}.html`))) throw new Error(`quotes ${name}, which isn't a note on kinocomputing`);
+  if (!slug || !notePath(slug)) throw new Error(`quotes ${name}, which isn't a note on kinocomputing`);
   const entry = registry[slug];
-  const page = readFileSync(join(KINO, "notes", `${slug}.html`), "utf8");
+  const page = readFileSync(notePath(slug), "utf8");
   const thread = entry ? (entry.kind ?? (entry.stub_of ? "thread" : "fragment")) === "thread"
     : /<meta name="blyg:kind" content="thread">/.test(page);
   if (thread) throw new Error(`quotes ${name}, a write-up; only claims, paradigm entries and the PI's notes can be quoted`);
@@ -270,6 +280,20 @@ const parsed = names.map((file) => ({ file, name: file.replace(/\.md$/, ""), ...
 parsed.sort((a, b) => FRAGMENTS.has(b.data.kind) - FRAGMENTS.has(a.data.kind) || a.file.localeCompare(b.file));
 let claims = 0;
 const BRIEF = `lab-${run.date}-brief`;
+// The brief goes out at its release time, a few hours after the night's
+// notes (tools/release.mjs); until then settle holds it, dated for then. A
+// Sunday's week in review is held with it. Past that time, or for a brief
+// already out, it goes straight to kinocomputing.
+const due = dueAt(run.date, config);
+const holding = now() < due;
+const holdNotes = holding && run.sunday?.job === "week-in-review";
+const briefLive = existsSync(join(KINO, "notes", `${BRIEF}.html`));
+const briefHeld = holding && !briefLive;
+const place = (path, bytes, held) => {
+  if (held) return hold(LAB, path, bytes, due);
+  mkdirSync(dirname(join(KINO, path)), { recursive: true });
+  writeFileSync(join(KINO, path), bytes);
+};
 // The day so far: what earlier shifts today published and said, kept for the
 // brief and for the day's limits on notes. A day can have two shifts
 // (README, "A night"); the brief is the day's, not the shift's.
@@ -340,16 +364,13 @@ for (const { file, name, data, body } of parsed) {
     page = await renderNote({
       markdown: body, name, voice, pin: data.pin === true, changeNote: update ? data.change_note ?? null : null,
       answers: !update && data.answers ? data.answers : null, kind: data.kind, section: data.section ?? null, maxClaim: config.publish.max_claim_chars, maxParadigm: config.publish.max_paradigm_chars,
-      quote: quoteResolver, image, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+      quote: quoteResolver, image, model: run.model, at: holdNotes ? due : now(), kino: KINO, origin: config.kinocomputing.origin,
     });
   } catch (error) {
     reject(file, error.message);
     continue;
   }
-  for (const { file: media, bytes } of placed) {
-    mkdirSync(join(KINO, "media"), { recursive: true });
-    writeFileSync(join(KINO, "media", media), bytes);
-  }
+  for (const { file: media, bytes } of placed) place(`media/${media}`, bytes, holdNotes);
   if (existsSync(join(outbox, name))) {
     mkdirSync(join(LAB, "published", name), { recursive: true });
     // Copied over what's there, not renamed: a folder can't be renamed onto
@@ -357,7 +378,7 @@ for (const { file, name, data, body } of parsed) {
     cpSync(join(outbox, name), join(LAB, "published", name), { recursive: true, force: true });
     rmSync(join(outbox, name), { recursive: true, force: true });
   }
-  writeFileSync(join(KINO, "notes", `${name}.html`), page);
+  place(`notes/${name}.html`, page, holdNotes);
   mkdirSync(join(LAB, "published"), { recursive: true });
   renameSync(join(outbox, file), join(LAB, "published", file));
   if (claim) claims += 1;
@@ -469,8 +490,7 @@ if (existsSync(pictureDir)) {
     const { width, height, problems } = checkImage(bytes, meta.file);
     if (problems.length) throw new Error(`${problems.join("; ")} (config/house/STYLE.md)`);
     const file = `${createHash("sha256").update(bytes).digest("hex").slice(0, 16)}${meta.file.slice(meta.file.lastIndexOf(".")).toLowerCase()}`;
-    mkdirSync(join(KINO, "media"), { recursive: true });
-    writeFileSync(join(KINO, "media", file), bytes);
+    place(`media/${file}`, bytes, briefHeld);
     picture = { file, width, height, alt: String(meta.alt).trim().replace(/\s+/g, " "), caption: String(meta.caption).trim().replace(/\s+/g, " ") };
   } catch (error) {
     report.push(`- The day's picture wasn't used: it ${error.message}.`);
@@ -552,13 +572,14 @@ const briefOf = (said) => {
     [...shifts.flatMap((s) => s.told ?? []), `${several ? `The day's ${shifts.length} shifts` : "The shift"} cost $${total.toFixed(2)}, on ${models}.`].map((l) => `- ${l}`).join("\n"),
   ].join("\n\n");
 };
-const briefUpdate = isPublished(BRIEF);
+// An update only to a brief readers have seen; a held one is still its first.
+const briefUpdate = briefLive;
 let saidUsed = shiftSaid;
 let briefMd = briefOf(shiftSaid);
 let briefPage = null;
 const renderBrief = (markdown) => renderNote({
   markdown, name: BRIEF, kind: "brief", changeNote: briefUpdate ? "Updated with the day's second shift: its summary, what it published and what it cost." : null,
-  quote: quoteResolver, model: run.model, at: now(), kino: KINO, origin: config.kinocomputing.origin,
+  quote: quoteResolver, model: run.model, at: briefHeld ? due : now(), kino: KINO, origin: config.kinocomputing.origin,
   image: (src) => {
     if (!picture || src !== picture.file) throw new Error(`has an image (${src}) that isn't the day's picture`);
     return { url: `${config.kinocomputing.origin}media/${picture.file}`, width: picture.width, height: picture.height, kind: "plate" };
@@ -578,10 +599,10 @@ try {
   }
 }
 if (briefPage) {
-  writeFileSync(join(KINO, "notes", `${BRIEF}.html`), briefPage);
+  place(`notes/${BRIEF}.html`, briefPage, briefHeld);
   mkdirSync(join(LAB, "published"), { recursive: true });
   writeFileSync(join(LAB, "published", `${BRIEF}.md`), `---\nkind: brief\npin: false\n---\n\n${briefMd}\n`);
-  summary.push(`${briefUpdate ? "updated" : "published"} the brief`);
+  summary.push(briefHeld ? `held the brief for ${due.slice(11, 16)}` : `${briefUpdate ? "updated" : "published"} the brief`);
 }
 writeFileSync(dayPath, json({ date: run.date, shifts: shiftsWith(saidUsed) }));
 

@@ -28,7 +28,8 @@ shift      a researcher works a shift (breadth, or depth), under a dollar cap an
 restore    the lab's machinery put back as committed                            (no tokens)
 replicate  every new experiment result re-run on the next seed                  (no tokens)
 settle     spend; takes handled or re-offered; claims append-only; publish;     (no tokens)
-           the night's brief
+           the day's brief, held for its release
+release    the brief out a few hours after the notes (08:45 UTC; Sundays 10:45) (no tokens)
 ```
 
 Nightly on GitHub Actions at 02:23 UTC (03:41 as a backup, if GitHub skipped the first), or by hand on your machine

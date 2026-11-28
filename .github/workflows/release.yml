@@ -1,0 +1,98 @@
+name: Release the brief
+
+# The day's brief goes out a few hours after the night's notes (README,
+# "A night"): settle holds it in held/, dated for its release, and this puts
+# it on kinocomputing when it's due. A Sunday's week in review goes with it,
+# later. Times are config/lab.json's `release` (UTC): 08:45, Sundays 10:45.
+#
+# GitHub's own schedule can run hours late, so the outside scheduler
+# (cron-job.org) dispatches this at both times every day; a run with nothing
+# due does nothing. The schedules below are the backup, and settle releases
+# anything overdue as the next shift starts.
+on:
+  schedule:
+    - cron: "47 8 * * *"
+    - cron: "47 10 * * *"
+    - cron: "17 13 * * *"   # backup
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Anything held?
+        id: held
+        run: |
+          if [ -f held/manifest.json ]; then
+            echo "due=$(jq -r .due held/manifest.json)" >> "$GITHUB_OUTPUT"
+            echo "go=$([ "$(jq -r .due held/manifest.json)" \< "$(date -u +%FT%TZ)" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.held.outputs.go == 'true'
+        with:
+          repository: msmsim/kinocomputing
+          path: kinocomputing
+          token: ${{ secrets.KINO_PUSH_TOKEN }}
+          persist-credentials: false
+
+      # No npm install: tools/release.mjs uses only Node's own modules.
+      - name: Release
+        id: release
+        if: steps.held.outputs.go == 'true'
+        env:
+          KINO_DIR: kinocomputing
+        run: |
+          node tools/release.mjs | tee release.log
+          echo "summary=$(tail -1 release.log | sed 's/^release: //')" >> "$GITHUB_OUTPUT"
+
+      # kinocomputing first: if the lab's push then fails, held/ is still
+      # there and the next run copies the same files again, which is harmless.
+      - name: Publish to kinocomputing
+        if: steps.held.outputs.go == 'true'
+        env:
+          TOKEN: ${{ secrets.KINO_PUSH_TOKEN }}
+          SUMMARY: ${{ steps.release.outputs.summary }}
+        working-directory: kinocomputing
+        run: |
+          if [ -z "$(git status --porcelain notes media)" ]; then echo "nothing to publish"; exit 0; fi
+          git config user.name "kinocomputing-lab[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notes media
+          git commit -m "lab: $SUMMARY"
+          for attempt in 1 2 3; do
+            if git push "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" HEAD:main; then exit 0; fi
+            git pull --rebase "https://x-access-token:${TOKEN}@github.com/msmsim/kinocomputing" main
+          done
+          echo "could not publish after 3 attempts"; exit 1
+
+      - name: Commit the lab
+        if: steps.held.outputs.go == 'true'
+        env:
+          TOKEN: ${{ github.token }}
+          SUMMARY: ${{ steps.release.outputs.summary }}
+        run: |
+          git config user.name "kinocomputing-lab[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A held
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "release: $SUMMARY"
+          for attempt in 1 2 3; do
+            if git push "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:main; then exit 0; fi
+            git pull --rebase "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" main
+          done
+          echo "could not push the lab after 3 attempts"; exit 1
