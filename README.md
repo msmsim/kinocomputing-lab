@@ -29,6 +29,8 @@ steers from its principal investigator (PI).
 05:07 UTC  the same again, shift 2 of 2: depth — full texts, experiments, audits,
            from what shift 1 asked; the rest of the day's money; no rotation.
            Settle updates the held brief with both shifts. 5–15 notes a day.
+07:41 UTC  build     one headline in Now on the roadmap, built and tested;  (tokens)
+                     landed, or left for the PI ("The build shift")
 08:45 UTC  release   the day's brief → kinocomputing, a few hours after   (no tokens)
                      the night's notes (Sundays 10:45, with the week in review)
            ↓
@@ -251,6 +253,40 @@ tests run, then the mutants the change could reach. If both pass, main's
 A failing proposal stays open with its failing checks. Once, in the
 repository's settings: Actions → General → "Allow GitHub Actions to create
 and approve pull requests", so the night shift can open them.
+
+## The build shift
+
+Each morning at 07:41 UTC, after the research shifts, the build shift takes
+one headline in **Now** on kinocomputing's roadmap and builds it
+(`.github/workflows/build.yml`; `BUILD.md` is its agent's brief). Moving a
+headline to Now is the go-ahead; nobody is asked again. It takes the one
+longest in Now, not tried yet that day, not waiting on you, and tried fewer
+than three times since it reached Now (`config/lab.json`, `build`: Opus, up
+to $3 and 60 minutes a try, counted apart from the research budget).
+
+Four jobs, each with only what it needs (`tools/build.mjs`, `tools/land.sh`):
+
+1. **Pick**, with no secrets.
+2. **Build**: the agent, with the Anthropic key and nothing else, in fresh
+   checkouts of both repositories. It outlines the item if it has no
+   outline, builds it with tests, runs them, and writes a report. Its change
+   leaves as patches.
+3. **Test**, with no secrets: the patches on main, tested by each
+   repository's own tests and the mutants they could reach.
+4. **Land**, with push rights and none of the agent's code: main's own judge
+   decides. A change that passed and keeps away from what judges, publishes
+   or steers the work (the workflows, the test harnesses and mutant runners,
+   the judge itself, the charter, `AGENT.md`, `config/`, the packages, the
+   lab's record and the site's notes) lands on main in each repository, and
+   the headline moves to Done with its commits linked, so the next brief
+   names it. One that changes any of those goes to you as a pull request
+   labelled "for the PI", and the headline waits for you in Now. One that
+   failed its tests, or that the agent says isn't done, lands nothing.
+
+Every attempt is a line in `state/build.jsonl`: the item, what happened and
+why, the cost, and the commits or pull request. Moving a headline out of Now
+and back gives it a fresh start. The schedule is GitHub's; cron-job.org can
+dispatch it on time as it does the shifts (`build.yml`, `{"ref":"main"}`).
 
 ## Tests
 

@@ -1,0 +1,220 @@
+name: Build shift
+
+# One headline in Now on kinocomputing's roadmap, built each morning after
+# the research shifts (README, "The build shift"; BUILD.md is the agent's
+# brief). Four jobs, each with only what it needs:
+#
+#   pick   no secrets   the item longest in Now not yet tried today
+#   build  Anthropic key only, no push rights: the agent, in fresh checkouts
+#          of both repositories; its change leaves as patches
+#   test   no secrets   the patches on main, tested by each repository's own
+#                       tests and the mutants they could reach
+#   land   push rights, and runs none of the agent's code: main's own judge
+#          (tools/build.mjs, copied before any patch is applied) decides; it
+#          lands on main and moves the item to Done with its commits, or goes
+#          to the PI as a pull request; the attempt is recorded either way
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: build-shift
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      id: ${{ steps.pick.outputs.id }}
+      date: ${{ steps.pick.outputs.date }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/build.mjs
+            config/lab.json
+            state/build.jsonl
+          sparse-checkout-cone-mode: false
+      - id: pick
+        run: |
+          date=$(date -u +%F)
+          echo "date=$date" >> "$GITHUB_OUTPUT"
+          curl -sf https://raw.githubusercontent.com/msmsim/kinocomputing/main/notes/_roadmap.json -o roadmap.json || echo '{"items":[]}' > roadmap.json
+          node tools/build.mjs pick roadmap.json state/build.jsonl "$date" BRIEF.md | tee -a "$GITHUB_OUTPUT"
+      - if: steps.pick.outputs.id != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: brief
+          path: BRIEF.md
+
+  build:
+    needs: pick
+    if: needs.pick.outputs.id != '' && vars.LAB_PAUSED != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      lab_base: ${{ steps.clone.outputs.lab_base }}
+      site_base: ${{ steps.clone.outputs.site_base }}
+    steps:
+      - id: clone
+        run: |
+          mkdir work
+          git clone -q https://github.com/msmsim/kinocomputing-lab.git work/lab
+          git clone -q https://github.com/msmsim/kinocomputing.git work/kinocomputing
+          echo "lab_base=$(git -C work/lab rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "site_base=$(git -C work/kinocomputing rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          cp work/lab/BUILD.md work/BUILD.md
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: brief
+          path: work
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: work/lab/.nvmrc
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install
+        run: |
+          (cd work/lab && npm ci)
+          (cd work/kinocomputing && npm ci)
+          npm install -g @anthropic-ai/claude-code@2.1.325
+
+      - name: Build
+        working-directory: work
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KINO_DIR: ${{ github.workspace }}/work/kinocomputing
+        run: |
+          set +e
+          model=$(jq -r .build.model lab/config/lab.json)
+          usd=$(jq -r .build.max_usd lab/config/lab.json)
+          minutes=$(jq -r .build.minutes lab/config/lab.json)
+          node lab/tools/timebox.mjs "$(( minutes * 60 ))" claude -p "Read BUILD.md and do tonight's build. Your briefing is BRIEF.md." \
+            --model "$model" \
+            --max-budget-usd "$usd" \
+            --output-format json \
+            --permission-mode acceptEdits \
+            --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch Task Agent" \
+            < /dev/null > claude-output.json
+          echo "the build exited $?"
+
+      - name: The change, as patches
+        if: ${{ !cancelled() }}
+        working-directory: work
+        run: |
+          for repo in lab kinocomputing; do
+            git -C "$repo" add -A
+            git -C "$repo" diff --cached --binary > "$repo.patch"
+          done
+          touch REPORT.md claude-output.json
+          ls -l *.patch
+
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            work/lab.patch
+            work/kinocomputing.patch
+            work/REPORT.md
+            work/claude-output.json
+
+  test:
+    needs: [pick, build]
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      lab: ${{ steps.lab.outputs.ok }}
+      site: ${{ steps.site.outputs.ok }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+      - name: Main, with the patches
+        env:
+          LAB_BASE: ${{ needs.build.outputs.lab_base }}
+          SITE_BASE: ${{ needs.build.outputs.site_base }}
+        run: |
+          git clone -q https://github.com/msmsim/kinocomputing-lab.git lab
+          git clone -q https://github.com/msmsim/kinocomputing.git kinocomputing
+          git -C lab checkout -q "$LAB_BASE"
+          git -C kinocomputing checkout -q "$SITE_BASE"
+          for repo in lab kinocomputing; do
+            if [ -s "build/$repo.patch" ]; then git -C "$repo" apply --index "$GITHUB_WORKSPACE/build/$repo.patch"; fi
+          done
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: lab/.nvmrc
+      - run: (cd lab && npm ci) && (cd kinocomputing && npm ci)
+      - id: site
+        name: The site's tests and mutants
+        working-directory: kinocomputing
+        env:
+          BASE: ${{ needs.build.outputs.site_base }}
+        run: |
+          if [ ! -s ../build/kinocomputing.patch ]; then echo "ok=none" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if npm test && node test/mutants.mjs --since "$BASE"; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; fi
+      - id: lab
+        name: The lab's tests and mutants
+        working-directory: lab
+        env:
+          BASE: ${{ needs.build.outputs.lab_base }}
+          KINO_DIR: ${{ github.workspace }}/kinocomputing
+        run: |
+          if [ ! -s ../build/lab.patch ]; then echo "ok=none" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if npm test && node test/mutants.mjs --since "$BASE"; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; fi
+
+  land:
+    needs: [pick, build, test]
+    if: ${{ !cancelled() && needs.pick.outputs.id != '' && needs.build.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: lab
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: msmsim/kinocomputing
+          path: kinocomputing
+          token: ${{ secrets.KINO_PUSH_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: build
+          path: build
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: lab/.nvmrc
+
+      # Main's judge and roadmap tool, before any patch is applied: nothing the
+      # agent wrote runs in this job.
+      - name: Land, or leave for the PI
+        env:
+          ID: ${{ needs.pick.outputs.id }}
+          DATE: ${{ needs.pick.outputs.date }}
+          BUILT: ${{ needs.build.result }}
+          LAB_OK: ${{ needs.test.outputs.lab }}
+          SITE_OK: ${{ needs.test.outputs.site }}
+          LAB_BASE: ${{ needs.build.outputs.lab_base }}
+          SITE_BASE: ${{ needs.build.outputs.site_base }}
+          GH_TOKEN: ${{ github.token }}
+          KINO_TOKEN: ${{ secrets.KINO_PUSH_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: bash lab/tools/land.sh

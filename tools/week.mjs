@@ -11,7 +11,7 @@ import { frontMatter, readJson, readJsonl } from "./lib.mjs";
 import { doneOn, itemsOf, shippedBetween } from "./shipped.mjs";
 
 // Commits that are the machinery running, not anyone changing it.
-const ROUTINE = /^(night shift |local shift |lab: |release: |blyg: record state|motes: publish|subset: )/;
+const ROUTINE = /^(night shift |local shift |lab: |release: |build: |roadmap: |blyg: record state|motes: publish|subset: )/;
 const BOTS = /\[bot\]$/;
 
 const shiftDays = (date, days) => new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);

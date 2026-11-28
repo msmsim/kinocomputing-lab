@@ -148,6 +148,39 @@ constraints.
   unreported; each mutant runs in its own copy, never in the source, and a
   mutant run stops if the tests fail with no mutant at all.
 
+## 7. How work is chosen and shipped
+
+- **Headlines** — a stream of them, one shipped at a time: a headline is a
+  very short sentence with only the highest-order bit ("You can now rent VMs
+  through an API"), what you'd tell someone you hadn't seen in months. Cut
+  everything the headline would still be credible without; a headline has
+  either shipped by a given time or it hasn't. Developing by headlines is
+  what makes communicating by them honest.
+  *Here:* kinocomputing's roadmap (`/roadmap`) is one flat list of headlines
+  in buckets; Matt writes them and moves them, Now is the go-ahead, and the
+  brief says what shipped.
+- **Outline speedrunning** —
+  ["How to build extremely quickly"](https://learnhowtolearn.org/how-to-build-extremely-quickly/).
+  Outline recursively, fill in the lowest levels as fast as you can, and
+  perfect nothing until it's all done. *Here:* an item gets its outline when
+  it reaches Now, before any code (`BUILD.md`, "Outline first").
+- **A shared context, and agents working from it** — Notion,
+  ["A new shape for work"](https://www.notion.com/en-gb/a-new-shape-for-work).
+  One governed place where people and agents keep what they know; work as
+  rows with a status, picked up by an agent when the status changes, its
+  output attached and the row moved on. *Here:* the roadmap is that list,
+  and the build shift picks up what's in Now and moves it to Done with its
+  commits.
+- **Ship fast** — Varun Srinivasan,
+  ["How to ship fast"](https://www.varunsrinivasan.com/2024/08/17/how-to-ship-fast)
+  (2024). Avoid side quests; remove bureaucracy; optimise the tools for
+  speed, so a fix reaches users the day it's made. *Here:* one headline at a
+  time, nothing that doesn't help it ship, and tests and mutants in seconds.
+- **Reduce complexity** — two ways, inside and out: remove what isn't
+  essential, and add abstractions that hide what is. *Here:* a roadmap that
+  is one text file and a page, not a database; a brief that drops a section
+  rather than growing one.
+
 ## Looked at, not adopted
 
 - **ToolUniverse** — [aiscientist.tools](https://aiscientist.tools/). Mostly

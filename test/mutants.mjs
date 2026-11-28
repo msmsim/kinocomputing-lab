@@ -145,6 +145,17 @@ const MUTANTS = [
   ["a broken roadmap costs the night", "tools/settle.mjs", "try { return JSON.parse(readFileSync(roadmapPath, \"utf8\")); } catch { return {}; }", "return JSON.parse(readFileSync(roadmapPath, \"utf8\"));"],
   ["the week counts headlines from outside the week", "tools/shipped.mjs", "return on && on >= since && on <= until;", "return on && on <= until;"],
   ["the week counts headlines no longer done", "tools/shipped.mjs", "if (item?.status !== \"done\") return null;", ""],
+  // The build shift (tools/build.mjs, tools/land.sh).
+  ["the build may change its judges", "tools/build.mjs", "if (off.length) return { land: false, why: `it changes ${off", "if (false) return { land: false, why: `it changes ${off"],
+  ["the build may take tests out", "tools/build.mjs", "if (testLinesRemoved) return { land: false", "if (false) return { land: false"],
+  ["the build may land untested code", "tools/build.mjs", "if (code && !tested) return { land: false", "if (false) return { land: false"],
+  ["the build may publish notes", "tools/build.mjs", "/^notes\\/(?!_roadmap\\.json$)/,", ""],
+  ["the build tries an item twice a day", "tools/build.mjs", "if (mine.some((a) => a.date === date)) return false;", ""],
+  ["the build rebuilds what's waiting on the PI or landed", "tools/build.mjs", "if (mine.some((a) => a.outcome === \"for the PI\" || a.outcome === \"landed\")) return false;", ""],
+  ["the build tries forever", "tools/build.mjs", "return mine.length < most;", "return true;"],
+  ["the build lands what the agent says isn't done", "tools/land.sh", "elif [ \"$done\" != yes ]; then", "elif false; then"],
+  ["the build lands what failed its tests", "tools/land.sh", "[ \"${OK[$r]}\" = true ] ||", "true ||"],
+  ["the build lands what goes to the PI", "tools/land.sh", "[ \"$land\" = true ] || outcome=\"for the PI\"", "true"],
 ];
 
 const JOBS = Math.max(1, Number(process.env.MUTANT_JOBS ?? availableParallelism()));

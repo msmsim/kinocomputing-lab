@@ -399,6 +399,56 @@
     "test": "three nights, end to end: takes handled or re-offered, claims kept, experiments replicated, notes published, versioned and pinned",
     "site": "ba6ea5c1ff5a"
   },
+  "the build lands what failed its tests": {
+    "file": "test/build.test.mjs",
+    "test": "landing: nothing lands when the tests failed, the agent says it isn't done, it changed nothing, or the build didn't finish; each is recorded",
+    "site": "ce632cc77545"
+  },
+  "the build lands what goes to the PI": {
+    "file": "test/build.test.mjs",
+    "test": "landing: a change to what judges it goes to the PI as a pull request; the item stays in Now",
+    "site": "6c4c9775742c"
+  },
+  "the build lands what the agent says isn't done": {
+    "file": "test/build.test.mjs",
+    "test": "landing: nothing lands when the tests failed, the agent says it isn't done, it changed nothing, or the build didn't finish; each is recorded",
+    "site": "3db1238acaa5"
+  },
+  "the build may change its judges": {
+    "file": "test/build.test.mjs",
+    "test": "build judge: lands with tests and away from the judges; anything that changes what judges, publishes or steers goes to the PI",
+    "site": "3cbabc475b2b"
+  },
+  "the build may land untested code": {
+    "file": "test/build.test.mjs",
+    "test": "build judge: lands with tests and away from the judges; anything that changes what judges, publishes or steers goes to the PI",
+    "site": "c30149006636"
+  },
+  "the build may publish notes": {
+    "file": "test/build.test.mjs",
+    "test": "build judge: lands with tests and away from the judges; anything that changes what judges, publishes or steers goes to the PI",
+    "site": "6285f2300a17"
+  },
+  "the build may take tests out": {
+    "file": "test/build.test.mjs",
+    "test": "build judge: lands with tests and away from the judges; anything that changes what judges, publishes or steers goes to the PI",
+    "site": "1702b11dbc70"
+  },
+  "the build rebuilds what's waiting on the PI or landed": {
+    "file": "test/build.test.mjs",
+    "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",
+    "site": "fdee5f639189"
+  },
+  "the build tries an item twice a day": {
+    "file": "test/build.test.mjs",
+    "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",
+    "site": "12be59c0c139"
+  },
+  "the build tries forever": {
+    "file": "test/build.test.mjs",
+    "test": "build pick: the item longest in Now, not tried today, not waiting on the PI, not tried too often since it last reached Now",
+    "site": "8aae6c2942a6"
+  },
   "the byline leads": {
     "file": "test/unit.test.mjs",
     "test": "render: a voice signs a write-up under its title; claims and the brief stay in the house voice",
